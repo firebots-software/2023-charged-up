@@ -29,21 +29,20 @@ public class SwerveModule {
     private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
 
-    public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
+    public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
         absoluteEncoder = new AnalogInput(absoluteEncoderId);
 
-        driveMotor = new WPI_TalonFX(5);
-        turningMotor = new WPI_TalonFX(6);
+        driveMotor = new WPI_TalonFX(driveMotorId);
+        turningMotor = new WPI_TalonFX(turningMotorId);
 
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
-
        
-        turningEncoder = new CANCoder(07);
+        turningEncoder = new CANCoder(CANCoderId);
 
         CANCoderConfiguration config = new CANCoderConfiguration();
         // set units of the CANCoder to radians, with velocity being radians per second

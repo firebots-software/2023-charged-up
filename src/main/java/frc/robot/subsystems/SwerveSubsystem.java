@@ -64,6 +64,7 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     public SwerveSubsystem() {
+        gyro.calibrate();
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -78,7 +79,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return 0.0; // Math.IEEEremainder(gyro.getYaw(), 360);
+        return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {
@@ -99,7 +100,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //odometer.update(getRotation2d(), frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+        odometer.update(getRotation2d(), getModulePositions());
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     } 

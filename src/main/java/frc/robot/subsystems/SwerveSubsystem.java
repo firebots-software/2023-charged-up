@@ -55,7 +55,7 @@ public class SwerveSubsystem extends SubsystemBase {
              DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
              DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
-    private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
+    private final ADXRS450_Gyro gyro = new ADXRS450_Gyro();
     
     private final edu.wpi.first.math.kinematics.SwerveDriveOdometry odometer = new edu.wpi.first.math.kinematics.SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -79,7 +79,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
 
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {

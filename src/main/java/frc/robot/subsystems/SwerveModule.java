@@ -81,7 +81,7 @@ public class SwerveModule extends SubsystemBase {
 
     public SwerveModulePosition getModulePosition() {
         SwerveModuleState state = getState();
-        return new SwerveModulePosition(state.speedMetersPerSecond, state.angle);
+        return new SwerveModulePosition(state.speedMetersPerSecond, state.angle); // TODO: state.speedMetersPerSecond should be distance traveled, not speed
     }
 
     public void stop() {

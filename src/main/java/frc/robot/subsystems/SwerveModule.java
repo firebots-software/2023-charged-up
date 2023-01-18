@@ -24,17 +24,14 @@ public class SwerveModule extends SubsystemBase {
     private final WPI_TalonFX turningMotor;
 
     private final CANCoder turningEncoder;
-    private final int debug_turning;
 
     private final PIDController turningPidController;
 
-    private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
 
-    public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
+    public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed, double absoluteEncoderOffset) {
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-        this.absoluteEncoderReversed = absoluteEncoderReversed;
 
         driveMotor = new WPI_TalonFX(driveMotorId);
         turningMotor = new WPI_TalonFX(turningMotorId);
@@ -43,7 +40,6 @@ public class SwerveModule extends SubsystemBase {
         turningMotor.setInverted(turningMotorReversed);
        
         turningEncoder = new CANCoder(CANCoderId);
-        debug_turning = CANCoderId;
 
         CANCoderConfiguration config = new CANCoderConfiguration();
         // set units of the CANCoder to radians, with velocity being radians per second

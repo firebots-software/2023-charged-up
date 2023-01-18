@@ -44,13 +44,9 @@ public class SwerveJoystickCmd extends CommandBase {
         double turningSpeed = turningSpdFunction.get();
 
         // 2. Apply deadband
-        double xDir = Math.signum(xSpeed);
-        double yDir = Math.signum(ySpeed);
-        double turnDir = Math.signum(turningSpeed);
-
-        xSpeed = Math.abs(xSpeed); //> OI.kDeadband ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed); //> OIConstants.kDeadband ? ySpeed : 0.0;
-        turningSpeed = Math.abs(turningSpeed); //> OIConstants.kDeadband ? turningSpeed : 0.0;
+        // xSpeed = Math.abs(xSpeed); //> OI.kDeadband ? xSpeed : 0.0;
+        // ySpeed = Math.abs(ySpeed); //> OIConstants.kDeadband ? ySpeed : 0.0;
+        // turningSpeed = Math.abs(turningSpeed); //> OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 3. Make the driving smoother
         xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
@@ -64,7 +60,7 @@ public class SwerveJoystickCmd extends CommandBase {
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
         } else {
             // Relative to robot
-            chassisSpeeds = new ChassisSpeeds(xSpeed * xDir, ySpeed * yDir, turningSpeed * turnDir);
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
 
         // 5. Convert chassis speeds to individual module states

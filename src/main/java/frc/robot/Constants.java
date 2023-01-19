@@ -41,6 +41,9 @@ public final class Constants {
         public static final int R3_BUTTON_PORT = 12;
         public static final int PS_BUTTON_PORT = 13;
         public static final int BIG_BUTTON_PORT = 14;
+
+        // Joystick constants 
+        public static final double DEADBAND = 0.05; 
     }
 
     public static final class Drivetrain {
@@ -168,7 +171,5 @@ public final class Constants {
         public static final int kDriverXAxis = 0;
         public static final int kDriverRotAxis = 4;
         public static final int kDriverFieldOrientedButtonIdx = 1;
-
-        public static final double kDeadband = 0.05;
     }
 }

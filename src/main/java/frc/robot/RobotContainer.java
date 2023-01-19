@@ -32,7 +32,7 @@ public class RobotContainer {
                 swerveSubsystem,
                 () -> -ps4_controller1.getRawAxis(1),
                 () -> -ps4_controller1.getRawAxis(0),
-                () -> ps4_controller1.getRawAxis(2),
+                () -> -ps4_controller1.getRawAxis(2),
                 () -> !ps4_controller1.getRawButton(Constants.OI.CIRCLE_BUTTON_PORT)));
     // Configure the button bindings
     configureButtonBindings();

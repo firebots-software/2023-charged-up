@@ -1,16 +1,11 @@
 package frc.robot.subsystems;
 
-//import com.revrobotics.CANEncoder;
-//import com.revrobotics.CANSparkMax;
-//import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -28,6 +23,8 @@ public class SwerveModule extends SubsystemBase {
     private final PIDController turningPidController;
 
     private final double absoluteEncoderOffsetRad;
+    private final double absoluteDriveEncoderOffset;
+    private double DEBUG_lastms;
 
     public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed, double absoluteEncoderOffset) {
 
@@ -50,7 +47,8 @@ public class SwerveModule extends SubsystemBase {
         turningPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
-        resetEncoders();
+        absoluteDriveEncoderOffset = driveMotor.getSelectedSensorPosition();
+
     }
 
     public double getTurningPosition() {
@@ -61,16 +59,14 @@ public class SwerveModule extends SubsystemBase {
         return turningEncoder.getVelocity();
     }
 
-    public void resetEncoders() {
-        //turningEncoder.setPosition(turningEncoder.getAbsolutePosition()-absoluteEncoderOffsetRad);
-    }
-
     public SwerveModuleState getState() {
-        return new SwerveModuleState(driveMotor.getSelectedSensorVelocity(), new Rotation2d(getTurningPosition()));
+        // * 10d because getSelectedSensorVelocity() returns ticks/100ms; 
+        return new SwerveModuleState(driveMotor.getSelectedSensorVelocity() * 10d * Constants.ModuleConstants.kDriveEncoderTicks2Meter, new Rotation2d(getTurningPosition()));
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        if (Math.abs(state.speedMetersPerSecond) < 0.005) {
+        DEBUG_lastms = state.speedMetersPerSecond;
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
             return;
         }
@@ -80,8 +76,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public SwerveModulePosition getModulePosition() {
-        SwerveModuleState state = getState();
-        return new SwerveModulePosition(state.speedMetersPerSecond, state.angle); // TODO: state.speedMetersPerSecond should be distance traveled, not speed
+        return new SwerveModulePosition((driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset) * Constants.ModuleConstants.kDriveEncoderTicks2Meter, getState().angle);
     }
 
     public void stop() {
@@ -89,17 +84,16 @@ public class SwerveModule extends SubsystemBase {
         turningMotor.set(0);
     }
 
-    // private int count = 0;
+    private int count = 0;
 
     @Override
     public void periodic() {
-        /*
         count++;
-        if (count % 100 == 0) {
-            System.out.println(debug_turning + " encoder: " + (turningEncoder.getAbsolutePosition()));
+        if (count % 150 == 0) {
+            System.out.println("m/s: " + getState().speedMetersPerSecond + " actual: " + DEBUG_lastms);
+            System.out.println(getModulePosition().distanceMeters);
             count = 0;
         }
-        */
     }
 }
 

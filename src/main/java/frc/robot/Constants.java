@@ -47,68 +47,16 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public final static int leftFollowerPort = 4; //TODO: change port numbers for new drivetrain
-        public final static int leftMasterPort = 3;
-        public final static int rightMasterPort = 2;
-        public final static int rightFollowerPort = 1;
-
-        public static final double TICKS_PER_METER = 35914.8225; // * (2048 * 8.4) / 0.479;
-        public static final double drivetrainTicksPerRev = 2048 * 8.4;
-        public static final double drivetrainWheelRadiusMeters = 0.0762; // convert to meters 
-
-        public final static int PIGEON_ID = 8;
-        
-        public static final double TRACK_WIDTH_METERS = 0.612775;
-
-        public static final DifferentialDriveKinematics kinematics =
-                new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
-        public static double kMaxSpeedMetersPerSecond = 1;
-        public static double kMaxAccelerationMetersPerSecondSquared = 1;
-
-        // ramsete values from wpilib docs
-        public static double kRamseteB = 2.0;
-        public static double kRamseteZeta = 0.7;
-        public static double kPDriveVel = 2.6604;
-
-        public static final double ksVolts = 0.67605;
-        public static final double kvVoltSecondsPerMeter = 1.8252;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.37032;
-		public static final double velocityThreshold = 90; // tune this value
-
-        public static DifferentialDriveVoltageConstraint autoVoltageConstraint =
-                new DifferentialDriveVoltageConstraint(
-                        new SimpleMotorFeedforward(ksVolts,
-                                kvVoltSecondsPerMeter,
-                                kaVoltSecondsSquaredPerMeter),
-                        kinematics,
-                        10);
-
-        public static TrajectoryConfig MotionProfilingConfig = new TrajectoryConfig(kMaxSpeedMetersPerSecond,
-                kMaxAccelerationMetersPerSecondSquared)
-                // Add kinematics to ensure max speed is actually obeyed
-                .setKinematics(kinematics)
-                // Apply the voltage constraint
-                .addConstraint(autoVoltageConstraint)
-                .setReversed(false);
-
-
-        public static TrajectoryConfig MotionProfilingConfigReversed = new TrajectoryConfig(kMaxSpeedMetersPerSecond,
-                kMaxAccelerationMetersPerSecondSquared)
-                // Add kinematics to ensure max speed is actually obeyed
-                .setKinematics(kinematics)
-                // Apply the voltage constraint
-                .addConstraint(autoVoltageConstraint)
-                .setReversed(true);
+        // ramsete values from wpilib docs.
     } 
 
    public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-    public static final double kDriveMotorGearRatio = 1 / 5.8462;
-    public static final double kTurningMotorGearRatio = 1 / 18.0;
+    public static final double kDriveMotorGearRatio = 1 / 6.75; // from swervdrivespecialties.com/products/mk4-swerve-module, model is L2
+    public static final double kDriveEncoderTicksPerRotation = 2048;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-    public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+    public static final double kDriveEncoderTicks2Meter = kDriveEncoderRot2Meter / kDriveEncoderTicksPerRotation;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
-    public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.5;
 }
       
@@ -134,6 +82,11 @@ public final class Constants {
         public static final int kFrontRightTurningMotorPort = 1;
         public static final int kBackRightTurningMotorPort = 12;
 
+        public static final int kFrontLeftDriveAbsoluteEncoderPort = 5;
+        public static final int kBackLeftDriveAbsoluteEncoderPort = 6;
+        public static final int kFrontRightDriveAbsoluteEncoderPort = 8;
+        public static final int kBackRightDriveAbsoluteEncoderPort = 7;
+
         public static final boolean kFrontLeftTurningEncoderReversed = true;
         public static final boolean kBackLeftTurningEncoderReversed = true;
         public static final boolean kFrontRightTurningEncoderReversed = true;
@@ -144,11 +97,6 @@ public final class Constants {
         public static final boolean kFrontRightDriveEncoderReversed = true;
         public static final boolean kBackRightDriveEncoderReversed = true;
 
-        public static final int kFrontLeftDriveAbsoluteEncoderPort = 5;
-        public static final int kBackLeftDriveAbsoluteEncoderPort = 6;
-        public static final int kFrontRightDriveAbsoluteEncoderPort = 8;
-        public static final int kBackRightDriveAbsoluteEncoderPort = 7;
-
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.270286977291107;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 1.8269674256443977;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.32366929203271866;
@@ -158,8 +106,7 @@ public final class Constants {
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
-        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-                kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
     }

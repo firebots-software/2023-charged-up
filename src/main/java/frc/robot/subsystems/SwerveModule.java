@@ -84,16 +84,19 @@ public class SwerveModule extends SubsystemBase {
         turningMotor.set(0);
     }
 
-    private int count = 0;
+    //private int count = 0;
 
     @Override
     public void periodic() {
+    /*
         count++;
         if (count % 150 == 0) {
-            System.out.println("m/s: " + getState().speedMetersPerSecond + " actual: " + DEBUG_lastms);
-            System.out.println(getModulePosition().distanceMeters);
+            System.out.println("actual m/s: " + getState().speedMetersPerSecond + "\n.\texpected m/s: " + DEBUG_lastms);
+            System.out.println("power: " + DEBUG_lastms / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+            //System.out.println("distance m: " + getModulePosition().distanceMeters);
             count = 0;
         }
+    */
     }
 }
 

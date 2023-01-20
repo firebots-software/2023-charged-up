@@ -43,17 +43,25 @@ public class SwerveJoystickCmd extends CommandBase {
         double ySpeed = ySpdFunction.get(); // ySpeed is actually left right (left +, right -)
         double turningSpeed = turningSpdFunction.get(); // turning speed is anti-clockwise +, clockwise -
 
-        // 2. Apply deadband
+        // 2. Normalize inputs
+        double length = xSpeed * xSpeed + ySpeed * ySpeed; // acutally length squared
+        if (length > 1d) { 
+            length = Math.sqrt(length);
+            xSpeed /= length;
+            ySpeed /= length;
+        }
+
+        // 3. Apply deadband
         xSpeed = Math.abs(xSpeed) > OI.DEADBAND ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > OI.DEADBAND ? ySpeed : 0.0;
         turningSpeed = Math.abs(turningSpeed) > OI.DEADBAND ? turningSpeed : 0.0;
 
-        // 3. Make the driving smoother
+        // 4. Make the driving smoother
         xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
-        // 4. Construct desired chassis speeds
+        // 5. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
         if (fieldOrientedFunction.get()) {
             // Relative to field
@@ -63,10 +71,10 @@ public class SwerveJoystickCmd extends CommandBase {
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
 
-        // 5. Convert chassis speeds to individual module states
+        // 6. Convert chassis speeds to individual module states
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-        // 6. Output each module states to wheels
+        // 7. Output each module states to wheels
         swerveSubsystem.setModuleStates(moduleStates);
     }
 

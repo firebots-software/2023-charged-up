@@ -24,7 +24,6 @@ public class SwerveModule extends SubsystemBase {
 
     private final double absoluteEncoderOffsetRad;
     private final double absoluteDriveEncoderOffset;
-    private double DEBUG_lastms;
 
     public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed, double absoluteEncoderOffset) {
 
@@ -48,7 +47,6 @@ public class SwerveModule extends SubsystemBase {
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
         absoluteDriveEncoderOffset = driveMotor.getSelectedSensorPosition();
-
     }
 
     public double getTurningPosition() {
@@ -65,7 +63,6 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void setDesiredState(SwerveModuleState state) {
-        DEBUG_lastms = state.speedMetersPerSecond;
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
             return;

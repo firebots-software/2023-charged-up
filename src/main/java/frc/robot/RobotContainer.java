@@ -6,9 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -33,7 +35,7 @@ public class RobotContainer {
                 () -> -ps4_controller1.getRawAxis(1),
                 () -> -ps4_controller1.getRawAxis(0),
                 () -> -ps4_controller1.getRawAxis(2),
-                () -> !ps4_controller1.getRawButton(Constants.OI.CIRCLE_BUTTON_PORT)));
+                () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -44,7 +46,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
+    damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -4,13 +4,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -45,10 +40,6 @@ public final class Constants {
         // Joystick constants 
         public static final double DEADBAND = 0.05; 
     }
-
-    public static final class Drivetrain {
-        // ramsete values from wpilib docs.
-    } 
 
    public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
@@ -105,8 +96,9 @@ public final class Constants {
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5106;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
-        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+        public static final double kTeleDrivePercentSpeed = 0.25;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * kTeleDrivePercentSpeed;
+        public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond * kTeleDrivePercentSpeed;
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
     }

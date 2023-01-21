@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.PortNumCmd;
 import frc.robot.commands.ZeroHeadingCmd;
+import frc.robot.subsystems.SingleMotor;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -23,19 +24,23 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
+  private int currentPort = 0;
+  private SingleMotor dummyMotor;
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
-    //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
-    
-    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
-                swerveSubsystem,
-                () -> -ps4_controller1.getRawAxis(1),
-                () -> -ps4_controller1.getRawAxis(0),
-                () -> -ps4_controller1.getRawAxis(2),
-                () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
+    dummyMotor = new SingleMotor(currentPort); 
+    dummyMotor.destroy(); // render it useless- we just use it to set a default command.
+
+    dummyMotor.setDefaultCommand(new PortNumCmd(
+      () -> ps4_controller1.getRawButtonPressed(Constants.OI.L1_BUTTON_PORT), 
+      () -> ps4_controller1.getRawButtonPressed(Constants.OI.L2_BUTTON_PORT), 
+      () -> ps4_controller1.getRawButtonPressed(Constants.OI.X_BUTTON_PORT), 
+      () -> ps4_controller1.getRawButtonReleased(Constants.OI.X_BUTTON_PORT)
+    ));
+
     // Configure the button bindings
     configureButtonBindings();
   }

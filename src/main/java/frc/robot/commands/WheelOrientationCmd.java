@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class WheelOrientationCmd extends CommandBase {
 
@@ -24,8 +25,6 @@ public class WheelOrientationCmd extends CommandBase {
     private Supplier<Boolean> decrementer;
     private Supplier<Double> angler;
     private Supplier<Boolean> printer;
-
-    private double percentRot = 0;
 
     public WheelOrientationCmd(List<TestModule> modules, Supplier<Boolean> incrementer, Supplier<Boolean> decrementer, Supplier<Double> angler, Supplier<Boolean> printer, Subsystem defaultSystem) {
         this.modules = modules;
@@ -54,8 +53,8 @@ public class WheelOrientationCmd extends CommandBase {
             changeModule(curModuleIndex);
         }
 
-        percentRot += angler.get() * 0.005; // TODO: change constant
-        module.turn(percentRot);
+        double by = angler.get();
+        module.turn(Math.abs(by) > Constants.OI.DEADBAND ? by * 0.2 : 0);
 
         if (printer.get()) {
             module.print();
@@ -83,6 +82,7 @@ public class WheelOrientationCmd extends CommandBase {
         private PIDController pid;
 
         public TestModule(int driveMotorId, int turnMotorId, int canCoderId) {
+            // we assume it is reversed
             driveMotor = new WPI_TalonFX(driveMotorId);
             turnMotor = new WPI_TalonFX(turnMotorId);
             canCoder = new CANCoder(canCoderId);
@@ -90,19 +90,21 @@ public class WheelOrientationCmd extends CommandBase {
             CANCoderConfiguration canconfig = new CANCoderConfiguration();
             canconfig.sensorCoefficient = 1d / 4096d;
             canconfig.unitString = "rots";
+            canconfig.sensorDirection = true;
             canCoder.configAllSettings(canconfig);
 
             canCoder.setPosition(0);
 
-            pid = new PIDController(0.5, 0, 0);
+            pid = new PIDController(1, 0, 0);
+            pid.enableContinuousInput(-1d, 1);
         }
 
         public void run() {
             driveMotor.set(0.2);
         }
 
-        public void turn(double percentRot) {
-            turnMotor.set(pid.calculate(canCoder.getPosition(), percentRot));
+        public void turn(double by) {
+            turnMotor.set(by);
         }
 
         public void print() {

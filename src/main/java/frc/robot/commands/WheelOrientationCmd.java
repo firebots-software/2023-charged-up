@@ -24,15 +24,17 @@ public class WheelOrientationCmd extends CommandBase {
     private Supplier<Boolean> incrementer;
     private Supplier<Boolean> decrementer;
     private Supplier<Double> angler;
+    private Supplier<Boolean> driver;
     private Supplier<Boolean> printer;
 
-    public WheelOrientationCmd(List<TestModule> modules, Supplier<Boolean> incrementer, Supplier<Boolean> decrementer, Supplier<Double> angler, Supplier<Boolean> printer, Subsystem defaultSystem) {
+    public WheelOrientationCmd(List<TestModule> modules, Supplier<Boolean> incrementer, Supplier<Boolean> decrementer, Supplier<Double> angler, Supplier<Boolean> printer, Supplier<Boolean> driver, Subsystem defaultSystem) {
         this.modules = modules;
 
         this.incrementer = incrementer;
         this.decrementer = decrementer;
         this.angler = angler;
         this.printer = printer;
+        this.driver = driver;
         
         changeModule(curModuleIndex);
 
@@ -58,6 +60,12 @@ public class WheelOrientationCmd extends CommandBase {
 
         if (printer.get()) {
             module.print();
+        }
+
+        if (driver.get()) {
+            module.set(0.1);
+        } else {
+            module.set(0);
         }
     }
 
@@ -99,8 +107,8 @@ public class WheelOrientationCmd extends CommandBase {
             pid.enableContinuousInput(-1d, 1);
         }
 
-        public void run() {
-            driveMotor.set(0.2);
+        public void set(double to) {
+            driveMotor.set(to);
         }
 
         public void turn(double by) {

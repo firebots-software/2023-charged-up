@@ -77,6 +77,7 @@ public class RobotContainer {
       decrementer, 
       () -> -ps4_controller1.getRawAxis(0), 
       () -> ps4_controller1.getRawButtonPressed(Constants.OI.X_BUTTON_PORT),
+      () -> ps4_controller1.getRawButton(Constants.OI.CIRCLE_BUTTON_PORT),
       dummyMotor
     ));
 

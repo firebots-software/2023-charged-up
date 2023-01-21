@@ -4,13 +4,22 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.DriveForDistance;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
@@ -72,8 +81,28 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(String trajectoryFileName, boolean shouldResetOdometry) {
     // An ExampleCommand will run in autonomous
-      return null;
-  }
+
+      // final Trajectory trajectory = generateTrajectory(waypoints);
+      final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 2, 3);
+      
+      return new InstantCommand(() -> {
+        if (shouldResetOdometry) {
+          PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
+          Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
+              initialSample.holonomicRotation);
+          swerveSubsystem.resetOdometry(initialPose);
+        }
+      }).andThen(new PPSwerveControllerCommand(
+          trajectory,
+          swerveSubsystem::getPose,
+          DriveConstants.kDriveKinematics,
+          new PIDController(5, 0, 0),
+          new PIDController(5, 0, 0),
+          new PIDController(0.5, 0, 0),
+          swerveSubsystem::setModuleStates,
+          true,
+          swerveSubsystem));
+    }
 }

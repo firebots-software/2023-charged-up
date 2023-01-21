@@ -9,8 +9,12 @@ public class SingleMotor extends SubsystemBase {
     private boolean active;
 
     public SingleMotor(int port) {
+        if (port == -1) {
+            active = false;
+            return;
+        }
         motor = new WPI_TalonFX(port);
-        active = true;
+        active = motor.isAlive();
     }
 
     public void run() {

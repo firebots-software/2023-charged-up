@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.PortNumCmd;
+import frc.robot.commands.WheelOrientationCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SingleMotor;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -26,19 +30,54 @@ public class RobotContainer {
   //private Joystick ps4_controller2; 
   private int currentPort = 0;
   private SingleMotor dummyMotor;
-  private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  // private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
-    dummyMotor = new SingleMotor(currentPort); 
-    dummyMotor.destroy(); // render it useless- we just use it to set a default command.
+    dummyMotor = new SingleMotor(-1);
 
+    Supplier<Boolean> incrementer = () -> ps4_controller1.getRawButtonPressed(Constants.OI.R1_BUTTON_PORT); 
+    Supplier<Boolean> decrementer = () -> ps4_controller1.getRawButtonPressed(Constants.OI.L1_BUTTON_PORT); 
+
+    /*
     dummyMotor.setDefaultCommand(new PortNumCmd(
-      () -> ps4_controller1.getRawButtonPressed(Constants.OI.L1_BUTTON_PORT), 
-      () -> ps4_controller1.getRawButtonPressed(Constants.OI.L2_BUTTON_PORT), 
+      incrementer, 
+      decrementer, 
       () -> ps4_controller1.getRawButtonPressed(Constants.OI.X_BUTTON_PORT), 
-      () -> ps4_controller1.getRawButtonReleased(Constants.OI.X_BUTTON_PORT)
+      () -> ps4_controller1.getRawButtonReleased(Constants.OI.X_BUTTON_PORT),
+      dummyMotor
+    ));
+    */
+
+    dummyMotor.setDefaultCommand(new WheelOrientationCmd(
+      new ArrayList<WheelOrientationCmd.TestModule>(){{
+        add(new WheelOrientationCmd.TestModule(
+          Constants.DriveConstants.kFrontLeftDriveMotorPort, 
+          Constants.DriveConstants.kFrontLeftTurningMotorPort,
+          Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort)
+        );
+        add(new WheelOrientationCmd.TestModule(
+          Constants.DriveConstants.kFrontRightDriveMotorPort, 
+          Constants.DriveConstants.kFrontRightTurningMotorPort,
+          Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort)
+        );
+        add(new WheelOrientationCmd.TestModule(
+          Constants.DriveConstants.kBackLeftDriveMotorPort, 
+          Constants.DriveConstants.kBackLeftTurningMotorPort,
+          Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort)
+        );
+        add(new WheelOrientationCmd.TestModule(
+          Constants.DriveConstants.kBackRightDriveMotorPort, 
+          Constants.DriveConstants.kBackRightTurningMotorPort,
+          Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort)
+        );
+      }}, 
+      incrementer, 
+      decrementer, 
+      () -> -ps4_controller1.getRawAxis(0), 
+      () -> ps4_controller1.getRawButtonPressed(Constants.OI.X_BUTTON_PORT),
+      dummyMotor
     ));
 
     // Configure the button bindings
@@ -52,8 +91,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
-    damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+    // final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
+    // damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
   }
 
   /**

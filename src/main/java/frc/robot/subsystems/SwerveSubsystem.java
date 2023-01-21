@@ -48,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
         DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad
     );
 
-    private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(); // TODO: possibly needs different port #?
+    //private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(); // TODO: possibly needs different port #?
     
     private final edu.wpi.first.math.kinematics.SwerveDriveOdometry odometer = new edu.wpi.first.math.kinematics.SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -57,7 +57,7 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     public SwerveSubsystem() {
-        gyro.calibrate();
+        //gyro.calibrate();
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -68,11 +68,12 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void zeroHeading() {
-        gyro.reset();
+        //gyro.reset();
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return 0;
+        //return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
 
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {
@@ -91,10 +92,30 @@ public class SwerveSubsystem extends SubsystemBase {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
 
+    public void setFrontLeft(double voltage){
+        frontLeft.setMotorVoltage(voltage);
+    }
+
+    public void setBackLeft(double voltage){
+        backLeft.setMotorVoltage(voltage);
+    }
+
+    public void setFrontRight(double voltage){
+        frontRight.setMotorVoltage(voltage);
+    }
+
+    public void setBackRight(double voltage){
+        backRight.setMotorVoltage(voltage);
+    }
+
+    public double getPosition() {
+        return frontLeft.getPosition();
+    }
+
     @Override
     public void periodic() {
         odometer.update(getRotation2d(), getModulePositions());
-        SmartDashboard.putNumber("Robot Heading", getHeading());
+        //SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     } 
 

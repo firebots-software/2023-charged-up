@@ -76,6 +76,14 @@ public class SwerveModule extends SubsystemBase {
         return new SwerveModulePosition((driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset) * Constants.ModuleConstants.kDriveEncoderTicks2Meter, getState().angle);
     }
 
+    public void setMotorVoltage(double v) {
+        driveMotor.set(v);
+    }
+
+    public double getPosition() {
+        return driveMotor.getSelectedSensorPosition();
+    }
+
     public void stop() {
         driveMotor.set(0);
         turningMotor.set(0);

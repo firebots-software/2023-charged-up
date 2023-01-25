@@ -35,6 +35,7 @@ public class RobotContainer {
                 () -> -ps4_controller1.getRawAxis(1),
                 () -> -ps4_controller1.getRawAxis(0),
                 () -> -ps4_controller1.getRawAxis(2),
+                () -> (ps4_controller1.getRawAxis(4) + 1d) / 2d,
                 () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
     // Configure the button bindings
     configureButtonBindings();
@@ -49,6 +50,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+    
   }
 
   /**

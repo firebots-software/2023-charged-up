@@ -13,18 +13,19 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class SwerveJoystickCmd extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
-    private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
+    private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction, speedControlFunction;
     private final Supplier<Boolean> fieldOrientedFunction;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
     public SwerveJoystickCmd(SwerveSubsystem swerveSubsystem,
         Supplier<Double> frontBackFunction, Supplier<Double> leftRightFunction, Supplier<Double> turningSpdFunction,
-        Supplier<Boolean> fieldOrientedFunction) {
+        Supplier<Double> speedControlFunction, Supplier<Boolean> fieldOrientedFunction) {
         
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunction = frontBackFunction;
         this.ySpdFunction = leftRightFunction;
         this.turningSpdFunction = turningSpdFunction;
+        this.speedControlFunction = speedControlFunction;
         this.fieldOrientedFunction = fieldOrientedFunction;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -57,9 +58,12 @@ public class SwerveJoystickCmd extends CommandBase {
         turningSpeed = Math.abs(turningSpeed) > OI.DEADBAND ? turningSpeed : 0.0;
 
         // 4. Make the driving smoother
-        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        double speedControl = (DriveConstants.kTeleDriveMaxSpeedMetersPerSecond - DriveConstants.kTeleDriveMinSpeedMetersPerSecond)
+        * speedControlFunction.get() + DriveConstants.kTeleDriveMinSpeedMetersPerSecond;
+
+        xSpeed = xLimiter.calculate(xSpeed) * speedControl;
+        ySpeed = yLimiter.calculate(ySpeed) * speedControl;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * speedControl;
 
         // 5. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
@@ -76,6 +80,7 @@ public class SwerveJoystickCmd extends CommandBase {
 
         // 7. Output each module states to wheels
         swerveSubsystem.setModuleStates(moduleStates);
+
     }
 
     @Override

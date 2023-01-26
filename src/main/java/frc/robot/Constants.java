@@ -120,6 +120,7 @@ public final class Constants {
  
         public static final int MAX_RESISTANCE = 5; 
         public static final double ANGLE_OFFSET = 0; //subject to change
+        public static final double TARGET_ANGLE = 0;
 
 
 

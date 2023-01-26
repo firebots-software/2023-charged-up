@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -15,6 +19,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -36,6 +42,9 @@ public class RobotContainer {
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private static Map<String, Command> eventMap = new HashMap<>();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -60,6 +69,9 @@ public class RobotContainer {
     configureButtonBindings();
 
     swerveSubsystem.stopModules();
+    autonChooser.addOption("swerve Controller command", getAutonomousCommand("a", true));
+    SmartDashboard.putData(autonChooser);
+    
   }
 
   /**
@@ -76,17 +88,17 @@ public class RobotContainer {
     driveDistance.onTrue(new DriveForDistance());
   }
 
+  
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand(String trajectoryFileName, boolean shouldResetOdometry) {
-    // An ExampleCommand will run in autonomous
-
-      // final Trajectory trajectory = generateTrajectory(waypoints);
-      final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 2, 3);
-      
+      //loadPath() will generate swerveModuleStates for an entire "path" drawn in the PathPlanner app
+      //  pass in the name of your path file (WITHOUT the .path), max vel (m/s), and max accel (m/s^2)
+      final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 1, 2);
       return new InstantCommand(() -> {
         if (shouldResetOdometry) {
           PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
@@ -94,7 +106,9 @@ public class RobotContainer {
               initialSample.holonomicRotation);
           swerveSubsystem.resetOdometry(initialPose);
         }
-      }).andThen(new PPSwerveControllerCommand(
+        //the actual command that runs the path
+      }).andThen(new FollowPathWithEvents(
+        new PPSwerveControllerCommand(
           trajectory,
           swerveSubsystem::getPose,
           DriveConstants.kDriveKinematics,
@@ -103,6 +117,12 @@ public class RobotContainer {
           new PIDController(0.5, 0, 0),
           swerveSubsystem::setModuleStates,
           true,
-          swerveSubsystem));
+          swerveSubsystem),
+         trajectory.getMarkers(), 
+         eventMap));
     }
+
+    
+
+    
 }

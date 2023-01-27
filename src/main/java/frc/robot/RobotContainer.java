@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.PortNumCmd;
+import frc.robot.commands.RunForDistance;
 import frc.robot.commands.WheelOrientationCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SingleMotor;
@@ -27,10 +28,9 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private Joystick ps4_controller1;
-  //private Joystick ps4_controller2; 
-  private int currentPort = 0;
+  //private Joystick ps4_controller2;
   private SingleMotor dummyMotor;
-  // private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -50,6 +50,7 @@ public class RobotContainer {
     ));
     */
 
+    /*
     dummyMotor.setDefaultCommand(new WheelOrientationCmd(
       new ArrayList<WheelOrientationCmd.TestModule>(){{
         add(new WheelOrientationCmd.TestModule(
@@ -80,6 +81,7 @@ public class RobotContainer {
       () -> ps4_controller1.getRawButton(Constants.OI.CIRCLE_BUTTON_PORT),
       dummyMotor
     ));
+    */
 
     // Configure the button bindings
     configureButtonBindings();
@@ -92,8 +94,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
-    // damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+    final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
+    damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+
+    final Trigger moveMeters = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+    moveMeters.toggleOnTrue(new RunForDistance(1, () -> ps4_controller1.getRawButtonPressed(Constants.OI.SQUARE_BUTTON_PORT), swerveSubsystem));
   }
 
   /**

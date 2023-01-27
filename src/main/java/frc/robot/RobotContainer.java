@@ -42,7 +42,7 @@ public class RobotContainer {
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
-  private SendableChooser<Command> autonChooser = new SendableChooser<>();
+  private static SendableChooser<Command> autonChooser = new SendableChooser<>();
   private static Map<String, Command> eventMap = new HashMap<>();
 
 
@@ -69,7 +69,10 @@ public class RobotContainer {
     configureButtonBindings();
 
     swerveSubsystem.stopModules();
-    autonChooser.addOption("swerve Controller command", getAutonomousCommand("a", true));
+    autonChooser.addOption("topAuton", getAutonomousCommand("topAuton", true));
+    autonChooser.addOption("middleAuton", getAutonomousCommand("middleAuton", true));
+    autonChooser.addOption("bottomAuton", getAutonomousCommand("bottomAuton", true));
+    autonChooser.addOption("pidTester", getAutonomousCommand("pidTester", true));
     SmartDashboard.putData(autonChooser);
     
   }
@@ -88,7 +91,9 @@ public class RobotContainer {
     driveDistance.onTrue(new DriveForDistance());
   }
 
-  
+  public static SendableChooser<Command> getAutonChooser(){
+    return autonChooser;
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -112,9 +117,9 @@ public class RobotContainer {
           trajectory,
           swerveSubsystem::getPose,
           DriveConstants.kDriveKinematics,
-          new PIDController(5, 0, 0),
-          new PIDController(5, 0, 0),
-          new PIDController(0.5, 0, 0),
+          new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
+          new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
+          new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
           swerveSubsystem::setModuleStates,
           true,
           swerveSubsystem),

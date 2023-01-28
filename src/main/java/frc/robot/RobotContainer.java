@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
@@ -43,7 +45,6 @@ public class RobotContainer {
   //private Joystick ps4_controller2; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
-  private static Map<String, Command> eventMap = new HashMap<>();
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -72,7 +73,7 @@ public class RobotContainer {
     autonChooser.addOption("topAuton", getAutonomousCommand("topAuton", true));
     autonChooser.addOption("middleAuton", getAutonomousCommand("middleAuton", true));
     autonChooser.addOption("bottomAuton", getAutonomousCommand("bottomAuton", true));
-    autonChooser.addOption("pidTester", getAutonomousCommand("pidTester", true));
+    autonChooser.addOption("eventMapTest", getAutonomousCommand("eventMapTest", true));
     SmartDashboard.putData(autonChooser);
     
   }
@@ -103,7 +104,13 @@ public class RobotContainer {
   public Command getAutonomousCommand(String trajectoryFileName, boolean shouldResetOdometry) {
       //loadPath() will generate swerveModuleStates for an entire "path" drawn in the PathPlanner app
       //  pass in the name of your path file (WITHOUT the .path), max vel (m/s), and max accel (m/s^2)
+
+
+
       final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 1, 2);
+
+
+      
       return new InstantCommand(() -> {
         if (shouldResetOdometry) {
           PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
@@ -124,7 +131,7 @@ public class RobotContainer {
           true,
           swerveSubsystem),
          trajectory.getMarkers(), 
-         eventMap));
+         Constants.PathPlannerConstants.eventMap));
     }
 
     

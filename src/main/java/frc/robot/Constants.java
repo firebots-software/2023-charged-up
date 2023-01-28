@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -123,6 +126,12 @@ public final class Constants {
         public static final double kPTurning = 0.5;
         public static final double kITurning = 0;
         public static final double kDTurning = 0;
+
+        public static final Map<String, Command> eventMap = Map.of(
+            "raiseAndExtendArm", new WaitCommand(1.5)
+        );
+
+        
     }
 
 }

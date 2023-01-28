@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
@@ -16,6 +19,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -41,6 +45,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
   PhotonVision pv;
+  PhotonInfo pInfo;
  
 
 
@@ -53,6 +58,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     pv = new PhotonVision();
+    pInfo = new PhotonInfo();
     //pv.setDefaultCommand(new DistanceFromTag());
     configureBindings();
 
@@ -87,9 +93,34 @@ private void updateShuffleboard(){
   private void configureButtonBindings() {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+     
+     ArrayList<PathPoint> points = new ArrayList<>();
+     points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
+     points.add(new PathPoint(new Translation2d(pInfo.getX(), pInfo.getY()), new Rotation2d(0.0)));
+     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 3), points);
 
-    final Trigger tune = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-    tune.toggleOnTrue(new SwervePID());
+    //final Trigger tune = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+    //tune.toggleOnTrue(new SwervePID());
+    final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+    cessina.toggleOnTrue(new InstantCommand(() -> {
+        PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
+        Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
+            initialSample.holonomicRotation);
+        swerveSubsystem.resetOdometry(initialPose);
+      
+      //the actual command that runs the path
+    }).andThen(
+      new PPSwerveControllerCommand(
+        trajectory,
+        swerveSubsystem::getPose,
+        DriveConstants.kDriveKinematics,
+        new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
+        new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
+        new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
+        swerveSubsystem::setModuleStates,
+        true,
+        swerveSubsystem));
+
   }
 
   public static SendableChooser<Command> getAutonChooser(){

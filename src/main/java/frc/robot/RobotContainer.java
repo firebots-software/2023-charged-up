@@ -4,16 +4,35 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.PhotonInfo;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.PhotonVision;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriveConstants;
+
+
+import frc.robot.commands.PhotonInfo;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.subsystems.PhotonVision;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.SwervePID;
 import frc.robot.commands.ZeroHeadingCmd;
@@ -28,6 +47,8 @@ public class RobotContainer {
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private static SendableChooser<Command> autonChooser = new SendableChooser<>();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -52,8 +73,14 @@ public class RobotContainer {
      
   } 
 
-  private void updateShuffleboard(){
-    SmartDashboard.putNumber("Area",pv.getArea(null) );
+private void updateShuffleboard(){
+    swerveSubsystem.stopModules();
+    autonChooser.addOption("topAuton", getAutonomousCommand("topAuton", true));
+    autonChooser.addOption("middleAuton", getAutonomousCommand("middleAuton", true));
+    autonChooser.addOption("bottomAuton", getAutonomousCommand("bottomAuton", true));
+    autonChooser.addOption("eventMapTest", getAutonomousCommand("eventMapTest", true));
+    SmartDashboard.putData(autonChooser);
+    
   }
 
 
@@ -65,9 +92,49 @@ public class RobotContainer {
     tune.toggleOnTrue(new SwervePID());
   }
 
-
-
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+  public static SendableChooser<Command> getAutonChooser(){
+    return autonChooser;
   }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand(String trajectoryFileName, boolean shouldResetOdometry) {
+      //loadPath() will generate swerveModuleStates for an entire "path" drawn in the PathPlanner app
+      //  pass in the name of your path file (WITHOUT the .path), max vel (m/s), and max accel (m/s^2)
+
+
+
+      final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 1, 2);
+
+
+      
+      return new InstantCommand(() -> {
+        if (shouldResetOdometry) {
+          PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
+          Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
+              initialSample.holonomicRotation);
+          swerveSubsystem.resetOdometry(initialPose);
+        }
+        //the actual command that runs the path
+      }).andThen(new FollowPathWithEvents(
+        new PPSwerveControllerCommand(
+          trajectory,
+          swerveSubsystem::getPose,
+          DriveConstants.kDriveKinematics,
+          new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
+          new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
+          new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
+          swerveSubsystem::setModuleStates,
+          true,
+          swerveSubsystem),
+         trajectory.getMarkers(), 
+         Constants.PathPlannerConstants.eventMap));
+    }
+
+    
+
+    
 }

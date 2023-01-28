@@ -120,8 +120,13 @@ public final class Constants {
  
         public static final int MAX_RESISTANCE = 5; 
         public static final double ANGLE_OFFSET = 0; //subject to change
-        public static final double TARGET_ANGLE = 0;
+        public static final double TARGET_ANGLE = 0; //subject to change
 
+        public static final double angleP = 0; //subject to change
+        public static final double angleI = 0; //subject to change
+        public static final double angleD = 0; //subject to change
+
+        public static final double pidPositionToleranceDegrees = 0; //subject to change
 
 
     }

@@ -81,6 +81,8 @@ public final class Constants {
         public static final int kFrontRightDriveAbsoluteEncoderPort = 8;
         public static final int kBackRightDriveAbsoluteEncoderPort = 7;
 
+        public static final int PIGEON_PORT = 16;
+
         public static final boolean kFrontLeftTurningEncoderReversed = true;
         public static final boolean kBackLeftTurningEncoderReversed = true;
         public static final boolean kFrontRightTurningEncoderReversed = true;

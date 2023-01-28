@@ -59,7 +59,7 @@ public class PhotonInfo extends CommandBase{
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
-        return (dist) / Math.cos(yaw) - 0.5;
+        return (dist) / Math.cos(yaw) - 0.37;
     }
     public double getX(){
         PhotonPipelineResult result = pv.getLatestPipeline();

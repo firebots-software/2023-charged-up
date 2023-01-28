@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;

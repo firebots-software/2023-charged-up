@@ -105,7 +105,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putNumber("Robot Pitch", getPitch());
         SmartDashboard.putNumber("Robot Roll", getRoll());
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+        SmartDashboard.putNumber("Robot X", getPose().getX());
     } 
 
     public void stopModules() {

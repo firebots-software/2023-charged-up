@@ -77,11 +77,11 @@ public class RobotContainer {
     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(
       new PathConstraints(1, 3), 
       new PathPoint(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
-      new PathPoint(new Translation2d(1.0, 1.0), Rotation2d.fromDegrees(45), Rotation2d.fromDegrees(-90)) // position, heading(direction of travel), holonomic rotation
+      new PathPoint(new Translation2d(1.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
     );
 
     final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-    wobbleWobble.whileTrue(new ChargeStation(new PIDController(2, 0, 0), swerveSubsystem));
+    wobbleWobble.whileTrue(new ChargeStation(new PIDController(0.1, 0, 0), swerveSubsystem));
 
     /*
     final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
@@ -101,8 +101,7 @@ public class RobotContainer {
         swerveSubsystem::setModuleStates,
         true,
         swerveSubsystem)
-    ));
-    */
+    ));*/
   }
 
   public static SendableChooser<Command> getAutonChooser(){

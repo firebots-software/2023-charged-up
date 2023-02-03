@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -76,6 +75,14 @@ public class SwerveSubsystem extends SubsystemBase {
         return Math.IEEEremainder(gyro.getYaw(), 360); // TODO: maybe should be negative?
     }
 
+    public double getPitch() {
+        return gyro.getPitch();
+    }
+
+    public double getRoll() {
+        return gyro.getRoll();
+    }
+
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {
         return edu.wpi.first.math.geometry.Rotation2d.fromDegrees(getHeading());
     }
@@ -96,7 +103,9 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         odometer.update(getRotation2d(), getModulePositions());
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+        SmartDashboard.putNumber("Robot Pitch", getPitch());
+        SmartDashboard.putNumber("Robot Roll", getRoll());
+        SmartDashboard.putNumber("Robot X", getPose().getX());
     } 
 
     public void stopModules() {

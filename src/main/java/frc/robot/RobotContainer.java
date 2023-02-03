@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.DriveForDistance;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -52,14 +51,6 @@ public class RobotContainer {
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
-    swerveSubsystem.setModuleStates(new SwerveModuleState[]{
-      new SwerveModuleState(0.01, new Rotation2d()),
-      new SwerveModuleState(0.01, new Rotation2d()),
-      new SwerveModuleState(0.01, new Rotation2d()),
-      new SwerveModuleState(0.01, new Rotation2d())
-    });
-
-
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
                 () -> -ps4_controller1.getRawAxis(1),
@@ -68,14 +59,6 @@ public class RobotContainer {
                 () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
     // Configure the button bindings
     configureButtonBindings();
-
-    swerveSubsystem.stopModules();
-    autonChooser.addOption("topAuton", getAutonomousCommand("topAuton", true));
-    autonChooser.addOption("middleAuton", getAutonomousCommand("middleAuton", true));
-    autonChooser.addOption("bottomAuton", getAutonomousCommand("bottomAuton", true));
-    autonChooser.addOption("eventMapTest", getAutonomousCommand("eventMapTest", true));
-    SmartDashboard.putData(autonChooser);
-    
   }
 
   /**
@@ -86,10 +69,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
-    damageControl.whileTrue(new ZeroHeadingCmd(swerveSubsystem));
-
-    final Trigger driveDistance = new JoystickButton(ps4_controller1, Constants.OI.X_BUTTON_PORT);
-    driveDistance.onTrue(new DriveForDistance());
+    damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
   }
 
   public static SendableChooser<Command> getAutonChooser(){
@@ -110,7 +90,7 @@ public class RobotContainer {
       final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 1, 2);
 
 
-      
+
       return new InstantCommand(() -> {
         if (shouldResetOdometry) {
           PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);

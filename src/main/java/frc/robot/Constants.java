@@ -125,12 +125,14 @@ public final class Constants {
         public static final double kIDriving = 0;
         public static final double kDDriving = 0;
 
-        public static final double kPTurning = 0.5;
+        public static final double kPTurning = 4;
         public static final double kITurning = 0;
-        public static final double kDTurning = 0;
+        public static final double kDTurning = 0.69;
+
+        public static final double kVMax = 0.5;
+        public static final double kAMax = 0.05;
 
         public static final Map<String, Command> eventMap = Map.of(
-            "raiseAndExtendArm", new WaitCommand(1.5)
         );
 
         

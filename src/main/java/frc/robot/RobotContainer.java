@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -45,6 +49,15 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
+  SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+      swerveSubsystem::getPose, 
+      swerveSubsystem::resetOdometry,
+      DriveConstants.kDriveKinematics,
+      new PIDConstants(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving), 
+      new PIDConstants(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning), 
+      swerveSubsystem::setModuleStates, 
+      Constants.PathPlannerConstants.eventMap, 
+      swerveSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -59,6 +72,23 @@ public class RobotContainer {
                 () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
     // Configure the button bindings
     configureButtonBindings();
+
+    
+
+      final List<PathPlannerTrajectory> topAuton = PathPlanner.loadPathGroup(
+        "topAuton", 
+        Constants.PathPlannerConstants.kVMax, Constants.PathPlannerConstants.kAMax);
+
+      final List<PathPlannerTrajectory> rotationTest = PathPlanner.loadPathGroup(
+          "New Path", 
+          Constants.PathPlannerConstants.kVMax, Constants.PathPlannerConstants.kAMax);
+
+      autonChooser.addOption("topAuton", autoBuilder.fullAuto(topAuton));
+      autonChooser.addOption("rotationTest", autoBuilder.fullAuto(rotationTest));
+
+      SmartDashboard.putData(autonChooser);
+
+
   }
 
   /**
@@ -81,40 +111,9 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand(String trajectoryFileName, boolean shouldResetOdometry) {
-      //loadPath() will generate swerveModuleStates for an entire "path" drawn in the PathPlanner app
-      //  pass in the name of your path file (WITHOUT the .path), max vel (m/s), and max accel (m/s^2)
+  public Command getAutonomousCommand() {
 
+      return autonChooser.getSelected();
+  }
 
-
-      final PathPlannerTrajectory trajectory = PathPlanner.loadPath(trajectoryFileName, 1, 2);
-
-
-
-      return new InstantCommand(() -> {
-        if (shouldResetOdometry) {
-          PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
-          Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
-              initialSample.holonomicRotation);
-          swerveSubsystem.resetOdometry(initialPose);
-        }
-        //the actual command that runs the path
-      }).andThen(new FollowPathWithEvents(
-        new PPSwerveControllerCommand(
-          trajectory,
-          swerveSubsystem::getPose,
-          DriveConstants.kDriveKinematics,
-          new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-          new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-          new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
-          swerveSubsystem::setModuleStates,
-          true,
-          swerveSubsystem),
-         trajectory.getMarkers(), 
-         Constants.PathPlannerConstants.eventMap));
-    }
-
-    
-
-    
 }

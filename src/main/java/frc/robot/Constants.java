@@ -126,7 +126,6 @@ public final class Constants {
 
     public static final class DockingConstants {
         public static final double DOCKING_TOLERANCE = 5;
-        public static final double DOCKING_SPEED = 1;
 
         public static final double kPEngage = 0.08;
         public static final double KIEngage = 0;

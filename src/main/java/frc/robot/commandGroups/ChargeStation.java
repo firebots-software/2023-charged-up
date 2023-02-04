@@ -8,9 +8,9 @@ import frc.robot.commands.EngageCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class ChargeStation extends SequentialCommandGroup {
-    public ChargeStation(SwerveSubsystem swerveSubsystem) {
+    public ChargeStation(SwerveSubsystem swerveSubsystem, double speed) {
         addCommands(
-            new DockCmd(swerveSubsystem, Constants.DockingConstants.DOCKING_SPEED),
+            new DockCmd(swerveSubsystem, speed),
             new EngageCmd(new PIDController(Constants.DockingConstants.kPEngage, Constants.DockingConstants.KIEngage, Constants.DockingConstants.KDEngage), swerveSubsystem)
         );
     }

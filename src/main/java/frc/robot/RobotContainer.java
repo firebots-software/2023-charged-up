@@ -74,7 +74,7 @@ public class RobotContainer {
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
     final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-    wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem));
+    wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem, 1));
       //new EngageCmd(new PIDController(Constants.DockingConstants.kPDocking, Constants.DockingConstants.kIDocking, Constants.DockingConstants.kDDocking), swerveSubsystem));
 
     /*

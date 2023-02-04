@@ -6,16 +6,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class ChargeStation extends CommandBase{
+public class EngageCmd extends CommandBase{
 
     private PIDController pid; 
     private SwerveSubsystem swerve;
-    private double[] angles;
 
-    public ChargeStation(PIDController pid, SwerveSubsystem swerve) {
+    public EngageCmd(PIDController pid, SwerveSubsystem swerve) {
         this.pid = pid;
         this.swerve = swerve;
-        angles = new double[3];
 
         pid.setSetpoint(swerve.getPitch());
 
@@ -31,13 +29,8 @@ public class ChargeStation extends CommandBase{
     public void execute() {
         double pitch = swerve.getPitch();
         double calculated = pid.calculate(pitch);
-        swerve.setModuleStates(new SwerveModuleState[]{
-            new SwerveModuleState(calculated, new Rotation2d(0d)),
-            new SwerveModuleState(calculated, new Rotation2d(0d)),
-            new SwerveModuleState(calculated, new Rotation2d(0d)),
-            new SwerveModuleState(calculated, new Rotation2d(0d))
-        });
-        // get gyro position and change PID
+        SwerveModuleState state = new SwerveModuleState(calculated, new Rotation2d(0d));
+        swerve.setModuleStates(new SwerveModuleState[]{state, state, state, state});
     }
 
 

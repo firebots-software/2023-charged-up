@@ -13,7 +13,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.ChargeStation;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -136,4 +135,11 @@ public final class Constants {
     
     }
 
+    public static final class DockingConstants {
+        public static final double DOCKING_TOLERANCE = 5;
+
+        public static final double kPEngage = 0.08;
+        public static final double KIEngage = 0;
+        public static final double KDEngage = 0.01;
+    }
 }

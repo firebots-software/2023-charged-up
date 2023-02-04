@@ -19,17 +19,16 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.ChargeStation;
+import frc.robot.commandGroups.ChargeStation;
+import frc.robot.commands.EngageCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -74,16 +73,17 @@ public class RobotContainer {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
+    final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+    wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem));
+      //new EngageCmd(new PIDController(Constants.DockingConstants.kPDocking, Constants.DockingConstants.kIDocking, Constants.DockingConstants.kDDocking), swerveSubsystem));
+
+    /*
     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(
       new PathConstraints(1, 3), 
       new PathPoint(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
       new PathPoint(new Translation2d(1.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
     );
-
-    final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-    wobbleWobble.whileTrue(new ChargeStation(new PIDController(0.1, 0, 0), swerveSubsystem));
-
-    /*
+  
     final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
     cessina.toggleOnTrue(new InstantCommand(() -> {
         PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);

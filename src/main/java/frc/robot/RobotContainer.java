@@ -94,7 +94,7 @@ private void updateShuffleboard(){
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
     final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
     
-    cessina.toggleOnTrue(new GoToAprilTag(pInfo, swerveSubsystem));
+    cessina.toggleOnTrue(new GoToAprilTag(pv, swerveSubsystem));
     //tune.toggleOnTrue(new SwervePID());
   }
 

@@ -1,10 +1,29 @@
 {
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "transitory": {
+      "FMSInfo": {
+        "open": true
+      },
+      "LiveWindow": {
+        ".status": {
+          "open": true
+        },
+        "open": true
+      },
+      "Shuffleboard": {
+        ".recording": {
+          "open": true
+        },
+        "open": true
+      },
       "photonvision": {
         "limelightCam": {
           "open": true
-        }
+        },
+        "open": true
       }
     },
     "types": {
@@ -20,7 +39,8 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT4)",
+    "mode": "Client (NT3)",
+    "port3": 1735,
     "serverTeam": "3501"
   },
   "Plots": {

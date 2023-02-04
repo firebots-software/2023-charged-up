@@ -16,13 +16,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class GoToAprilTag extends CommandBase{
-    private PhotonInfo pInfo;
+    private PhotonVision pInfo;
     private SwerveSubsystem swerveSubsystem;
     private PPSwerveControllerCommand ppcontroller;
-    public GoToAprilTag(PhotonInfo pInfo, SwerveSubsystem swerveSubsystem){
+    public GoToAprilTag(PhotonVision pInfo, SwerveSubsystem swerveSubsystem){
         this.pInfo = pInfo;
         this.swerveSubsystem = swerveSubsystem;
         addRequirements(swerveSubsystem);
@@ -34,6 +35,9 @@ public class GoToAprilTag extends CommandBase{
         points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
         points.add(new PathPoint(new Translation2d(pInfo.getY(), pInfo.getX()), new Rotation2d(0.0)));
         final PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(1, 3), points);
+        if (trajectory == null) {
+            System.out.println("trajectory is null");
+        }
         PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
         Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
             initialSample.holonomicRotation);

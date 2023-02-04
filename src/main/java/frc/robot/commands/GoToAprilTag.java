@@ -34,10 +34,16 @@ public class GoToAprilTag extends CommandBase{
         ArrayList<PathPoint> points = new ArrayList<>();
         points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
         points.add(new PathPoint(new Translation2d(pInfo.getY(), pInfo.getX()), new Rotation2d(0.0)));
-        final PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(1, 3), points);
+        PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(1, 3), points);
         if (trajectory == null) {
             System.out.println("trajectory is null");
+            points.clear();
+            points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
+            points.add(new PathPoint(new Translation2d(1, 0), new Rotation2d(0.0)));
         }
+
+        trajectory = PathPlanner.generatePath(new PathConstraints(1, 3), points);
+
         PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
         Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
             initialSample.holonomicRotation);

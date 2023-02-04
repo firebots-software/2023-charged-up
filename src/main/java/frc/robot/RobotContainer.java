@@ -54,8 +54,11 @@ public class RobotContainer {
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   public final Map<String, Command> eventMap = Map.of(
-        "chargeStation", new ChargeStation(new PIDController(0.12, 0, 0), swerveSubsystem)
-    );
+
+    //TODO: shmeez aagrims code
+    "chargeStationForward", new ChargeStation(new PIDController(0.12, 0, 0), swerveSubsystem),
+    "chargeStationBackward", new ChargeStation(new PIDController(0.12, 0, 0), swerveSubsystem)
+);
 
 
   SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
@@ -84,13 +87,10 @@ public class RobotContainer {
     configureButtonBindings();
 
     
+    initializeAutonChooser();
 
 
-
-      autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
-      autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
-      SmartDashboard.putData(autonChooser);
-
+      
 
   }
 
@@ -127,6 +127,14 @@ public class RobotContainer {
         true,
         swerveSubsystem)
     ));*/
+
+  }
+
+  public void initializeAutonChooser(){
+    autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
+    autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
+    SmartDashboard.putData(autonChooser);
+
   }
 
   public static SendableChooser<Command> getAutonChooser(){

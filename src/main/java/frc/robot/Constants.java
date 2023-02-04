@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.ChargeStation;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -120,7 +121,7 @@ public final class Constants {
         public static final int kDriverFieldOrientedButtonIdx = 1;
     }
 
-    public static final class PathPlannerConstants {
+    public static final class AutonConstants {
         public static final double kPDriving = 1.2;
         public static final double kIDriving = 0.4;
         public static final double kDDriving = 0;
@@ -129,13 +130,10 @@ public final class Constants {
         public static final double kITurning = 0;
         public static final double kDTurning = 0.69;
 
-        public static final double kVMax = 0.5;
-        public static final double kAMax = 0.05;
+        public static final double kVMax = 1;
+        public static final double kAMax = 2;
 
-        public static final Map<String, Command> eventMap = Map.of(
-        );
-
-        
+    
     }
 
 }

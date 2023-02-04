@@ -53,16 +53,22 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
+  public final Map<String, Command> eventMap = Map.of(
+        "chargeStation", new ChargeStation(new PIDController(0.12, 0, 0), swerveSubsystem)
+    );
+
+
   SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       swerveSubsystem::getPose, 
       swerveSubsystem::resetOdometry,
       DriveConstants.kDriveKinematics,
-      new PIDConstants(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving), 
-      new PIDConstants(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning), 
+      new PIDConstants(Constants.AutonConstants.kPDriving, Constants.AutonConstants.kIDriving, Constants.AutonConstants.kDDriving), 
+      new PIDConstants(Constants.AutonConstants.kPTurning, Constants.AutonConstants.kITurning, Constants.AutonConstants.kDTurning), 
       swerveSubsystem::setModuleStates, 
-      Constants.PathPlannerConstants.eventMap, 
+      eventMap, 
       swerveSubsystem);
 
+    
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
@@ -79,17 +85,10 @@ public class RobotContainer {
 
     
 
-      final List<PathPlannerTrajectory> topAuton = PathPlanner.loadPathGroup(
-        "topAuton", 
-        Constants.PathPlannerConstants.kVMax, Constants.PathPlannerConstants.kAMax);
 
-      final List<PathPlannerTrajectory> rotationTest = PathPlanner.loadPathGroup(
-          "New Path", 
-          Constants.PathPlannerConstants.kVMax, Constants.PathPlannerConstants.kAMax);
 
-      autonChooser.addOption("topAuton", autoBuilder.fullAuto(topAuton));
-      autonChooser.addOption("rotationTest", autoBuilder.fullAuto(rotationTest));
-
+      autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
+      autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
       SmartDashboard.putData(autonChooser);
 
 
@@ -105,14 +104,9 @@ public class RobotContainer {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
-    final PathPlannerTrajectory trajectory = PathPlanner.generatePath(
-      new PathConstraints(1, 3), 
-      new PathPoint(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
-      new PathPoint(new Translation2d(1.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
-    );
 
     final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-    wobbleWobble.whileTrue(new ChargeStation(new PIDController(0.1, 0, 0), swerveSubsystem));
+    wobbleWobble.whileTrue(new ChargeStation(new PIDController(0.1, 0, 0.03), swerveSubsystem));
 
     /*
     final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);

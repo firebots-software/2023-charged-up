@@ -19,8 +19,8 @@ public class PhotonInfo extends CommandBase{
     PhotonVision pv;
     // RamseteCommand rcommnad;
 
-    static double CAMERA_HEIGHT_METERS = 0.6477;
-    static double TARGET_HEIGHT_METERS = 1.17602;
+    static double CAMERA_HEIGHT_METERS = 0.2032;
+    static double TARGET_HEIGHT_METERS = 0.4699;
     static double CAMERA_YAW = 24.5;
 
 

@@ -3,13 +3,17 @@ package frc.robot.subsystems;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVision extends SubsystemBase{
@@ -17,6 +21,12 @@ public class PhotonVision extends SubsystemBase{
     private NetworkTable table = instance.getTable("limelightCam");
     
     PhotonCamera camera = new PhotonCamera("limelightCam");
+    PhotonPipelineResult result = getLatestPipeline();
+
+    static double CAMERA_HEIGHT_METERS = 0.2032;
+    static double TARGET_HEIGHT_METERS = 0.4699;
+    static double CAMERA_YAW = 24.5;
+
 
     //Have to use the same pipeline result each time you want to gather data.
     //Gets the processed data from the camera
@@ -90,10 +100,56 @@ public class PhotonVision extends SubsystemBase{
         return target.getAlternateCameraToTarget();
     }
 
-    // @Override
-    // public void periodic(){
-    //     DistanceFromTag d = new DistanceFromTag();
-    //     d.execute();
-    // }
+    public double getDistance(){
+        PhotonTrackedTarget target = result.getBestTarget();
+        double dist = 0.0;
+       
+        if(result.hasTargets()){
+            dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(target.getPitch()));   
+        }
+        else{
+            dist = 0.6;
+        }
+        return dist;
+
+    }
+
+    public double getY(){
+        double dist = 0;
+        double yaw = 0;
+        double pitch = 0;
+
+        if(result.hasTargets()){
+            yaw = getYaw(result.getBestTarget());
+            pitch = getPitch(result.getBestTarget());
+            dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
+        }
+
+        return (dist)* Math.sin(yaw);
+    }
+
+    public double getX(){
+        double dist = 0;
+        double yaw = 0;
+        double pitch = 0;
+
+        if(result.hasTargets()){
+            yaw = getYaw(result.getBestTarget());
+            pitch = getPitch(result.getBestTarget());
+            dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
+        }
+
+        return (dist)* Math.cos(yaw)-0.4;
+    }
+
+    @Override
+    public void periodic(){
+        result = getLatestPipeline();
+        SmartDashboard.putNumber("forward distance to target", getX());
+        SmartDashboard.putNumber("horizontal distance to target", getY());
+    }
 
 }

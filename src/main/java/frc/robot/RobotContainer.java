@@ -96,7 +96,7 @@ private void updateShuffleboard(){
      
      ArrayList<PathPoint> points = new ArrayList<>();
      points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-     points.add(new PathPoint(new Translation2d(pInfo.getX(), pInfo.getY()), new Rotation2d(0.0)));
+     points.add(new PathPoint(new Translation2d(pv.getY(), pv.getX()), new Rotation2d(0.0)));
      final PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 3), points);
 
     //final Trigger tune = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
@@ -119,7 +119,7 @@ private void updateShuffleboard(){
         new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
         swerveSubsystem::setModuleStates,
         true,
-        swerveSubsystem));
+        swerveSubsystem)));
 
   }
 

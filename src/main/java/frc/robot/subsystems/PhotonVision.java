@@ -109,7 +109,7 @@ public class PhotonVision extends SubsystemBase{
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(target.getPitch()));   
         }
         else{
-            dist = 0.6;
+            dist = 0.1;
         }
         return dist;
 
@@ -127,7 +127,7 @@ public class PhotonVision extends SubsystemBase{
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
-        return (dist)* Math.sin(yaw);
+        return (dist)* Math.sin((90-yaw));
     }
 
     public double getX(){
@@ -142,12 +142,13 @@ public class PhotonVision extends SubsystemBase{
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
-        return (dist)* Math.cos(yaw)-0.4;
+        return Math.abs((dist)* Math.cos((90-yaw)) -0.3);
     }
 
     @Override
     public void periodic(){
         result = getLatestPipeline();
+        SmartDashboard.putNumber("Actual Distance", getDistance());
         SmartDashboard.putNumber("forward distance to target", getX());
         SmartDashboard.putNumber("horizontal distance to target", getY());
     }

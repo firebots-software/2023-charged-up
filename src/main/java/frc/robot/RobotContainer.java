@@ -94,15 +94,19 @@ private void updateShuffleboard(){
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
      
-     ArrayList<PathPoint> points = new ArrayList<>();
-     points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-     points.add(new PathPoint(new Translation2d(pv.getY(), pv.getX()), new Rotation2d(0.0)));
-     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 3), points);
+    ArrayList<PathPoint> points = new ArrayList<>();
+    points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
+    points.add(new PathPoint(new Translation2d(pv.getX(), 0), new Rotation2d(0.0)));
+    PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(1, 1), points);
 
     //final Trigger tune = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
     //tune.toggleOnTrue(new SwervePID());
     final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
     cessina.toggleOnTrue(new InstantCommand(() -> {
+      points.clear();
+      points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
+      points.add(new PathPoint(new Translation2d(pv.getX(), 0), new Rotation2d(0.0)));
+ 
         PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
         Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
             initialSample.holonomicRotation);
@@ -111,7 +115,7 @@ private void updateShuffleboard(){
       //the actual command that runs the path
     }).andThen(
       new PPSwerveControllerCommand(
-        trajectory,
+        PathPlanner.generatePath(new PathConstraints(1, 1), points),
         swerveSubsystem::getPose,
         DriveConstants.kDriveKinematics,
         new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),

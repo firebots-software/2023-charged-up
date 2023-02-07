@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
+import frc.robot.commandGroups.ConePivot;
 import frc.robot.commands.EngageCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
@@ -108,6 +109,8 @@ public class RobotContainer {
     wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem, 1));
       //new EngageCmd(new PIDController(Constants.DockingConstants.kPDocking, Constants.DockingConstants.kIDocking, Constants.DockingConstants.kDDocking), swerveSubsystem));
 
+    final Trigger conePivot = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
+    conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7 ,true));
     /*
     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(
       new PathConstraints(1, 3), 
@@ -115,24 +118,7 @@ public class RobotContainer {
       new PathPoint(new Translation2d(1.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
     );
   
-    final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-    cessina.toggleOnTrue(new InstantCommand(() -> {
-        PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
-        Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
-            initialSample.holonomicRotation);
-        swerveSubsystem.resetOdometry(initialPose);
-      //the actual command that runs the path
-    }).andThen(new PPSwerveControllerCommand(
-        trajectory,
-        swerveSubsystem::getPose,
-        DriveConstants.kDriveKinematics,
-        new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-        new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-        new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
-        swerveSubsystem::setModuleStates,
-        true,
-        swerveSubsystem)
-    ));*/
+    final Trigger cessina = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);;*/
 
   }
 

@@ -113,7 +113,6 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
-    
     public static SwerveSubsystem getInstance() {
         if (instance == null) {
             instance = new SwerveSubsystem();

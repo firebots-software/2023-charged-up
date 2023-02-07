@@ -80,7 +80,6 @@ public class SwerveJoystickCmd extends CommandBase {
 
         // 7. Output each module states to wheels
         swerveSubsystem.setModuleStates(moduleStates);
-
     }
 
     @Override

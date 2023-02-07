@@ -31,12 +31,17 @@ public class RobotContainer {
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
-                swerveSubsystem,
-                () -> -ps4_controller1.getRawAxis(1),
-                () -> -ps4_controller1.getRawAxis(0),
-                () -> -ps4_controller1.getRawAxis(2),
-                () -> (ps4_controller1.getRawAxis(4) + 1d) / 2d,
-                () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
+      swerveSubsystem,
+      () -> -ps4_controller1.getRawAxis(1),
+      () -> -ps4_controller1.getRawAxis(0),
+      () -> -ps4_controller1.getRawAxis(2),
+
+      // Changing the R2 axis range from  [-1, 1] to [0, 1] because we are using
+      // this value as a decimal to multiply and control the speed of the robot.
+      () -> (ps4_controller1.getRawAxis(4) + 1d) / 2d, 
+      
+      () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)
+    ));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -50,7 +55,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
-    
   }
 
   /**

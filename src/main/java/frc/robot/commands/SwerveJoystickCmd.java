@@ -58,12 +58,12 @@ public class SwerveJoystickCmd extends CommandBase {
         turningSpeed = Math.abs(turningSpeed) > OI.DEADBAND ? turningSpeed : 0.0;
 
         // 4. Make the driving smoother
-        double speedControl = (DriveConstants.kTeleDriveMaxSpeedMetersPerSecond - DriveConstants.kTeleDriveMinSpeedMetersPerSecond)
-        * speedControlFunction.get() + DriveConstants.kTeleDriveMinSpeedMetersPerSecond;
+        double driveSpeed = (DriveConstants.kTeleDriveMaxPercentSpeed - DriveConstants.kTeleDriveMinPercentSpeed)
+        * speedControlFunction.get() + DriveConstants.kTeleDriveMinPercentSpeed;
 
-        xSpeed = xLimiter.calculate(xSpeed) * speedControl;
-        ySpeed = yLimiter.calculate(ySpeed) * speedControl;
-        turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMinAngularSpeedRadiansPerSecond;
+        xSpeed = xLimiter.calculate(xSpeed) * driveSpeed * DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+        ySpeed = yLimiter.calculate(ySpeed) * driveSpeed * DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * driveSpeed * DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         // 5. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;

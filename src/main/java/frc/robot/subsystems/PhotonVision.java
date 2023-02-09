@@ -23,9 +23,9 @@ public class PhotonVision extends SubsystemBase{
     PhotonCamera camera = new PhotonCamera("limelightCam");
     PhotonPipelineResult result = getLatestPipeline();
 
-    static double CAMERA_HEIGHT_METERS = 0.2032;
+    static double CAMERA_HEIGHT_METERS = 0.16;
     static double TARGET_HEIGHT_METERS = 0.4699;
-    static double CAMERA_YAW = 24.5;
+    static double CAMERA_YAW = 28;
 
 
     //Have to use the same pipeline result each time you want to gather data.
@@ -106,12 +106,12 @@ public class PhotonVision extends SubsystemBase{
        
         if(result.hasTargets()){
             dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(target.getPitch()));   
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(90+CAMERA_YAW), Units.degreesToRadians(target.getPitch()));   
         }
         else{
-            dist = 0.1;
+            dist = 0.0;
         }
-        return dist;
+        return Math.pow(((dist-0.00536369)/0.61553),2);
 
     }
 
@@ -127,7 +127,7 @@ public class PhotonVision extends SubsystemBase{
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
-        return (dist)* Math.sin((90-yaw));
+        return (Math.pow(((dist-0.00536369)/0.61553),2))* Math.sin((90-yaw));
     }
 
     public double getX(){
@@ -142,12 +142,21 @@ public class PhotonVision extends SubsystemBase{
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
-        return Math.abs((dist)* Math.cos((90-yaw)) -0.3);
+        
+    return Math.abs((Math.pow(((dist-0.00536369)/0.61553),2))* Math.cos((90-yaw)) -0.4);
+    
     }
 
     @Override
     public void periodic(){
-        result = getLatestPipeline();
+        double dist; 
+        if(result.getBestTarget() == null){
+            dist = 0.1; 
+        }
+        dist =  PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
+        TARGET_HEIGHT_METERS, Units.degreesToRadians(90-CAMERA_YAW), Units.degreesToRadians(getPitch(result.getBestTarget())));   
+        result = getLatestPipeline();  
+        SmartDashboard.putNumber("Photon vision distance:", dist );   
         SmartDashboard.putNumber("Actual Distance", getDistance());
         SmartDashboard.putNumber("forward distance to target", getX());
         SmartDashboard.putNumber("horizontal distance to target", getY());

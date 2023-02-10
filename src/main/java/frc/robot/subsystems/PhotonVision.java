@@ -107,7 +107,7 @@ public class PhotonVision extends SubsystemBase{
        
         if(result.hasTargets()){
             dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(90+CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch())));   
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch())));   
         }
         else{
             dist = 0.0;
@@ -117,44 +117,35 @@ public class PhotonVision extends SubsystemBase{
     }
 
     public double getY(){
-        double dist = 0;
         double yaw = 0;
-        double pitch = 0;
-
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
-            pitch = getPitch(result.getBestTarget());
-            dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
-        return (Math.pow(((dist-0.00536369)/0.61553),2))* Math.sin((90-yaw));
+        return getDistance() * Math.sin((90-yaw));
     }
 
     public double getX(){
-        double dist = 0;
         double yaw = 0;
-        double pitch = 0;
 
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
-            pitch = getPitch(result.getBestTarget());
-            dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians(pitch));   
         }
 
         
-    return Math.abs((Math.pow(((dist-0.00536369)/0.61553),2))* Math.cos((90-yaw)) -0.4);
+    return getDistance() * Math.cos((90-yaw)) -0.4;
     
     }
 
     @Override
     public void periodic(){
         result = getLatestPipeline();  
-          
+        double distx = getDistance()-0.4;
         SmartDashboard.putNumber("Actual Distance", getDistance());
-        //SmartDashboard.putNumber("forward distance to target", getX());
-        //SmartDashboard.putNumber("horizontal distance to target", getY());
+        SmartDashboard.putNumber("vertical distance to target", getX());
+        SmartDashboard.putNumber("horizontal distance to target", getY());
+        SmartDashboard.putNumber("Distance X: ", distx);
+
     }
 
 }

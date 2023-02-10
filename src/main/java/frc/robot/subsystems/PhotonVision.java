@@ -26,6 +26,7 @@ public class PhotonVision extends SubsystemBase{
     static double CAMERA_HEIGHT_METERS = 0.16;
     static double TARGET_HEIGHT_METERS = 0.4699;
     static double CAMERA_YAW = 28;
+    static final double AAGRIMS_CONSTANT = 1.60297;
 
 
     //Have to use the same pipeline result each time you want to gather data.
@@ -106,12 +107,12 @@ public class PhotonVision extends SubsystemBase{
        
         if(result.hasTargets()){
             dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(90+CAMERA_YAW), Units.degreesToRadians(target.getPitch()));   
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(90+CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch())));   
         }
         else{
             dist = 0.0;
         }
-        return Math.pow(((dist-0.00536369)/0.61553),2);
+        return dist;
 
     }
 
@@ -149,17 +150,11 @@ public class PhotonVision extends SubsystemBase{
 
     @Override
     public void periodic(){
-        double dist; 
-        if(result.getBestTarget() == null){
-            dist = 0.1; 
-        }
-        dist =  PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-        TARGET_HEIGHT_METERS, Units.degreesToRadians(90-CAMERA_YAW), Units.degreesToRadians(getPitch(result.getBestTarget())));   
         result = getLatestPipeline();  
-        SmartDashboard.putNumber("Photon vision distance:", dist );   
+          
         SmartDashboard.putNumber("Actual Distance", getDistance());
-        SmartDashboard.putNumber("forward distance to target", getX());
-        SmartDashboard.putNumber("horizontal distance to target", getY());
+        //SmartDashboard.putNumber("forward distance to target", getX());
+        //SmartDashboard.putNumber("horizontal distance to target", getY());
     }
 
 }

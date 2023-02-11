@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.MoveToTarget;
-import frc.robot.commands.PhotonInfo;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.commands.SwerveJoystickCmd;
@@ -44,7 +43,6 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
   PhotonVision pv;
-  PhotonInfo pInfo;
  
 
 
@@ -72,7 +70,6 @@ public class RobotContainer {
     true,
     swerveSubsystem);
     pv = new PhotonVision();
-    pInfo = new PhotonInfo();
     //pv.setDefaultCommand(new DistanceFromTag());
     configureBindings();
 
@@ -134,12 +131,10 @@ public class RobotContainer {
     // ArrayList<PathPoint> points = new ArrayList<>();
     // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
     // //  points.add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0.0)));
-    MoveToTarget mtt = new MoveToTarget(pp);
-    final Trigger updatePath = new JoystickButton(ps4_controller1, Constants.OI.L1_BUTTON_PORT);
-    updatePath.toggleOnTrue(mtt);
+    MoveToTarget mtt = new MoveToTarget(swerveSubsystem);
 
     final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
-    followPath.toggleOnTrue(pp);
+    followPath.toggleOnTrue(mtt);
 
     
 

@@ -122,7 +122,7 @@ public class PhotonVision extends SubsystemBase{
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
         }
-        return -getDistance() * Math.tan(Units.degreesToRadians(yaw * AAGRIMS_CONSTANT));
+        return -getDistance() * Math.tan(Units.degreesToRadians(yaw * 1));
     }
 
     public double getX(){

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import com.pathplanner.lib.PathConstraints;
@@ -17,6 +18,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -27,9 +30,11 @@ public class MoveToTarget extends CommandBase {
   PhotonVision pv = new PhotonVision();
   SwerveSubsystem ss;
   PPSwerveControllerCommand pp;
+  Field2d field;
   
   /** Creates a new MoveToTarget. */
   public MoveToTarget(SwerveSubsystem swerveSubsystem) {
+    field = new Field2d();
     this.ss = swerveSubsystem;
   }
 
@@ -38,18 +43,24 @@ public class MoveToTarget extends CommandBase {
   public void initialize() {
     ArrayList<PathPoint> points = new ArrayList<>();
     points.clear();
-    points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-    points.add(new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), new Rotation2d(0.0)));
+    points.add(new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0)));
+    points.add(new PathPoint(new Translation2d(2,2), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(45)));
+  
+    //points.add(new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), new Rotation2d()));
 
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(1, 1), points);
-
-    PathPlannerState initialSample = (PathPlannerState) trajectory.sample(0);
+    PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(1, 1), 
+                                                          new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
+                                                          new PathPoint(new Translation2d(2, 2), Rotation2d.fromDegrees(90)));
+    field.getObject("trajectory").setTrajectory(traj);
+    SmartDashboard.putData(field);
+    PathPlannerState initialSample = (PathPlannerState) traj.sample(0);
     Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
       initialSample.holonomicRotation);
     ss.resetOdometry(initialPose);
 
     pp = new PPSwerveControllerCommand(
-      trajectory,
+      traj,
       ss::getPose,
       DriveConstants.kDriveKinematics,
       new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),

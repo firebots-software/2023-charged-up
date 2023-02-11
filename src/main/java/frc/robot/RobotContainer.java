@@ -32,10 +32,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.ClosePiston;
 import frc.robot.commands.MoveToTarget;
+import frc.robot.commands.OpenPiston;
 import frc.robot.commands.PhotonInfo;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
+import frc.robot.subsystems.Piston;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.SwervePID;
 import frc.robot.commands.ZeroHeadingCmd;
@@ -45,6 +48,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   PhotonVision pv;
   PhotonInfo pInfo;
+  Piston piston;
  
 
 
@@ -141,6 +145,11 @@ public class RobotContainer {
     final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
     followPath.toggleOnTrue(pp);
 
+    final Trigger closePiston = new JoystickButton(ps4_controller1, Constants.OI.BIG_BUTTON_PORT);
+    closePiston.toggleOnTrue(new ClosePiston());
+
+    final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
+    openPiston.toggleOnTrue(new OpenPiston());
     
 
   }

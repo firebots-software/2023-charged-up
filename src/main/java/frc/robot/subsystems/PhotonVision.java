@@ -23,10 +23,11 @@ public class PhotonVision extends SubsystemBase{
     PhotonCamera camera = new PhotonCamera("limelightCam");
     PhotonPipelineResult result = getLatestPipeline();
 
-    static double CAMERA_HEIGHT_METERS = 0.16;
-    static double TARGET_HEIGHT_METERS = 0.4699;
-    static double CAMERA_YAW = 28;
+    static final double CAMERA_HEIGHT_METERS = 0.16;
+    static final double TARGET_HEIGHT_METERS = 0.4699;
+    static final double CAMERA_YAW = 28;
     static final double AAGRIMS_CONSTANT = 1.60297;
+    static final double YAJWINS_CONSTANT = AAGRIMS_CONSTANT * AAGRIMS_CONSTANT;
 
 
     //Have to use the same pipeline result each time you want to gather data.
@@ -121,20 +122,11 @@ public class PhotonVision extends SubsystemBase{
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
         }
-
-        return getDistance() * Math.sin((90-yaw));
+        return -getDistance() * Math.tan(Units.degreesToRadians(yaw * AAGRIMS_CONSTANT));
     }
 
     public double getX(){
-        double yaw = 0;
-
-        if(result.hasTargets()){
-            yaw = getYaw(result.getBestTarget());
-        }
-
-        
-    return getDistance() * Math.cos((90-yaw)) -0.4;
-    
+        return getDistance();
     }
 
     @Override

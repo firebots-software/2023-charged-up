@@ -45,10 +45,9 @@ import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
+
 public class RobotContainer {
   PhotonVision pv;
-  PhotonInfo pInfo;
-  Piston piston;
  
 
 
@@ -76,7 +75,6 @@ public class RobotContainer {
     true,
     swerveSubsystem);
     pv = new PhotonVision();
-    pInfo = new PhotonInfo();
     //pv.setDefaultCommand(new DistanceFromTag());
     configureBindings();
 
@@ -138,12 +136,10 @@ public class RobotContainer {
     // ArrayList<PathPoint> points = new ArrayList<>();
     // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
     // //  points.add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0.0)));
-    MoveToTarget mtt = new MoveToTarget(pp);
-    final Trigger updatePath = new JoystickButton(ps4_controller1, Constants.OI.L1_BUTTON_PORT);
-    updatePath.toggleOnTrue(mtt);
+    MoveToTarget mtt = new MoveToTarget(swerveSubsystem);
 
     final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
-    followPath.toggleOnTrue(pp);
+    followPath.toggleOnTrue(mtt);
 
     final Trigger closePiston = new JoystickButton(ps4_controller1, Constants.OI.BIG_BUTTON_PORT);
     closePiston.toggleOnTrue(new ClosePiston());

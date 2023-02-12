@@ -19,6 +19,12 @@
         },
         "open": true
       },
+      "SmartDashboard": {
+        "Field": {
+          "open": true
+        },
+        "open": true
+      },
       "photonvision": {
         "limelightCam": {
           "open": true
@@ -27,7 +33,8 @@
       }
     },
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d"
     }
   },
   "NetworkTables Info": {
@@ -53,6 +60,13 @@
       "window": {
         "visible": false
       }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 332
+        }
+      ]
     }
   }
 }

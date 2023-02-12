@@ -32,13 +32,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.ClosePiston;
 import frc.robot.commands.MoveToTarget;
+import frc.robot.commands.OpenPiston;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
+import frc.robot.subsystems.Piston;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.SwervePID;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SwerveSubsystem;
+
 
 
 public class RobotContainer {
@@ -58,19 +62,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-    points.add(new PathPoint(new Translation2d(1, 0), new Rotation2d(0.0)));
-    pp = new PPSwerveControllerCommand(PathPlanner.generatePath(new PathConstraints(1, 1), points),
-    swerveSubsystem::getPose,
-    DriveConstants.kDriveKinematics,
-    new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-    new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-    new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
-    swerveSubsystem::setModuleStates,
-    true,
-    swerveSubsystem);
-    pv = new PhotonVision();
-    //pv.setDefaultCommand(new DistanceFromTag());
+   
     configureBindings();
 
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
@@ -99,31 +91,7 @@ public class RobotContainer {
     SmartDashboard.putData(autonChooser);
   }
 
-  private ArrayList<PathPoint> path(){
-
-    double distx = pv.getDistance()-0.4;
-    
-    ArrayList<PathPoint> points = new ArrayList<>();
-    points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-
-    points.add(new PathPoint(new Translation2d(distx, 0), new Rotation2d(0.0)));
-    return points;
-  }
-
-  private PPSwerveControllerCommand pp(){
-    System.err.println("*##########################################The PP is being called");
-    return new PPSwerveControllerCommand(
-        PathPlanner.generatePath(new PathConstraints(1, 1), path()),
-        swerveSubsystem::getPose,
-        DriveConstants.kDriveKinematics,
-        new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-        new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-        new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
-        swerveSubsystem::setModuleStates,
-        true,
-        swerveSubsystem);
-  }
-
+  
   private void configureButtonBindings() {
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
@@ -136,6 +104,11 @@ public class RobotContainer {
     final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
     followPath.toggleOnTrue(mtt);
 
+    final Trigger closePiston = new JoystickButton(ps4_controller1, Constants.OI.BIG_BUTTON_PORT);
+    closePiston.toggleOnTrue(new ClosePiston());
+
+    final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
+    openPiston.toggleOnTrue(new OpenPiston());
     
 
   }

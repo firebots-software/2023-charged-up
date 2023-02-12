@@ -137,10 +137,13 @@ public class RobotContainer {
   }
 
   public void initializeAutonChooser(){
+    
     autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
+    autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
+    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
     autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
-    SmartDashboard.putData(autonChooser);
 
+    SmartDashboard.putData(autonChooser);
   }
 
   public static SendableChooser<Command> getAutonChooser(){

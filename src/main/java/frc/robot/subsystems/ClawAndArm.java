@@ -45,12 +45,16 @@ public class ClawAndArm extends SubsystemBase {
         return getVoltage() * clawConstants.VOLTAGE_TO_ANGLE_CONSTANT; //to be calculated
     }
 
-    public void extendPiston() {
+    public void closeClaw() {
         piston.set(true);
     }
 
-    public void retractPiston() {
+    public void openClaw() {
         piston.set(false);
+    } 
+
+    public void toggleClaw(){
+        piston.set(!piston.get());
     }
 
 

@@ -15,6 +15,15 @@ public class AutonPaths {
     public static List<PathPlannerTrajectory> chargeStationTest = PathPlanner.loadPathGroup(
         "chargeStationTest", 
         Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+    
+    public static List<PathPlannerTrajectory> bottomAuton = PathPlanner.loadPathGroup(
+        "bottomAuton", 
+        Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
+    public static List<PathPlannerTrajectory> middleAuton = PathPlanner.loadPathGroup(
+        "middleAuton", 
+        Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
         
     
 }

@@ -111,6 +111,14 @@ public class RobotContainer {
 
     final Trigger conePivot = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
     conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7 ,true));
+
+    final Trigger beyblade = new JoystickButton(ps4_controller1, Constants.OI.L1_BUTTON_PORT);
+    beyblade.whileTrue(new SwerveJoystickCmd(
+                swerveSubsystem,
+                () -> -ps4_controller1.getRawAxis(1),
+                () -> -ps4_controller1.getRawAxis(0),
+                () -> 0.6,
+                () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
     /*
     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(
       new PathConstraints(1, 3), 

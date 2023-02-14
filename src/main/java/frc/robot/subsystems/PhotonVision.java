@@ -26,8 +26,8 @@ public class PhotonVision extends SubsystemBase{
     static final double CAMERA_HEIGHT_METERS = 0.16;
     static final double TARGET_HEIGHT_METERS = 0.4699;
     static final double CAMERA_YAW = 28;
-    static final double AAGRIMS_CONSTANT = 1.60297;
-    static final double YAJWINS_CONSTANT = AAGRIMS_CONSTANT * AAGRIMS_CONSTANT;
+    static final double AAGRIMS_CONSTANT = 1.5273790889723764;
+    static final double YAJWINS_CONSTANT = -4.057015102914277;
 
 
     //Have to use the same pipeline result each time you want to gather data.
@@ -108,7 +108,7 @@ public class PhotonVision extends SubsystemBase{
        
         if(result.hasTargets()){
             dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch())));   
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch() + YAJWINS_CONSTANT)));   
         }
         else{
             dist = 0.0;
@@ -122,7 +122,7 @@ public class PhotonVision extends SubsystemBase{
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
         }
-        return -getDistance() * Math.tan(Units.degreesToRadians(yaw * 1));
+        return -getDistance() * Math.tan(Units.degreesToRadians(AAGRIMS_CONSTANT * yaw + YAJWINS_CONSTANT));
     }
 
     public double getX(){
@@ -131,12 +131,13 @@ public class PhotonVision extends SubsystemBase{
 
     @Override
     public void periodic(){
-        result = getLatestPipeline();  
-        double distx = getDistance()-0.4;
-        SmartDashboard.putNumber("Actual Distance", getDistance());
+        result = getLatestPipeline();
         SmartDashboard.putNumber("vertical distance to target", getX());
         SmartDashboard.putNumber("horizontal distance to target", getY());
-        SmartDashboard.putNumber("Distance X: ", distx);
+        if (result.hasTargets()) {
+            SmartDashboard.putNumber("target pitch: ", result.getBestTarget().getPitch());
+            SmartDashboard.putNumber("target yaw: ", result.getBestTarget().getYaw());
+        }
 
     }
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-data = [
+pitchData = [
     # (actual, pitch)
     (0.5, 2.67),
     (1, -6.68),
@@ -9,14 +9,23 @@ data = [
     (3, -13.87)
 ]
 
+yawData = [
+    # ([distance to target straight, horizontal distance], yaw)
+    ([0.2, 0.1], 2.67),
+    ([0.3, 0.2], -6.68),
+    ([0.5, 0.3], -9.98),
+    ([0.2, -0.1], -13.87)
+]
+
 tagHeight = 0.4699
 cameraHeight = 0.16
 cameraDegrees = 28
 
-metersToTheoreticalDegrees = lambda meters : np.rad2deg(np.arctan((tagHeight-cameraHeight)/meters) - np.deg2rad(cameraDegrees))
+metersToTheoreticalPitch = lambda meters : np.rad2deg(np.arctan2((tagHeight-cameraHeight), meters) - np.deg2rad(cameraDegrees))
+metersToTheoreticalYaw = lambda listXY : np.arctan2(-listXY[1], listXY[0])
 
 # Find the m value in y = mx that best fits the data
-def findSlope(data, xindex, yindex):
+def findSlope(data, xindex, yindex, yconverter):
     # We want to find the absolute min of the sum of (predicted - actual)^2
     # our predicted y value is m*x, so we're finding the min of the sum of (mx_n - y_n)^2
 
@@ -37,22 +46,25 @@ def findSlope(data, xindex, yindex):
     denominator = 0 # accumulate x_n^2
 
     for point in data:
-        numerator += point[xindex] * metersToTheoreticalDegrees(point[yindex])
+        numerator += point[xindex] * yconverter(point[yindex])
         denominator += point[xindex] * point[xindex]
 
     return numerator / denominator
 
-
-def calculateConstant(data, meters2deg):
+def calculateConstant(data, xindex, yindex, yconverter):
     xvals = []
     yvals = []
     for point in data:
-        xvals.append(meters2deg(point[0]))
-        yvals.append(point[1])
+        xvals.append(point[xindex])
+        yvals.append(yconverter(point[yindex]))
     
-    coeffs = np.polyfit(np.array(yvals), np.array(xvals), 1)
-    return str(coeffs.item(0)) + " * pitch + " + str(coeffs.item(1))
+    coeffs = np.polyfit(np.array(xvals), np.array(yvals), 1)
+    return str(coeffs.item(0)) + " * x + " + str(coeffs.item(1))
 
-print("Aagrim's constant: " + str(findSlope(data, 1, 0)) + " * pitch")
 
-print("Yajwin's equation: " + calculateConstant(data, metersToTheoreticalDegrees))
+print("Pitch equation: " + calculateConstant(pitchData, 1, 0, metersToTheoreticalPitch))
+print("Yaw equation: " + calculateConstant(yawData, 1, 0, metersToTheoreticalYaw))
+
+# y = -getDistance() * tan(yaw);
+# y = -x * tan(yaw)
+# meters to theoretical yaw = arctan(-y/x)

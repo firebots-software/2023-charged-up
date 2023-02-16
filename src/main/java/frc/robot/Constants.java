@@ -113,12 +113,21 @@ public final class Constants {
     }
 
     public static final class clawConstants {
-        public static final double VOLTAGE_TO_ANGLE_CONSTANT = 0; //subject to change
+        public static final double VOLTAGE_TO_DEGREES_CONSTANT = 0; //subject to change
+        public static final double TICKS_TO_INCHES_CONSTANT = 0; //subject to change
 
-        public static final int POTENTIOMETER_CANID = 0; //subject to change
-        public static final int PISTON_CANID = 0; //subject to change
+
+        public static final int POTENTIOMETER_PORT = 0; //subject to change
+        public static final int PISTON_PORT = 0; //subject to change
+        public static final int BOTTOMHALLEFFECT_PORT = 0; //subject to change
+        public static final int TOPHALLEFFECT_PORT = 0; //subject to change
+        public static final int ROTATINGMOTOR_PORT = 0; //subject to change
+        public static final int EXTENDINGMOTOR_PORT = 0; //subject to change
+
+        public static final int ENCODER_PID_ID = 0; //subject to change
+        public static final int ENCODER_TIMEOUT_MS = 30; //subject to change
  
-        public static final int MAX_RESISTANCE = 5; 
+        public static final int MAX_RESISTANCE = 5; //subject to change
         public static final double ANGLE_OFFSET = 0; //subject to change
         public static final double TARGET_ANGLE = 0; //subject to change
 
@@ -126,8 +135,12 @@ public final class Constants {
         public static final double angleI = 0; //subject to change
         public static final double angleD = 0; //subject to change
 
-        public static final double pidPositionToleranceDegrees = 0; //subject to change
+        public static final double distP = 0; //subject to change
+        public static final double distI = 0; //subject to change
+        public static final double distD = 0; //subject to change
 
+        public static final double pidPositionToleranceDegrees = 0; //subject to change
+        public static final double pidPositionToleranceInches = 0; //subject to change
 
     }
 }

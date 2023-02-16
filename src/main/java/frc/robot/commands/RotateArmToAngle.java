@@ -10,12 +10,12 @@ import frc.robot.Constants.clawConstants;
 
 
 
-public class ClawToAngle extends CommandBase{
-    private ClawAndArm claw; 
+public class RotateArmToAngle extends CommandBase{
+    private ClawAndArm clawAndArm; 
     private PIDController pid;
 
-    public ClawToAngle() {
-        claw = ClawAndArm.getInstance(); 
+    public RotateArmToAngle() {
+        clawAndArm = ClawAndArm.getInstance(); 
         pid = new PIDController(clawConstants.angleP, clawConstants.angleI, clawConstants.angleD);
         pid.setTolerance(clawConstants.pidPositionToleranceDegrees);
 
@@ -28,16 +28,15 @@ public class ClawToAngle extends CommandBase{
 
     @Override
     public void execute() {
-        double angle = claw.getAngle();
+        double angle = clawAndArm.getAngle();
         double val = pid.calculate(angle);
         
-        claw.setRotatingMotor(val);
+        clawAndArm.setRotatingMotor(val);
     }
 
     @Override
     public void end(boolean interrupted) {
-        claw.setRotatingMotor(0);
-        System.out.println("done with command");
+        clawAndArm.setRotatingMotor(0);
     }
 
     public boolean isFinished() {
@@ -46,7 +45,7 @@ public class ClawToAngle extends CommandBase{
 
       @Override
     public Set<Subsystem> getRequirements() {
-        return Set.of(claw);
+        return Set.of(clawAndArm);
     }
 }
 

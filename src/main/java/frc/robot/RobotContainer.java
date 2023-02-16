@@ -54,8 +54,6 @@ public class RobotContainer {
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   public final Map<String, Command> eventMap = Map.of(
-
-    //TODO: shmeez aagrims code
     "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
     "chargeStationBackward", new ChargeStation(swerveSubsystem, -1)
 );

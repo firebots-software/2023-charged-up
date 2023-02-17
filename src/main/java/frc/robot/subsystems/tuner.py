@@ -1,31 +1,37 @@
-import numpy as np
+import math
 
 pitchData = [
-    # (actual, pitch)
-    (0.5, 2.67),
-    (1, -6.68),
-    (1.5, -9.98),
+    # [distance, pitch]
+    [0.5, 2.67],
+    [1, -6.68],
+    [1.5, -9.98],
     #(2, -14.85),
-    (3, -13.87)
+    [3, -13.87]
 ]
 
 yawData = [
     # ([distance to target straight, horizontal distance], yaw)
-    ([0.2, 0.1], 2.67),
-    ([0.3, 0.2], -6.68),
-    ([0.5, 0.3], -9.98),
-    ([0.2, -0.1], -13.87)
+    [[0.2, 0.1], 2.67],
+    [[0.3, 0.2], -6.68],
+    [[0.5, 0.3], -9.98],
+    [[0.2, -0.1], -13.87]
 ]
 
 tagHeight = 0.4699
 cameraHeight = 0.16
 cameraDegrees = 28
 
-metersToTheoreticalPitch = lambda meters : np.rad2deg(np.arctan2((tagHeight-cameraHeight), meters) - np.deg2rad(cameraDegrees))
-metersToTheoreticalYaw = lambda listXY : np.arctan2(-listXY[1], listXY[0])
+def rad2Deg(x):
+    return x*(180/math.pi)
+
+def deg2Rad(x):
+    return x*(math.pi/180)
+
+metersToTheoreticalPitch = lambda meters : rad2Deg(math.atan2((tagHeight-cameraHeight), meters) - deg2Rad(cameraDegrees))
+metersToTheoreticalYaw = lambda listXY : math.atan2(-listXY[1], listXY[0])
 
 # Find the m value in y = mx that best fits the data
-def findSlope(data, xindex, yindex, yconverter):
+def findM(data, xindex, yindex):
     # We want to find the absolute min of the sum of (predicted - actual)^2
     # our predicted y value is m*x, so we're finding the min of the sum of (mx_n - y_n)^2
 
@@ -46,24 +52,43 @@ def findSlope(data, xindex, yindex, yconverter):
     denominator = 0 # accumulate x_n^2
 
     for point in data:
-        numerator += point[xindex] * yconverter(point[yindex])
+        numerator += point[xindex] * point[yindex]
         denominator += point[xindex] * point[xindex]
 
     return numerator / denominator
 
-def calculateConstant(data, xindex, yindex, yconverter):
-    xvals = []
-    yvals = []
+def findLine(data, xindex, yindex):
+    sumx = 0
+    sumy = 0
+    sumxy = 0
+    sumxx = 0
+
     for point in data:
-        xvals.append(point[xindex])
-        yvals.append(yconverter(point[yindex]))
+        sumx += point[xindex]
+        sumy += point[yindex]
+        sumxy += point[xindex] * point[yindex]
+        sumxx += point[xindex] * point[xindex]
     
-    coeffs = np.polyfit(np.array(xvals), np.array(yvals), 1)
-    return str(coeffs.item(0)) + " * x + " + str(coeffs.item(1))
+    m = (sumxy - (sumx * sumy) / len(data)) / (sumxx - (sumx * sumx) / len(data))
+    b = (sumy - m * sumx) / len(data)
 
+    return [m, b]
 
-print("Pitch equation: " + calculateConstant(pitchData, 1, 0, metersToTheoreticalPitch))
-print("Yaw equation: " + calculateConstant(yawData, 1, 0, metersToTheoreticalYaw))
+def convertIndex(data, index, converter):
+    for p in range(len(data)):
+        data[p][index] = converter(data[p][index])
+
+convertIndex(pitchData, 0, metersToTheoreticalPitch)
+convertIndex(yawData, 0, metersToTheoreticalYaw)
+
+pitchline = findLine(pitchData, 1, 0)
+yawline = findLine(yawData, 1, 0)
+
+print("Pitch equation: " + str(pitchline[0]) + " * pitch + " + str(pitchline[1]))
+print("Yaw equation: " + str(yawline[0]) + " * yaw + " + str(yawline[1]))
+print()
+
+print("// CONSTANTS:\nstatic final double AAGRIMS_CONSTANT = %0.10f;\nstatic final double YAJWINS_CONSTANT = %0.10f;\nstatic final double ARYAVS_CONSTANT = %0.10f;\nstatic final double RITVIKS_CONSTANT = %0.10f;" %(pitchline[0], pitchline[1], yawline[0], yawline[1]))
 
 # y = -getDistance() * tan(yaw);
 # y = -x * tan(yaw)

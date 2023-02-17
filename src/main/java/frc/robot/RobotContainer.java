@@ -109,15 +109,18 @@ public class RobotContainer {
     wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem, 1));
       //new EngageCmd(new PIDController(Constants.DockingConstants.kPDocking, Constants.DockingConstants.kIDocking, Constants.DockingConstants.kDDocking), swerveSubsystem));
 
-    final Trigger conePivot = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
+    final Trigger conePivot = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
     conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7 ,true));
+
+    final Trigger conePivot2 = new JoystickButton(ps4_controller1, Constants.OI.X_BUTTON_PORT);
+    conePivot2.whileTrue(new ConePivot(swerveSubsystem, 0.7 ,false));
 
     final Trigger beyblade = new JoystickButton(ps4_controller1, Constants.OI.L1_BUTTON_PORT);
     beyblade.whileTrue(new SwerveJoystickCmd(
                 swerveSubsystem,
                 () -> -ps4_controller1.getRawAxis(1),
                 () -> -ps4_controller1.getRawAxis(0),
-                () -> 0.6,
+                () -> 0.9,
                 () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
     /*
     final PathPlannerTrajectory trajectory = PathPlanner.generatePath(

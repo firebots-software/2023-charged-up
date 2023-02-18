@@ -4,9 +4,6 @@
 
 package frc.robot.commands;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -31,6 +28,8 @@ public class MoveToTarget extends CommandBase {
   SwerveSubsystem ss;
   PPSwerveControllerCommand pp;
   Field2d field;
+
+  private double yDisplacement;
   
   /** Creates a new MoveToTarget. */
   public MoveToTarget(SwerveSubsystem swerveSubsystem) {
@@ -38,20 +37,20 @@ public class MoveToTarget extends CommandBase {
     this.ss = swerveSubsystem;
   }
 
+  public MoveToTarget(SwerveSubsystem swerveSubsystem, double yDisplacement) {
+    this(swerveSubsystem);
+    this.yDisplacement = yDisplacement;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ArrayList<PathPoint> points = new ArrayList<>();
-    points.clear();
-    points.add(new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0)));
-    
-  
-    points.add(new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
-
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 2), points);
+    double x = pv.getX()-0.4, y = pv.getY(ss.getHeading())+yDisplacement;
+    System.out.println(x + " " + y);
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 
-                                                          new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
-                                                          new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
+      new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(ss.getHeading())),
+      new PathPoint(new Translation2d(x,y), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0))
+    );
     field.getObject("trajectory").setTrajectory(traj);
     SmartDashboard.putData(field);
     PathPlannerState initialSample = (PathPlannerState) traj.sample(0);

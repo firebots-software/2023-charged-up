@@ -47,11 +47,9 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
   PhotonVision pv;
- 
-
 
   private Joystick ps4_controller1;
-  //private Joystick ps4_controller2; 
+  private Joystick numpad; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
   InstantCommand command;
@@ -66,6 +64,7 @@ public class RobotContainer {
     configureBindings();
 
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
+    this.numpad = new Joystick(1);
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -100,6 +99,12 @@ public class RobotContainer {
     // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
     // //  points.add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0.0)));
     MoveToTarget mtt = new MoveToTarget(swerveSubsystem);
+
+    for (int row = 0; row < 3; row++) {
+      for (int col = 0; col < 3; col++) {
+        new JoystickButton(numpad, row * 3 + col + 1).toggleOnTrue(new MoveToTarget(swerveSubsystem, (-col + 1) * Constants.PathPlannerConstants.NODE_DISPLACEMENT));
+      }
+    }
 
     final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
     followPath.toggleOnTrue(mtt);

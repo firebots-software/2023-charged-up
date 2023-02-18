@@ -133,7 +133,7 @@ public final class Constants {
             "raiseAndExtendArm", new WaitCommand(1.5)
         );
 
-        
+        public static final double NODE_DISPLACEMENT = Units.inchesToMeters(21.5);
     }
 
 }

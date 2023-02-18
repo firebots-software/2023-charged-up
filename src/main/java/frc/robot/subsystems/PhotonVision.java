@@ -23,9 +23,9 @@ public class PhotonVision extends SubsystemBase{
     PhotonCamera camera = new PhotonCamera("limelightCam");
     PhotonPipelineResult result = getLatestPipeline();
 
-    static final double CAMERA_HEIGHT_METERS = 0.16;
+    static final double CAMERA_HEIGHT_METERS = 0.16; // TODO: 0.231 on actual robot
     static final double TARGET_HEIGHT_METERS = 0.4699;
-    static final double CAMERA_YAW = 28;
+    static final double CAMERA_YAW = 28; // TODO: 10 deg on actual robot
     //Multiply to pitch in getDistance();
     static final double AAGRIMS_CONSTANT = 1.6214288372574428;
     //Add to pitch in getDistance();
@@ -116,7 +116,7 @@ public class PhotonVision extends SubsystemBase{
        
         if(result.hasTargets()){
             dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
-            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch() + YAJWINS_CONSTANT)));   
+            TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians((target.getPitch())));   
         }
         else{
             dist = 0.0;
@@ -125,12 +125,16 @@ public class PhotonVision extends SubsystemBase{
 
     }
 
-    public double getY(){
+    public double getY(double headingDeg){
         double yaw = 0;
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
         }
-        return -getDistance() * Math.tan(Units.degreesToRadians(AAGRIMS_CONSTANT * yaw + YAJWINS_CONSTANT));
+        return -getDistance() * Math.tan(Units.degreesToRadians(AAGRIMS_CONSTANT * yaw + YAJWINS_CONSTANT - headingDeg));
+    }
+
+    public double getY() {
+        return getY(0);
     }
 
     public double getX(){

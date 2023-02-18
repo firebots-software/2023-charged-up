@@ -28,9 +28,9 @@ public class AutonPaths {
         "visionTest", 
         Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
 
-        public static List<PathPlannerTrajectory> pidTuner = PathPlanner.loadPathGroup(
-            "pidTuner", 
-            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+    public static List<PathPlannerTrajectory> pidTuner = PathPlanner.loadPathGroup(
+         "pidTuner", 
+        Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
 
         
     

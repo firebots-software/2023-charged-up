@@ -62,6 +62,10 @@ public class SwerveModule extends SubsystemBase {
         return new SwerveModuleState(driveMotor.getSelectedSensorVelocity() * 10d * Constants.ModuleConstants.kDriveEncoderTicks2Meter, new Rotation2d(getTurningPosition()));
     }
 
+    public double getDrivingTickValues() {
+        return driveMotor.getSelectedSensorPosition();
+    }
+
     public void setDesiredState(SwerveModuleState state) {
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();

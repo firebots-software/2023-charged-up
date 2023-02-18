@@ -28,8 +28,14 @@ public class PhotonVision extends SubsystemBase{
     static final double CAMERA_HEIGHT_METERS = 0.16;
     static final double TARGET_HEIGHT_METERS = 0.4699;
     static final double CAMERA_YAW = 28;
-    static final double AAGRIMS_CONSTANT = 1.5273790889723764;
-    static final double YAJWINS_CONSTANT = -4.057015102914277;
+    //Multiply to pitch in getDistance();
+    static final double AAGRIMS_CONSTANT = 1.6214288372574428;
+    //Add to pitch in getDistance();
+    static final double YAJWINS_CONSTANT = -3.0414949031355434;
+    //Multiply to yaw in getY();
+    static final double ARYAVS_CONSTANT = -0.04146708961342199;
+    //Add to yaw in getY();
+    static final double RITVIKS_CONSTANT = -0.5709238051120222;
 
     public static PhotonVision getInstance() {
         if (pvInstance == null) {
@@ -141,9 +147,10 @@ public class PhotonVision extends SubsystemBase{
     @Override
     public void periodic(){
         result = getLatestPipeline();
-        SmartDashboard.putNumber("vertical distance to target", getX());
-        SmartDashboard.putNumber("horizontal distance to target", getY());
         if (result.hasTargets()) {
+            SmartDashboard.putNumber("Actual Distance", getDistance());
+            SmartDashboard.putNumber("vertical distance to target", getX());
+            SmartDashboard.putNumber("horizontal distance to target", getY());
             SmartDashboard.putNumber("target pitch: ", result.getBestTarget().getPitch());
             SmartDashboard.putNumber("target yaw: ", result.getBestTarget().getYaw());
         }

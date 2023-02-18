@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVision extends SubsystemBase{
+    private static PhotonVision pvInstance;
+
     private NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private NetworkTable table = instance.getTable("limelightCam");
     
@@ -29,6 +31,13 @@ public class PhotonVision extends SubsystemBase{
     static final double AAGRIMS_CONSTANT = 1.5273790889723764;
     static final double YAJWINS_CONSTANT = -4.057015102914277;
 
+    public static PhotonVision getInstance() {
+        if (pvInstance == null) {
+            pvInstance = new PhotonVision();
+        }
+
+        return pvInstance;
+    }
 
     //Have to use the same pipeline result each time you want to gather data.
     //Gets the processed data from the camera
@@ -103,10 +112,10 @@ public class PhotonVision extends SubsystemBase{
     }
 
     public double getDistance(){
-        PhotonTrackedTarget target = result.getBestTarget();
         double dist = 0.0;
        
         if(result.hasTargets()){
+            PhotonTrackedTarget target = result.getBestTarget();
             dist = PhotonUtils.calculateDistanceToTargetMeters(CAMERA_HEIGHT_METERS, 
             TARGET_HEIGHT_METERS, Units.degreesToRadians(CAMERA_YAW), Units.degreesToRadians((AAGRIMS_CONSTANT * target.getPitch() + YAJWINS_CONSTANT)));   
         }

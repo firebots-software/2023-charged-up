@@ -123,15 +123,15 @@ public final class Constants {
     }
 
     public static final class AutonConstants {
-        public static final double kPDriving = 1.2;
-        public static final double kIDriving = 0.4;
+        public static final double kPDriving = 2.5;
+        public static final double kIDriving = 0;
         public static final double kDDriving = 0;
 
         public static final double kPTurning = 4;
         public static final double kITurning = 0;
         public static final double kDTurning = 0.69;
 
-        public static final double kVMax = 1;
+        public static final double kVMax = 2;
         public static final double kAMax = 2;
 
     
@@ -140,7 +140,7 @@ public final class Constants {
     public static final class DockingConstants {
         public static final double DOCKING_TOLERANCE = 5;
 
-        public static final double kPEngage = 0.08;
+        public static final double kPEngage = 0.09;
         public static final double KIEngage = 0;
         public static final double KDEngage = 0.01;
     }

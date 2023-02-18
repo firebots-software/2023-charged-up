@@ -67,6 +67,8 @@ public class SwerveSubsystem extends SubsystemBase {
         }).start();
     }
 
+    
+
     public void zeroHeading() {
         gyro.setYaw(0);
     }
@@ -106,6 +108,10 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot Pitch", getPitch());
         SmartDashboard.putNumber("Robot Roll", getRoll());
         SmartDashboard.putNumber("Robot X", getPose().getX());
+        SmartDashboard.putNumber("front left encoder", frontLeft.getDrivingTickValues());
+        SmartDashboard.putNumber("front right encoder", frontRight.getDrivingTickValues());
+        SmartDashboard.putNumber("back left encoder", backLeft.getDrivingTickValues());
+        SmartDashboard.putNumber("back right encoder", backRight.getDrivingTickValues());
     } 
 
     public void stopModules() {
@@ -130,6 +136,15 @@ public class SwerveSubsystem extends SubsystemBase {
         }
         return instance;
     }
+
+    public void resetEncoders(){
+        frontLeft.setDrivingTickValues(0);
+        frontRight.setDrivingTickValues(0);
+        backLeft.setDrivingTickValues(0);
+        backRight.setDrivingTickValues(0);
+    }
+
+    
 
     
 }

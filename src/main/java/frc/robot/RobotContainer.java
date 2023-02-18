@@ -63,7 +63,8 @@ public class RobotContainer {
 
   public final Map<String, Command> eventMap = Map.of(
     "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
-    "chargeStationBackward", new ChargeStation(swerveSubsystem, -1)
+    "chargeStationBackward", new ChargeStation(swerveSubsystem, -1),
+    "moveToTarget", new MoveToTarget(swerveSubsystem)
 );
   
   private PPSwerveControllerCommand pp;
@@ -83,7 +84,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
    
-
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
@@ -100,6 +100,12 @@ public class RobotContainer {
     initializeAutonChooser();
 
 
+    swerveSubsystem.resetEncoders();
+
+    SmartDashboard.putNumber("p value", Constants.AutonConstants.kPDriving);
+
+    
+
       
 
   }
@@ -111,6 +117,7 @@ public class RobotContainer {
 
     final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
     wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem, 1));
+
       //new EngageCmd(new PIDController(Constants.DockingConstants.kPDocking, Constants.DockingConstants.kIDocking, Constants.DockingConstants.kDDocking), swerveSubsystem));
 
     /*
@@ -138,22 +145,7 @@ public class RobotContainer {
         true,
         swerveSubsystem)
     ));*/
-
-  }
-
-  public void initializeAutonChooser(){
-    
-    autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
-    autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
-    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
-    autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
-
-    SmartDashboard.putData(autonChooser);
-    // ArrayList<PathPoint> points = new ArrayList<>();
-    // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-    // //  points.add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0.0)));
     MoveToTarget mtt = new MoveToTarget(swerveSubsystem);
-
     final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
     followPath.toggleOnTrue(mtt);
 
@@ -162,6 +154,24 @@ public class RobotContainer {
 
     final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
     openPiston.toggleOnTrue(new OpenPiston());
+  }
+
+  public void initializeAutonChooser(){
+    
+    autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
+    autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
+    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
+    autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
+    autonChooser.addOption("visionTest", autoBuilder.fullAuto(AutonPaths.visionTest));
+    autonChooser.addOption("pidTuner", autoBuilder.fullAuto(AutonPaths.pidTuner));
+
+    SmartDashboard.putData(autonChooser);
+    // ArrayList<PathPoint> points = new ArrayList<>();
+    // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
+    // //  points.add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0.0)));
+    
+
+    
     
 
   }

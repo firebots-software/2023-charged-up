@@ -44,9 +44,9 @@ public class MoveToTarget extends CommandBase {
     ArrayList<PathPoint> points = new ArrayList<>();
     points.clear();
     points.add(new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0)));
-    
   
     points.add(new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
+    System.out.printf("going to %f, %f\n", pv.getX()-0.4, pv.getY());
 
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 2), points);
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 

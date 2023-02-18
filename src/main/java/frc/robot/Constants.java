@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public final class Constants {
     public static class OI {
         public static final int PS4_CONTROLLER_PORT_1 = 3;
+        public static final int JOYSTICK_PORT = 0;
         public static final int PS4_CONTROLLER_PORT_2 = 1; // change
 
         // Buttons on PS4 Controller
@@ -158,6 +159,9 @@ public final class Constants {
         public static final double angleP = 0; //subject to change
         public static final double angleI = 0; //subject to change
         public static final double angleD = 0; //subject to change
+
+        public static final int TOP_PORT = 0;
+        public static final int BOTTOM_PORT = 0;
 
         public static final double pidPositionToleranceDegrees = 0; //subject to change
 

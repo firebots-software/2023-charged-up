@@ -29,9 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ClosePiston;
+import frc.robot.commands.ManualControlArm;
 import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.OpenPiston;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.subsystems.ClawAndArm;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.Piston;
 import frc.robot.commandGroups.ConePivot;
@@ -46,6 +48,7 @@ public class RobotContainer {
 
   // OI
   private Joystick ps4_controller1;
+  private Joystick joystick;
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
   
   InstantCommand command;
@@ -56,6 +59,7 @@ public class RobotContainer {
 
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private final ClawAndArm clawAndArm = ClawAndArm.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = Map.of(
       "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
@@ -80,6 +84,7 @@ public class RobotContainer {
   public RobotContainer() {
     // OI
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
+    this.joystick = new Joystick(Constants.OI.JOYSTICK_PORT);
 
     swerveSubsystem.resetEncoders();
 
@@ -100,6 +105,8 @@ public class RobotContainer {
         () -> (ps4_controller1.getRawAxis(4) + 1d) / 2d,
 
         () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
+
+        clawAndArm.setDefaultCommand(new ManualControlArm(joystick.getRawAxis(0), joystick.getRawAxis(1)));
     
 
         final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
@@ -118,6 +125,8 @@ public class RobotContainer {
     
         final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
         openPiston.toggleOnTrue(new OpenPiston());
+
+        
   }
         // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
         // this value as a decimal to multiply and control the speed of the robot.

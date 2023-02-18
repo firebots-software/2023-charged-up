@@ -31,11 +31,9 @@ public class PhotonVision extends SubsystemBase{
     //Add to pitch in getDistance();
     static final double YAJWINS_CONSTANT = -3.0414949031355434;
     //Multiply to yaw in getY();
-    //static final double ARYAVS_CONSTANT = -0.04146708961342199;
-    static final double ARYAVS_CONSTANT = 1;
+    static final double ARYAVS_CONSTANT = -0.04146708961342199;
     //Add to yaw in getY();
-    //static final double RITVIKS_CONSTANT = -0.5709238051120222;
-    static final double RITVIKS_CONSTANT = 0;
+    static final double RITVIKS_CONSTANT = -0.5709238051120222;
 
 
     //Have to use the same pipeline result each time you want to gather data.

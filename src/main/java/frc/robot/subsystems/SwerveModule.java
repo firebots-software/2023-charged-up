@@ -63,7 +63,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getDrivingTickValues() {
-        return driveMotor.getSelectedSensorPosition();
+        return (driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset);
     }
 
     public void setDesiredState(SwerveModuleState state) {

@@ -96,7 +96,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "dockAndEngage"
+          "chargeStationForward"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

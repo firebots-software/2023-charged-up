@@ -67,12 +67,22 @@ public class SwerveSubsystem extends SubsystemBase {
         }).start();
     }
 
+    
+
     public void zeroHeading() {
         gyro.setYaw(0);
     }
 
     public double getHeading() {
         return Math.IEEEremainder(gyro.getYaw(), 360); // TODO: maybe should be negative?
+    }
+
+    public double getPitch() {
+        return gyro.getPitch();
+    }
+
+    public double getRoll() {
+        return gyro.getRoll();
     }
 
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {
@@ -95,7 +105,13 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         odometer.update(getRotation2d(), getModulePositions());
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+        SmartDashboard.putNumber("Robot Pitch", getPitch());
+        SmartDashboard.putNumber("Robot Roll", getRoll());
+        SmartDashboard.putNumber("Robot X", getPose().getX());
+        SmartDashboard.putNumber("front left encoder", frontLeft.getDrivingTickValues());
+        SmartDashboard.putNumber("front right encoder", frontRight.getDrivingTickValues());
+        SmartDashboard.putNumber("back left encoder", backLeft.getDrivingTickValues());
+        SmartDashboard.putNumber("back right encoder", backRight.getDrivingTickValues());
     } 
 
     public void stopModules() {
@@ -106,6 +122,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
+        // System.out.println(desiredStates[0]);
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates,  DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
@@ -120,5 +137,13 @@ public class SwerveSubsystem extends SubsystemBase {
         return instance;
     }
 
+    public void resetEncoders(){
+        frontLeft.setDrivingTickValues(0);
+        frontRight.setDrivingTickValues(0);
+        backLeft.setDrivingTickValues(0);
+        backRight.setDrivingTickValues(0);
+    }
+
     
+
 }

@@ -59,9 +59,9 @@ public final class Constants {
       
     public static final class DriveConstants {
 
-        public static final double kTrackWidth = Units.inchesToMeters(29.5);
+        public static final double kTrackWidth = Units.inchesToMeters(24.5);
         // Distance between right and left wheels
-        public static final double kWheelBase = Units.inchesToMeters(29.5);
+        public static final double kWheelBase = Units.inchesToMeters(24.5);
         // Distance between front and back wheels
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -121,20 +121,46 @@ public final class Constants {
         public static final int kDriverFieldOrientedButtonIdx = 1;
     }
 
-    public static final class PathPlannerConstants {
-        public static final double kPDriving = 5;
+    public static final class AutonConstants {
+        public static final double kPDriving = 2.5;
         public static final double kIDriving = 0;
         public static final double kDDriving = 0;
 
-        public static final double kPTurning = 0.5;
+        public static final double kPTurning = 4;
         public static final double kITurning = 0;
-        public static final double kDTurning = 0;
+        public static final double kDTurning = 0.69;
 
-        public static final Map<String, Command> eventMap = Map.of(
-            "raiseAndExtendArm", new WaitCommand(1.5)
-        );
+        public static final double kVMax = 2;
+        public static final double kAMax = 2;
 
-        
+    
     }
 
+    public static final class DockingConstants {
+        public static final double DOCKING_TOLERANCE = 5;
+
+        public static final double kPEngage = 0.09;
+        public static final double KIEngage = 0;
+        public static final double KDEngage = 0.01;
+    }
+
+    public static final class clawConstants {
+        
+        public static final double VOLTAGE_TO_ANGLE_CONSTANT = 0; //subject to change
+
+        public static final int POTENTIOMETER_CANID = 0; //subject to change
+        public static final int PISTON_CANID = 0; //subject to change
+ 
+        public static final int MAX_RESISTANCE = 5; 
+        public static final double ANGLE_OFFSET = 0; //subject to change
+        public static final double TARGET_ANGLE = 0; //subject to change
+
+        public static final double angleP = 0; //subject to change
+        public static final double angleI = 0; //subject to change
+        public static final double angleD = 0; //subject to change
+
+        public static final double pidPositionToleranceDegrees = 0; //subject to change
+
+
+    }
 }

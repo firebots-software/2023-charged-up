@@ -44,9 +44,9 @@ public class MoveToTarget extends CommandBase {
     ArrayList<PathPoint> points = new ArrayList<>();
     points.clear();
     points.add(new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0)));
-    
   
     points.add(new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
+    System.out.printf("going to %f, %f\n", pv.getX()-0.4, pv.getY());
 
     PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 2), points);
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 
@@ -63,9 +63,9 @@ public class MoveToTarget extends CommandBase {
       traj,
       ss::getPose,
       DriveConstants.kDriveKinematics,
-      new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-      new PIDController(Constants.PathPlannerConstants.kPDriving, Constants.PathPlannerConstants.kIDriving, Constants.PathPlannerConstants.kDDriving),
-      new PIDController(Constants.PathPlannerConstants.kPTurning, Constants.PathPlannerConstants.kITurning, Constants.PathPlannerConstants.kDTurning),
+      new PIDController(Constants.AutonConstants.kPDriving, Constants.AutonConstants.kIDriving, Constants.AutonConstants.kDDriving),
+      new PIDController(Constants.AutonConstants.kPDriving, Constants.AutonConstants.kIDriving, Constants.AutonConstants.kDDriving),
+      new PIDController(Constants.AutonConstants.kPTurning, Constants.AutonConstants.kITurning, Constants.AutonConstants.kDTurning),
       ss::setModuleStates,
       ss);
 

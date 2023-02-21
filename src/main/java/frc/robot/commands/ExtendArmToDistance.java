@@ -18,16 +18,20 @@ public class ExtendArmToDistance extends CommandBase{
         this.clawAndArm = ClawAndArm.getInstance();
         pid = new PIDController(clawConstants.distP, clawConstants.distI, clawConstants.distD);
         pid.setTolerance(clawConstants.pidPositionToleranceInches);
+        pid.setSetpoint(targetHeight);
       }
 
     public void initialize() {
-        pid.setSetpoint(targetHeight);
+        
     }
 
     @Override
     public void execute() {
+        System.out.println("doing command");
         double position = clawAndArm.getPosition();
+        System.out.println(position);
         double val = pid.calculate(position);
+        System.out.println(val);
         
         clawAndArm.setExtendingMotor(val);
     }

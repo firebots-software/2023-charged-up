@@ -61,7 +61,8 @@ public class ClawAndArm extends SubsystemBase {
     }
 
     public double getPosition() {
-        return extendingMotor.getSelectedSensorPosition() * clawConstants.TICKS_TO_INCHES_CONSTANT;
+        double radians = extendingMotor.getSelectedSensorPosition() * clawConstants.TICKS_TO_RADIANS_CONSTANT;
+        return 2*Math.PI*(0.375 + (0.04*radians)); //equation returns inches extended
     }
 
     public void extendPiston() {

@@ -114,7 +114,7 @@ public final class Constants {
 
     public static final class clawConstants {
         public static final double VOLTAGE_TO_DEGREES_CONSTANT = 0; //subject to change
-        public static final double TICKS_TO_INCHES_CONSTANT = 0; //subject to change
+        public static final double TICKS_TO_RADIANS_CONSTANT = 0; //subject to change
 
 
         public static final int POTENTIOMETER_PORT = 0; //subject to change

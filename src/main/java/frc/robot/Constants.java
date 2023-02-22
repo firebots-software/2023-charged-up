@@ -64,34 +64,34 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final int kFrontLeftDriveMotorPort = 0;
-        public static final int kBackLeftDriveMotorPort = 6;
         public static final int kFrontRightDriveMotorPort = 3;
+        public static final int kBackLeftDriveMotorPort = 6;
         public static final int kBackRightDriveMotorPort = 4;
 
         public static final int kFrontLeftTurningMotorPort = 7;
-        public static final int kBackLeftTurningMotorPort = 5;
         public static final int kFrontRightTurningMotorPort = 2;
+        public static final int kBackLeftTurningMotorPort = 5;
         public static final int kBackRightTurningMotorPort = 8;
 
         public static final int kFrontLeftDriveAbsoluteEncoderPort = 11;
-        public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
         public static final int kFrontRightDriveAbsoluteEncoderPort = 10;
+        public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
         public static final int kBackRightDriveAbsoluteEncoderPort = 9;
 
         public static final boolean kFrontLeftTurningEncoderReversed = false;
-        public static final boolean kBackLeftTurningEncoderReversed = false;
         public static final boolean kFrontRightTurningEncoderReversed = false;
+        public static final boolean kBackLeftTurningEncoderReversed = false;
         public static final boolean kBackRightTurningEncoderReversed = false;
 
         public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kBackLeftDriveEncoderReversed = false;
         public static final boolean kFrontRightDriveEncoderReversed = false;
+        public static final boolean kBackLeftDriveEncoderReversed = false;
         public static final boolean kBackRightDriveEncoderReversed = false;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = Units.rotationsToRadians(0.64208984375);
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = Units.rotationsToRadians(0.38232421875);
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = Units.rotationsToRadians(0.121826171875);
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = Units.rotationsToRadians(0.5498046875);
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.2242676466703415;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.559135138988495;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 3.827274329960346;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.850130543112755;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5106;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;

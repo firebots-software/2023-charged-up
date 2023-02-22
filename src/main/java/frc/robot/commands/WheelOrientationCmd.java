@@ -99,16 +99,16 @@ public class WheelOrientationCmd extends CommandBase {
 
             canid = canCoderId;
 
+            
             CANCoderConfiguration canconfig = new CANCoderConfiguration();
-            canconfig.sensorCoefficient = 1d / 4096d;
-            canconfig.unitString = "rots";
-            canconfig.sensorDirection = true;
+
+            // set units of the CANCoder to radians, with velocity being radians per second
+            canconfig.sensorCoefficient = 2 * Math.PI / 4096.0;
+            canconfig.unitString = "rad";
             canCoder.configAllSettings(canconfig);
 
-            canCoder.setPosition(0);
-
             pid = new PIDController(1, 0, 0);
-            pid.enableContinuousInput(-1d, 1);
+            pid.enableContinuousInput(-Math.PI, Math.PI);
         }
 
         public void set(double to) {

@@ -59,11 +59,7 @@ public class WheelOrientationCmd extends CommandBase {
         module.turn(Math.abs(by) > Constants.OI.DEADBAND ? by * 0.2 : 0);
 
         if (printer.get()) {
-            modules.get(0).print();
-            modules.get(01).print();
-            modules.get(2).print();
-            modules.get(3).print();
-            System.out.println("***************");
+            module.print();
         }
 
         if (driver.get()) {
@@ -124,7 +120,7 @@ public class WheelOrientationCmd extends CommandBase {
         }
 
         public void print() {
-            System.out.println(canid + "abs enc. pos = " + canCoder.getAbsolutePosition());
+            System.out.println(canid + " abs enc. pos = " + canCoder.getAbsolutePosition());
             SmartDashboard.putNumber("abs enc. pos", canCoder.getAbsolutePosition());
         }
     }

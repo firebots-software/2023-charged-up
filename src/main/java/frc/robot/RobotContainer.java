@@ -50,7 +50,6 @@ public class RobotContainer {
       dummyMotor
     ));*/
 
-    /*
     dummyMotor.setDefaultCommand(new WheelOrientationCmd(
       new ArrayList<WheelOrientationCmd.TestModule>(){{
         add(new WheelOrientationCmd.TestModule(
@@ -81,8 +80,7 @@ public class RobotContainer {
       () -> ps4_controller1.getRawButton(Constants.OI.CIRCLE_BUTTON_PORT),
       dummyMotor
     ));
-    */
-
+    
     // Configure the button bindings
     //configureButtonBindings();
   }

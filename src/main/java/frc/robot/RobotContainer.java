@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.PortNumCmd;
+import frc.robot.commands.DisplayCancoder;
+//import frc.robot.commands.PortNumCmd;
+import frc.robot.commands.RunMotor;
 import frc.robot.commands.WheelOrientationCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SingleMotor;
@@ -30,7 +32,7 @@ public class RobotContainer {
   //private Joystick ps4_controller2; 
   private int currentPort = 0;
   private SingleMotor dummyMotor;
-  // private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  // // private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,15 +42,14 @@ public class RobotContainer {
     Supplier<Boolean> incrementer = () -> ps4_controller1.getRawButtonPressed(Constants.OI.R1_BUTTON_PORT); 
     Supplier<Boolean> decrementer = () -> ps4_controller1.getRawButtonPressed(Constants.OI.L1_BUTTON_PORT); 
 
-    /*
-    dummyMotor.setDefaultCommand(new PortNumCmd(
+    
+    /*dummyMotor.setDefaultCommand(new PortNumCmd(
       incrementer, 
       decrementer, 
       () -> ps4_controller1.getRawButtonPressed(Constants.OI.X_BUTTON_PORT), 
       () -> ps4_controller1.getRawButtonReleased(Constants.OI.X_BUTTON_PORT),
       dummyMotor
-    ));
-    */
+    ));*/
 
     dummyMotor.setDefaultCommand(new WheelOrientationCmd(
       new ArrayList<WheelOrientationCmd.TestModule>(){{
@@ -82,7 +83,7 @@ public class RobotContainer {
     ));
 
     // Configure the button bindings
-    configureButtonBindings();
+    //configureButtonBindings();
   }
 
   /**
@@ -92,6 +93,28 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    final Trigger runMotor1 = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+    runMotor1.toggleOnTrue(new RunMotor(2));
+    final Trigger runMotor2 = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
+    runMotor2.toggleOnTrue(new RunMotor(5));
+    final Trigger runMotor3 = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
+    runMotor3.toggleOnTrue(new RunMotor(8));
+    final Trigger runMotor4 = new JoystickButton(ps4_controller1, Constants.OI.X_BUTTON_PORT);
+    runMotor4.toggleOnTrue(new RunMotor(8));
+
+    final Trigger displayCancoder9 = new JoystickButton(ps4_controller1, Constants.OI.L1_BUTTON_PORT);
+    displayCancoder9.toggleOnTrue(new DisplayCancoder(9));
+    final Trigger displayCancoder10 = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
+    displayCancoder10.toggleOnTrue(new DisplayCancoder(10));
+    final Trigger displayCancoder11 = new JoystickButton(ps4_controller1, Constants.OI.L3_BUTTON_PORT);
+    displayCancoder11.toggleOnTrue(new DisplayCancoder(11));
+    final Trigger displayCancoder12 = new JoystickButton(ps4_controller1, Constants.OI.R3_BUTTON_PORT);
+    displayCancoder12.toggleOnTrue(new DisplayCancoder(12));
+    
+
+
+
     // final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     // damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
   }

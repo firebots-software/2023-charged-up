@@ -59,7 +59,11 @@ public class WheelOrientationCmd extends CommandBase {
         module.turn(Math.abs(by) > Constants.OI.DEADBAND ? by * 0.2 : 0);
 
         if (printer.get()) {
-            module.print();
+            modules.get(0).print();
+            modules.get(01).print();
+            modules.get(2).print();
+            modules.get(3).print();
+            System.out.println("***************");
         }
 
         if (driver.get()) {
@@ -87,6 +91,8 @@ public class WheelOrientationCmd extends CommandBase {
         private final WPI_TalonFX turnMotor;
         private final CANCoder canCoder;
 
+        private final int canid;
+
         private PIDController pid;
 
         public TestModule(int driveMotorId, int turnMotorId, int canCoderId) {
@@ -94,6 +100,8 @@ public class WheelOrientationCmd extends CommandBase {
             driveMotor = new WPI_TalonFX(driveMotorId);
             turnMotor = new WPI_TalonFX(turnMotorId);
             canCoder = new CANCoder(canCoderId);
+
+            canid = canCoderId;
 
             CANCoderConfiguration canconfig = new CANCoderConfiguration();
             canconfig.sensorCoefficient = 1d / 4096d;
@@ -116,7 +124,7 @@ public class WheelOrientationCmd extends CommandBase {
         }
 
         public void print() {
-            System.out.println("abs enc. pos = " + canCoder.getAbsolutePosition());
+            System.out.println(canid + "abs enc. pos = " + canCoder.getAbsolutePosition());
             SmartDashboard.putNumber("abs enc. pos", canCoder.getAbsolutePosition());
         }
     }

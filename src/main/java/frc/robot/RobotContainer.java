@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.PortNumCmd;
-import frc.robot.commands.RunForDistance;
+import frc.robot.commands.DisplayCancoder;
+//import frc.robot.commands.PortNumCmd;
+import frc.robot.commands.RunMotor;
 import frc.robot.commands.WheelOrientationCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.SingleMotor;
@@ -40,15 +41,14 @@ public class RobotContainer {
     Supplier<Boolean> incrementer = () -> ps4_controller1.getRawButtonPressed(Constants.OI.R1_BUTTON_PORT); 
     Supplier<Boolean> decrementer = () -> ps4_controller1.getRawButtonPressed(Constants.OI.L1_BUTTON_PORT); 
 
-    /*
-    dummyMotor.setDefaultCommand(new PortNumCmd(
+    
+    /*dummyMotor.setDefaultCommand(new PortNumCmd(
       incrementer, 
       decrementer, 
       () -> ps4_controller1.getRawButtonPressed(Constants.OI.X_BUTTON_PORT), 
       () -> ps4_controller1.getRawButtonReleased(Constants.OI.X_BUTTON_PORT),
       dummyMotor
-    ));
-    */
+    ));*/
 
     /*
     dummyMotor.setDefaultCommand(new WheelOrientationCmd(
@@ -84,7 +84,7 @@ public class RobotContainer {
     */
 
     // Configure the button bindings
-    configureButtonBindings();
+    //configureButtonBindings();
   }
 
   /**
@@ -94,11 +94,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    /*
     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
     final Trigger moveMeters = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
     moveMeters.toggleOnTrue(new RunForDistance(1, () -> ps4_controller1.getRawButtonPressed(Constants.OI.SQUARE_BUTTON_PORT), swerveSubsystem));
+    */
   }
 
   /**

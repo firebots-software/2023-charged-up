@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.FrictionBreakOn;
 //import frc.robot.commands.FrictionBreakOn;
 import frc.robot.commands.RunMotor;
 import frc.robot.commands.RunMotor3;
@@ -60,8 +61,8 @@ public class RobotContainer {
      RunMotor.toggleOnTrue(new RunMotor());
      final Trigger RunMotor3 = new JoystickButton(ps4_controller1, Constants.OI.X_BUTTON_PORT);
      RunMotor3.toggleOnTrue(new RunMotor3());
-    // final Trigger FrictionBreakOn = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
-    // FrictionBreakOn.toggleOnTrue(new FrictionBreakOn());
+    final Trigger FrictionBreakOn = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
+    FrictionBreakOn.toggleOnTrue(new FrictionBreakOn());
   }
 
   /**

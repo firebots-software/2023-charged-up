@@ -36,8 +36,8 @@ public class ClawAndArm2 extends SubsystemBase {
         clawConstants.STARTING_POINT);
     // clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
     // clawConstants.CLAW_SOLENOID_PORT);
-    // frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
-    // clawConstants.FRICTION_BREAK_PORT);
+    frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
+    clawConstants.FRICTION_BREAK_PORT);
 
     // bottomHallEffect = new DigitalInput(clawConstants.BOTTOMHALLEFFECT_PORT);
     // topHallEffect = new DigitalInput(clawConstants.TOPHALLEFFECT_PORT);
@@ -61,13 +61,13 @@ public class ClawAndArm2 extends SubsystemBase {
     return pot.get();
   }
 
-  // public void frictionBreakOn() {
-  //    frictionBreakSolenoid.set(true);
-  //  }
+  public void frictionBreakOn() {
+     frictionBreakSolenoid.set(true);
+   }
 
-  //  public void frictionBreakOff() {
-  //    frictionBreakSolenoid.set(false);
-  //  }
+   public void frictionBreakOff() {
+     frictionBreakSolenoid.set(false);
+   }
 
   public void setRotatingMotor(double speed) {
     rotatingMotor.set(speed);

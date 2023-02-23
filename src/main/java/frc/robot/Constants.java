@@ -113,9 +113,8 @@ public final class Constants {
     }
 
     public static final class clawConstants {
-        public static final double VOLTAGE_TO_DEGREES_CONSTANT = 0; //subject to change
-        public static final double TICKS_TO_RADIANS_CONSTANT = 0; //subject to change
-
+        public static final double VOLTAGE_TO_DEGREES_CONSTANT = 1; //subject to change
+        public static final double TICKS_TO_RADIANS_CONSTANT = 1; //subject to change
 
         public static final int POTENTIOMETER_PORT = 0; //subject to change
         public static final int PISTON_PORT = 0; //subject to change
@@ -129,7 +128,6 @@ public final class Constants {
  
         public static final int MAX_RESISTANCE = 5; //subject to change
         public static final double ANGLE_OFFSET = 0; //subject to change
-        public static final double TARGET_ANGLE = 0; //subject to change
 
         public static final double angleP = 0; //subject to change
         public static final double angleI = 0; //subject to change

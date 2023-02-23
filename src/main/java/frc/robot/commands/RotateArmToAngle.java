@@ -11,19 +11,19 @@ import frc.robot.Constants.clawConstants;
 
 
 public class RotateArmToAngle extends CommandBase{
-    private ClawAndArm clawAndArm; 
+    protected ClawAndArm clawAndArm; 
     private PIDController pid;
 
-    public RotateArmToAngle() {
+    public RotateArmToAngle(double targetAngle) {
         clawAndArm = ClawAndArm.getInstance(); 
         pid = new PIDController(clawConstants.angleP, clawConstants.angleI, clawConstants.angleD);
         pid.setTolerance(clawConstants.pidPositionToleranceDegrees);
-
+        pid.setSetpoint(targetAngle);
     }
 
     @Override
     public void initialize() {
-        pid.setSetpoint(clawConstants.TARGET_ANGLE);
+        
     }  
 
     @Override

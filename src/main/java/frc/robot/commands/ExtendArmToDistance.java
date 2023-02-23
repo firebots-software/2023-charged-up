@@ -23,25 +23,25 @@ public class ExtendArmToDistance extends CommandBase{
         
     }
 
-    @Override
-    public void execute() {
-        System.out.println("doing command");
-        double position = clawAndArm.getPosition();
-        System.out.println(position);
-        double val = pid.calculate(position);
-        System.out.println(val);
+    // @Override
+    // public void execute() {
+    //     System.out.println("doing command");
+    //     double position = clawAndArm.getPosition();
+    //     System.out.println(position);
+    //     double val = pid.calculate(position);
+    //     System.out.println(val);
         
-        clawAndArm.setExtendingMotor(val);
-    }
+    //     clawAndArm.setExtendingMotor(val);
+    // }
 
-    @Override
-    public void end(boolean interrupted) {
-        clawAndArm.setExtendingMotor(0);
-    }
+    // @Override
+    // public void end(boolean interrupted) {
+    //     clawAndArm.setExtendingMotor(0);
+    // }
 
-    public boolean isFinished() {
-        return pid.atSetpoint();
-    }
+    // public boolean isFinished() {
+    //     return pid.atSetpoint();
+    // }
 
     @Override
     public Set<Subsystem> getRequirements() {

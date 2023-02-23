@@ -15,7 +15,7 @@ public class RotateArmToAngle extends CommandBase{
     private PIDController pid;
 
     public RotateArmToAngle(double targetAngle) {
-        clawAndArm = ClawAndArm.getInstance(); 
+        this.clawAndArm = ClawAndArm.getInstance(); 
         pid = new PIDController(clawConstants.angleP, clawConstants.angleI, clawConstants.angleD);
         pid.setTolerance(clawConstants.pidPositionToleranceDegrees);
         pid.setSetpoint(targetAngle);

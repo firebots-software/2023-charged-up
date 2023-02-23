@@ -116,8 +116,9 @@ public final class Constants {
         public static final double VOLTAGE_TO_DEGREES_CONSTANT = 1; //subject to change
         public static final double TICKS_TO_RADIANS_CONSTANT = 1; //subject to change
 
-        public static final int POTENTIOMETER_PORT = 0; //subject to change
-        public static final int PISTON_PORT = 0; //subject to change
+        public static final int POTENTIOMETER_PORT = 1; //subject to change
+        public static final int CLAW_SOLENOID_PORT = 0; //subject to change
+        public static final int FRICTION_BREAK_PORT = 14; //subject to change
         public static final int BOTTOMHALLEFFECT_PORT = 0; //subject to change
         public static final int TOPHALLEFFECT_PORT = 0; //subject to change
         public static final int ROTATINGMOTOR_PORT = 0; //subject to change
@@ -126,8 +127,9 @@ public final class Constants {
         public static final int ENCODER_PID_ID = 0; //subject to change
         public static final int ENCODER_TIMEOUT_MS = 30; //subject to change
  
-        public static final int MAX_RESISTANCE = 5; //subject to change
-        public static final double ANGLE_OFFSET = 0; //subject to change
+        
+        public static final int RANGE_OF_MOTION = 300; //subject to change
+        public static final int STARTING_POINT = 0; //subject to change
 
         public static final double angleP = 0; //subject to change
         public static final double angleI = 0; //subject to change

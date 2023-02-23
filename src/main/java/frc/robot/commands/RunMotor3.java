@@ -6,10 +6,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawAndArm2;
 
-public class RunMotor extends CommandBase {
+public class RunMotor3 extends CommandBase {
     ClawAndArm2 clawAndArm2;
     /** Creates a new RunMotor. */
-    public RunMotor() {
+    public RunMotor3() {
       clawAndArm2 = ClawAndArm2.getInstance();
     }
   
@@ -22,7 +22,7 @@ public class RunMotor extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        clawAndArm2.setRotatingMotor(0.2);
+        clawAndArm2.setRotatingMotor(-0.2);
     }
   
     // Called once the command ends or is interrupted.

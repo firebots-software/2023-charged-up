@@ -128,8 +128,8 @@ public final class Constants {
         public static final int ENCODER_TIMEOUT_MS = 30; //subject to change
  
         
-        public static final int RANGE_OF_MOTION = 1800; //subject to change
-        public static final int STARTING_POINT = -900; //subject to change
+        public static final int RANGE_OF_MOTION = -6742; //subject to change
+        public static final int STARTING_POINT = 1836; //subject to change
 
         public static final double angleP = 0; //subject to change
         public static final double angleI = 0; //subject to change

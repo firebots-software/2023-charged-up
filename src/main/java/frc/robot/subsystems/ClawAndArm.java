@@ -91,11 +91,5 @@ public class ClawAndArm extends SubsystemBase {
         return pot.get();
     }
 
-    @Override
-    public void periodic() {
-        System.out.println("hi");
-        SmartDashboard.putNumber("potentiometer", pot.get());
-    }
-
 
 }

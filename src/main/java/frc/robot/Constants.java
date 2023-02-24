@@ -38,7 +38,7 @@ public final class Constants {
         public static final int BIG_BUTTON_PORT = 14;
 
         // Joystick constants 
-        public static final double DEADBAND = 0.05; 
+        public static final double DEADBAND = 0.025; 
     }
 
    public static final class ModuleConstants {
@@ -115,6 +115,9 @@ public final class Constants {
     public static final class clawConstants {
         public static final double VOLTAGE_TO_DEGREES_CONSTANT = 1; //subject to change
         public static final double TICKS_TO_RADIANS_CONSTANT = 1; //subject to change
+
+        public static final double ROTATIONAL_GEAR_RATIO = 1 / 126.15;
+        public static final double ROTATIONAL_TICKS2ROT = ROTATIONAL_GEAR_RATIO / 2048;
 
         public static final int POTENTIOMETER_PORT = 1; //subject to change
         public static final int CLAW_SOLENOID_PORT = 0; //subject to change

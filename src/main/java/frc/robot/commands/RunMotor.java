@@ -4,13 +4,13 @@ package frc.robot.commands;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawAndArm2;
+import frc.robot.subsystems.ClawAndArm;
 
 public class RunMotor extends CommandBase {
-    ClawAndArm2 clawAndArm2;
+    ClawAndArm clawAndArm2;
     /** Creates a new RunMotor. */
     public RunMotor() {
-      clawAndArm2 = ClawAndArm2.getInstance();
+      clawAndArm2 = ClawAndArm.getInstance();
     }
   
     // Called when the command is initially scheduled.

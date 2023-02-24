@@ -9,15 +9,17 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.FrictionBreakOn;
 //import frc.robot.commands.FrictionBreakOn;
 import frc.robot.commands.RunMotor;
 import frc.robot.commands.RunMotor3;
 //import frc.robot.commands.RunMotor;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.ZeroArmCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.ClawAndArm;
-import frc.robot.subsystems.ClawAndArm2;
+import frc.robot.subsystems.ClawAndArm;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -31,19 +33,17 @@ public class RobotContainer {
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
-  private final ClawAndArm2 clawAndArm = ClawAndArm2.getInstance();
+  private final ClawAndArm clawAndArm = ClawAndArm.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
-    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
-                swerveSubsystem,
-                () -> -ps4_controller1.getRawAxis(1),
-                () -> -ps4_controller1.getRawAxis(0),
-                () -> -ps4_controller1.getRawAxis(2),
-                () -> !ps4_controller1.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
+    clawAndArm.setDefaultCommand(new ArmJoystickCmd(
+      () -> ps4_controller1.getRawAxis(0) * 0.1
+    ));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -57,12 +57,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
     // damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
-     final Trigger RunMotor = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-     RunMotor.toggleOnTrue(new RunMotor());
-     final Trigger RunMotor3 = new JoystickButton(ps4_controller1, Constants.OI.X_BUTTON_PORT);
-     RunMotor3.toggleOnTrue(new RunMotor3());
-    final Trigger FrictionBreakOn = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
-    FrictionBreakOn.toggleOnTrue(new FrictionBreakOn());
+     final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+     damageControl.whileTrue(new ZeroArmCmd());
   }
 
   /**

@@ -28,7 +28,7 @@ public class RotateArmToAngle extends CommandBase{
 
     @Override
     public void execute() {
-        double angle = clawAndArm.getAngle();
+        double angle = clawAndArm.getPot();
         double val = pid.calculate(angle);
         
         clawAndArm.setRotatingMotor(val);

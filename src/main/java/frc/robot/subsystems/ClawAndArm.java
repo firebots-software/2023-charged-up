@@ -1,11 +1,19 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvector_FDRM;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -13,83 +21,61 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.clawConstants;
 
-
 public class ClawAndArm extends SubsystemBase {
-    private static ClawAndArm instance;
-    private AnalogPotentiometer pot;
-    private Solenoid clawSolenoid;
-    private Solenoid frictionBreakSolenoid;
-    private DigitalInput bottomHallEffect, topHallEffect;
-    private WPI_TalonFX rotatingMotor; 
-    //private WPI_TalonSRX extendingMotor; 
-   
-    public ClawAndArm() {
-        pot = new AnalogPotentiometer(clawConstants.POTENTIOMETER_PORT, clawConstants.RANGE_OF_MOTION, clawConstants.STARTING_POINT); 
-        // clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, clawConstants.CLAW_SOLENOID_PORT);
-        // frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, clawConstants.FRICTION_BREAK_PORT);
+  private static ClawAndArm instance;
+  // private AnalogPotentiometer pot;
+  private Solenoid frictionBreakSolenoid;
+  private WPI_TalonFX rotatingMotor;
 
-        // bottomHallEffect = new DigitalInput(clawConstants.BOTTOMHALLEFFECT_PORT);
-        // topHallEffect = new DigitalInput(clawConstants.TOPHALLEFFECT_PORT);
+  /** Creates a new ClawAndArm2. */
+  public ClawAndArm() {
+    frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
+    clawConstants.FRICTION_BREAK_PORT);
+    rotatingMotor = new WPI_TalonFX(clawConstants.ROTATINGMOTOR_PORT);
+  }
 
-        rotatingMotor = new WPI_TalonFX(clawConstants.ROTATINGMOTOR_PORT);
-       // extendingMotor = new WPI_TalonSRX(clawConstants.EXTENDINGMOTOR_PORT);
-
-       // extendingMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, clawConstants.ENCODER_PID_ID, clawConstants.ENCODER_TIMEOUT_MS); 
+  public static ClawAndArm getInstance() {
+    if (instance == null) {
+      instance = new ClawAndArm();
     }
-   
-    public static ClawAndArm getInstance() {
-        if (instance == null) {
-          instance = new ClawAndArm();
-        }
-        return instance;
-    }
+    return instance;
+  }
 
-    public void setRotatingMotor(double speed) {
-        rotatingMotor.set(ControlMode.PercentOutput, speed);
-    }
+  public double getPot() {
+    return 0.0;//pot.get();
+  }
 
-    // public void setExtendingMotor(double speed) {
-    //     extendingMotor.set(ControlMode.PercentOutput, speed);
-    // }
+  public void frictionBreakOn() {
+   frictionBreakSolenoid.set(true);
+  }
 
-    // public boolean getTopStatus() {
-    //     return topHallEffect.get();
-    // }
+   public void frictionBreakOff() {
+     frictionBreakSolenoid.set(false);
+   }
 
-    // public boolean getBottomStatus () {
-    //     return bottomHallEffect.get();
-    // }
+  public void setRotatingMotor(double speed) {
+    double deg = getRotationDegrees();
+    
+    if (deg <= 5) speed = Math.max(speed, 0);
+    else if (deg >= 300) speed = Math.min(speed, 0);
 
-    public double getAngle() {
-        return pot.get() * clawConstants.VOLTAGE_TO_DEGREES_CONSTANT; 
-    }
+    rotatingMotor.set(speed);
+  }
 
-    // public double getPosition() {
-    //     double radians = extendingMotor.getSelectedSensorPosition() * clawConstants.TICKS_TO_RADIANS_CONSTANT;
-    //     return 2*Math.PI*(0.375 + (0.04*radians)); //equation returns inches extended
-    // }
+  public void resetRotation() {
+    rotatingMotor.setSelectedSensorPosition(0);
+  }
 
-    // public void closeClaw() {
-    //     clawSolenoid.set(true);
-    // }
+  public double getRotationDegrees() {
+    return rotatingMotor.getSelectedSensorPosition() * Constants.clawConstants.ROTATIONAL_TICKS2ROT * 360.0;
+  }
 
-    // public void openClaw() {
-    //     clawSolenoid.set(false);
-    // }
-
-    // public void frictionBreakOn() {
-    //     frictionBreakSolenoid.set(true);
-    // }
-
-    // public void frictionBreakOff() {
-    //     frictionBreakSolenoid.set(false);
-    // }
-
-    public double getPot() {
-        return pot.get();
-    }
-
-
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("potentiometer", getPot());
+    SmartDashboard.putNumber("arm angle", getRotationDegrees());
+  }
 }

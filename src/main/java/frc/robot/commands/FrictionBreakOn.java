@@ -5,13 +5,13 @@ import java.util.Set;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.subsystems.ClawAndArm;
-import frc.robot.subsystems.ClawAndArm2;
+import frc.robot.subsystems.ClawAndArm;
 
 public class FrictionBreakOn extends CommandBase {
-    protected ClawAndArm2 ClawAndArm;
+    protected ClawAndArm ClawAndArm;
 
     public FrictionBreakOn() {
-        ClawAndArm = ClawAndArm2.getInstance();
+        ClawAndArm = ClawAndArm.getInstance();
     }
 
     @Override

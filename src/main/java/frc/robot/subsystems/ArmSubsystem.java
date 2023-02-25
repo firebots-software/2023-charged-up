@@ -4,17 +4,7 @@
 
 package frc.robot.subsystems;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
-import org.ejml.dense.row.decomposition.eig.watched.WatchedDoubleStepQREigenvector_FDRM;
-
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -81,7 +71,7 @@ public class ArmSubsystem extends SubsystemBase {
       speed = Math.max(speed, 0);
     else if (deg >= 300)
       speed = Math.min(speed, 0);
-    
+
     // if moving too slow, turn on friction break and don't move
     if (Math.abs(speed) < ArmConstants.FRICTION_BREAK_DEADBAND) {
       rotatingMotor.set(0);
@@ -103,9 +93,7 @@ public class ArmSubsystem extends SubsystemBase {
     return rotatingMotor.getSelectedSensorPosition() * Constants.ArmConstants.ROTATIONAL_TICKS2ROT * 360.0;
   }
 
-  /*
-   * retracting is negative, extending is positive
-   */
+  // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
     extendingMotor.set(speed);
   }
@@ -116,6 +104,14 @@ public class ArmSubsystem extends SubsystemBase {
 
   public boolean getBottomStatus() {
     return bottomHall.get();
+  }
+
+  public double getArmLength() {
+    return 0.0;
+  }
+
+  public double _ticksToLength(double ticks) {
+    return 2*Math.PI*(0.375+(0.04 * ticks * ArmConstants.EXTENSION_TICKS2ROT));
   }
 
   @Override

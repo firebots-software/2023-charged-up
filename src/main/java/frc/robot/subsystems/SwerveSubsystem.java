@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -48,7 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
         DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad
     );
 
-    private final ADXRS450_Gyro gyro = new ADXRS450_Gyro(); // TODO: possibly needs different port #?
+    private final PigeonIMU gyro = new PigeonIMU(13); // TODO: possibly needs different port #?
     
     private final edu.wpi.first.math.kinematics.SwerveDriveOdometry odometer = new edu.wpi.first.math.kinematics.SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -57,7 +60,6 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     public SwerveSubsystem() {
-        gyro.calibrate();
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -68,11 +70,11 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void zeroHeading() {
-        gyro.reset();
+        gyro.setYaw(0);
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return Math.IEEEremainder(gyro.getYaw(), 360);
     }
 
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {

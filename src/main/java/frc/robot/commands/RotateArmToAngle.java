@@ -5,19 +5,19 @@ import java.util.Set;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.ClawAndArm;
-import frc.robot.Constants.clawConstants;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.Constants.ArmConstants;
 
 
 
 public class RotateArmToAngle extends CommandBase{
-    protected ClawAndArm clawAndArm; 
+    protected ArmSubsystem clawAndArm; 
     private PIDController pid;
 
     public RotateArmToAngle(double targetAngle) {
-        this.clawAndArm = ClawAndArm.getInstance(); 
-        pid = new PIDController(clawConstants.angleP, clawConstants.angleI, clawConstants.angleD);
-        pid.setTolerance(clawConstants.pidPositionToleranceDegrees);
+        this.clawAndArm = ArmSubsystem.getInstance(); 
+        pid = new PIDController(ArmConstants.angleP, ArmConstants.angleI, ArmConstants.angleD);
+        pid.setTolerance(ArmConstants.pidPositionToleranceDegrees);
         pid.setSetpoint(targetAngle);
     }
 
@@ -28,7 +28,7 @@ public class RotateArmToAngle extends CommandBase{
 
     @Override
     public void execute() {
-        double angle = clawAndArm.getPot();
+        double angle = clawAndArm._getPotentiometerDegrees();
         double val = pid.calculate(angle);
         
         clawAndArm.setRotatingMotor(val);

@@ -18,8 +18,8 @@ import frc.robot.commands.RunMotor3;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroArmCmd;
 import frc.robot.commands.ZeroHeadingCmd;
-import frc.robot.subsystems.ClawAndArm;
-import frc.robot.subsystems.ClawAndArm;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -33,7 +33,7 @@ public class RobotContainer {
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
-  private final ClawAndArm clawAndArm = ClawAndArm.getInstance();
+  private final ArmSubsystem clawAndArm = ArmSubsystem.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -41,7 +41,8 @@ public class RobotContainer {
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
     clawAndArm.setDefaultCommand(new ArmJoystickCmd(
-      () -> ps4_controller1.getRawAxis(0) * 0.1
+      () -> ps4_controller1.getRawAxis(0) * 0.1,
+      () -> ps4_controller1.getRawAxis(1) * 0.1
     ));
 
     // Configure the button bindings

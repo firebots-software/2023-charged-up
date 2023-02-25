@@ -4,14 +4,15 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.OI;
-import frc.robot.subsystems.ClawAndArm;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmJoystickCmd extends CommandBase {
-    private ClawAndArm claw = ClawAndArm.getInstance();
-    private final Supplier<Double> armspdfunc;
+    private ArmSubsystem claw = ArmSubsystem.getInstance();
+    private final Supplier<Double> armspdfunc, extspdfunc;
 
-    public ArmJoystickCmd(Supplier<Double> rotation) {
+    public ArmJoystickCmd(Supplier<Double> rotation, Supplier<Double> extension) {
         this.armspdfunc = rotation;
+        this.extspdfunc = extension;
 
         addRequirements(claw);
     }
@@ -22,15 +23,14 @@ public class ArmJoystickCmd extends CommandBase {
 
     @Override
     public void execute() {
-        double speed = armspdfunc.get();
-        if (Math.abs(speed) > OI.DEADBAND) {
-            claw.setRotatingMotor(0);
-            claw.frictionBreakOn();
-            return;
-        }
-        claw.frictionBreakOff();
+        double angleSpeed = armspdfunc.get();
+        double extSpeed = extspdfunc.get();
 
-        claw.setRotatingMotor(speed);
+        angleSpeed = Math.abs(angleSpeed) > OI.DEADBAND ? angleSpeed : 0.0;
+        extSpeed = Math.abs(extSpeed) > OI.DEADBAND ? extSpeed : 0.0;
+
+        claw.setRotatingMotor(angleSpeed);
+        claw.setExtendingMotor(extSpeed);
     }
 
     @Override

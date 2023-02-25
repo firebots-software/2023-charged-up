@@ -5,17 +5,17 @@ import java.util.Set;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.Constants.clawConstants;
-import frc.robot.subsystems.ClawAndArm;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class ExtendArmToDistance extends CommandBase{
-    protected ClawAndArm clawAndArm;
+    protected ArmSubsystem clawAndArm;
     private PIDController pid;
 
     public ExtendArmToDistance(double targetDistance) {
-        this.clawAndArm = ClawAndArm.getInstance();
-        pid = new PIDController(clawConstants.distP, clawConstants.distI, clawConstants.distD);
-        pid.setTolerance(clawConstants.pidPositionToleranceInches);
+        this.clawAndArm = ArmSubsystem.getInstance();
+        pid = new PIDController(ArmConstants.distP, ArmConstants.distI, ArmConstants.distD);
+        pid.setTolerance(ArmConstants.pidPositionToleranceInches);
         pid.setSetpoint(targetDistance);
       }
 

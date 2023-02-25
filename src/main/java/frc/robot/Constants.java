@@ -38,7 +38,7 @@ public final class Constants {
         public static final int BIG_BUTTON_PORT = 14;
 
         // Joystick constants 
-        public static final double DEADBAND = 0.025; 
+        public static final double DEADBAND = 0.05; 
     }
 
    public static final class ModuleConstants {
@@ -112,10 +112,7 @@ public final class Constants {
         public static final int kDriverFieldOrientedButtonIdx = 1;
     }
 
-    public static final class clawConstants {
-        public static final double VOLTAGE_TO_DEGREES_CONSTANT = 1; //subject to change
-        public static final double TICKS_TO_RADIANS_CONSTANT = 1; //subject to change
-
+    public static final class ArmConstants {
         public static final double ROTATIONAL_GEAR_RATIO = 1 / 126.15;
         public static final double ROTATIONAL_TICKS2ROT = ROTATIONAL_GEAR_RATIO / 2048;
 
@@ -124,12 +121,8 @@ public final class Constants {
         public static final int FRICTION_BREAK_PORT = 14; //subject to change
         public static final int BOTTOMHALLEFFECT_PORT = 0; //subject to change
         public static final int TOPHALLEFFECT_PORT = 0; //subject to change
-        public static final int ROTATINGMOTOR_PORT = 1; //subject to change
-        public static final int EXTENDINGMOTOR_PORT = 0; //subject to change
-
-        public static final int ENCODER_PID_ID = 0; //subject to change
-        public static final int ENCODER_TIMEOUT_MS = 30; //subject to change
- 
+        public static final int ROTATINGMOTOR_PORT = 1; // confirmed
+        public static final int EXTENDINGMOTOR_PORT = 14; // guess
         
         public static final int RANGE_OF_MOTION = -6742; //subject to change
         public static final int STARTING_POINT = 1836; //subject to change
@@ -144,6 +137,8 @@ public final class Constants {
 
         public static final double pidPositionToleranceDegrees = 0; //subject to change
         public static final double pidPositionToleranceInches = 0; //subject to change
+
+        public static final double FRICTION_BREAK_DEADBAND = 0.05;
 
     }
 }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Webcam;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -19,12 +20,14 @@ public class Robot extends TimedRobot {
   private SwerveSubsystem swerveSubsystem;
 
   private RobotContainer m_robotContainer;
+  private Webcam webcam;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     pv = PhotonVision.getInstance();
     swerveSubsystem = SwerveSubsystem.getInstance();
+    webcam = new Webcam();
 
   }
 

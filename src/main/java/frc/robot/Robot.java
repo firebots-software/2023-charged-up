@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.PhotonVision;
-import frc.robot.subsystems.SwerveSubsystem;
+//import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Webcam;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private PhotonVision pv;
-  private SwerveSubsystem swerveSubsystem;
+  private PhotonVision pv2;
+  //private SwerveSubsystem swerveSubsystem;
 
   private RobotContainer m_robotContainer;
   private Webcam webcam;
@@ -25,8 +26,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    pv = PhotonVision.getInstance();
-    swerveSubsystem = SwerveSubsystem.getInstance();
+    pv = new PhotonVision("limelightCam");
+    pv2 = new PhotonVision("limelightCam2");
+   // swerveSubsystem = SwerveSubsystem.getInstance();
     webcam = new Webcam();
 
   }
@@ -60,8 +62,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("forward distance", pv.getX());
     SmartDashboard.putNumber("horizontal distance", pv.getY());
     
-    SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
-    SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());;
+//    SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
+ //   SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());
+
+    SmartDashboard.putBoolean("Limelight One Has Target", pv.hasTarget(pv.getLatestPipeline()));
+    SmartDashboard.putBoolean("Limelight Two Has Target", pv.hasTarget(pv2.getLatestPipeline()));
+
     
   }
 

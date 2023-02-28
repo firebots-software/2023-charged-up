@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.net.CacheRequest;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
@@ -19,11 +20,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PhotonVision extends SubsystemBase{
     private static PhotonVision pvInstance;
 
-    private NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    private NetworkTable table = instance.getTable("limelightCam");
+    private String camName;
     
-    PhotonCamera camera = new PhotonCamera("limelightCam");
-    PhotonPipelineResult result = getLatestPipeline();
+    PhotonCamera camera;
+    PhotonPipelineResult result;
 
     static final double CAMERA_HEIGHT_METERS = 0.16;
     static final double TARGET_HEIGHT_METERS = 0.4699;
@@ -37,13 +37,19 @@ public class PhotonVision extends SubsystemBase{
     //Add to yaw in getY();
     static final double RITVIKS_CONSTANT = -0.5709238051120222;
 
-    public static PhotonVision getInstance() {
-        if (pvInstance == null) {
-            pvInstance = new PhotonVision();
-        }
 
-        return pvInstance;
+    public PhotonVision(String camName){
+        this.camName = camName;
+        camera = new PhotonCamera(camName);
+        result = camera.getLatestResult();
     }
+    // public static PhotonVision getInstance() {
+    //     if (pvInstance == null) {
+    //         pvInstance = new PhotonVision(camName);
+    //     }
+
+    //     return pvInstance;
+    // }
 
     //Have to use the same pipeline result each time you want to gather data.
     //Gets the processed data from the camera
@@ -147,7 +153,7 @@ public class PhotonVision extends SubsystemBase{
     @Override
     public void periodic(){
         result = getLatestPipeline();
-        if (result.hasTargets()) {
+        if(result.hasTargets()) {
             SmartDashboard.putNumber("Actual Distance", getDistance());
             SmartDashboard.putNumber("vertical distance to target", getX());
             SmartDashboard.putNumber("horizontal distance to target", getY());

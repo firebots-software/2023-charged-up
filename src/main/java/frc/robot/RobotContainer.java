@@ -27,20 +27,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commandGroups.ChargeStation;
-import frc.robot.commands.ClosePiston;
-import frc.robot.commands.MoveToTarget;
-import frc.robot.commands.OpenPiston;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
-import frc.robot.subsystems.Piston;
-import frc.robot.commandGroups.ConePivot;
-import frc.robot.commands.ClosePiston;
-import frc.robot.commands.MoveToTarget;
-import frc.robot.commands.OpenPiston;
-import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.ZeroHeadingCmd;
-import frc.robot.subsystems.SwerveSubsystem;
+
 
 public class RobotContainer {
 
@@ -55,9 +45,11 @@ public class RobotContainer {
   private PPSwerveControllerCommand pp;
 
   // Subsystems
-  private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+ // private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
+ 
   private final Map<String, Command> eventMap = Map.of(
+/* 
       "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
       "chargeStationBackward", new ChargeStation(swerveSubsystem, -1)
       );
@@ -72,13 +64,16 @@ public class RobotContainer {
           Constants.AutonConstants.kDTurning),
       swerveSubsystem::setModuleStates,
       eventMap,
-      swerveSubsystem);
+      swerveSubsystem
+       */);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+  
   public RobotContainer() {
     // OI
+    /* 
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
 
     swerveSubsystem.resetEncoders();
@@ -89,9 +84,12 @@ public class RobotContainer {
     configureButtonBindings();
 
     initializeAutonChooser();
+     */
   }
 
+
   private void configureButtonBindings() {
+    /* 
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
         swerveSubsystem,
         () -> -ps4_controller1.getRawAxis(1),
@@ -118,7 +116,9 @@ public class RobotContainer {
     
         final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
         openPiston.toggleOnTrue(new OpenPiston());
+        */
   }
+  
         // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
         // this value as a decimal to multiply and control the speed of the robot.
         
@@ -134,7 +134,7 @@ public class RobotContainer {
   
 
   public void initializeAutonChooser(){
-    
+    /* 
     autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
     autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
     autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
@@ -162,6 +162,7 @@ public class RobotContainer {
 
     final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
     openPiston.toggleOnTrue(new OpenPiston());
+    */
   }
 
   

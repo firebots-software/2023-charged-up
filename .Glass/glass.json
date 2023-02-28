@@ -1,8 +1,5 @@
 {
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
     "transitory": {
       "FMSInfo": {
         "open": true
@@ -26,9 +23,6 @@
         "open": true
       },
       "photonvision": {
-        "limelightCam": {
-          "open": true
-        },
         "open": true
       }
     },
@@ -47,7 +41,6 @@
   },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",
-    "port3": 1735,
     "serverTeam": "3501"
   },
   "Plots": {
@@ -64,9 +57,12 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 332
+          "height": 91
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ArmJoystickCmd;
+import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.FrictionBreakOn;
 //import frc.robot.commands.FrictionBreakOn;
 import frc.robot.commands.RunMotor;
@@ -60,6 +61,9 @@ public class RobotContainer {
     // damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
      final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
      damageControl.whileTrue(new ZeroArmCmd());
+
+     final Trigger armToDegree = new JoystickButton(ps4_controller1, Constants.OI.SQUARE_BUTTON_PORT);
+    armToDegree.whileTrue(new ArmToDegree(clawAndArm, -90));
   }
 
   /**

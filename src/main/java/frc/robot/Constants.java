@@ -130,15 +130,15 @@ public final class Constants {
         public static final int RANGE_OF_MOTION = 1800; //subject to change
         public static final int STARTING_POINT = -1517; //subject to change
 
-        public static final double angleP = 0; //subject to change
+        public static final double angleP = 0.1; //subject to change
         public static final double angleI = 0; //subject to change
-        public static final double angleD = 0; //subject to change
+        public static final double angleD = 0.001; //subject to change
 
         public static final double distP = 0; //subject to change
         public static final double distI = 0; //subject to change
         public static final double distD = 0; //subject to change
 
-        public static final double pidPositionToleranceDegrees = 0; //subject to change
+        public static final double pidPositionToleranceDegrees = 1; //subject to change
         public static final double pidPositionToleranceInches = 0; //subject to change
 
         public static final double FRICTION_BREAK_DEADBAND = 0.05;

@@ -98,7 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getRotationDegrees() {
-    return rotatingMotor.getSelectedSensorPosition() * Constants.ArmConstants.ROTATIONAL_TICKS2ROT * 360.0;
+    return _getPotentiometerDegrees();// rotatingMotor.getSelectedSensorPosition() * Constants.ArmConstants.ROTATIONAL_TICKS2ROT * 360.0;
   }
 
   // retracting is negative, extending is positive

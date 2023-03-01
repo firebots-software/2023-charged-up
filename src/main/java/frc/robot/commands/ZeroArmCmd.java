@@ -12,7 +12,7 @@ public class ZeroArmCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        claw.setRotation(0);
+        claw.setRotationWithPot();
     }
 
     @Override

@@ -4,10 +4,16 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,7 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
   private Solenoid frictionBreakSolenoid;
 
   // extending
-  private WPI_TalonFX extendingMotor;
+  private WPI_TalonSRX extendingMotor;
   private DigitalInput topHall, bottomHall;
 
   /** Creates a new ArmSubsystem. */
@@ -34,9 +40,11 @@ public class ArmSubsystem extends SubsystemBase {
         ArmConstants.FRICTION_BREAK_PORT);
     rotatingMotor = new WPI_TalonFX(ArmConstants.ROTATINGMOTOR_PORT);
 
-    extendingMotor = new WPI_TalonFX(ArmConstants.EXTENDINGMOTOR_PORT);
+    extendingMotor = new WPI_TalonSRX(ArmConstants.EXTENDINGMOTOR_PORT);
+    extendingMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
     topHall = new DigitalInput(ArmConstants.TOPHALLEFFECT_PORT);
     bottomHall = new DigitalInput(ArmConstants.BOTTOMHALLEFFECT_PORT);
+    setRotationWithPot();
   }
 
   public static ArmSubsystem getInstance() {
@@ -65,11 +73,11 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean setRotatingMotor(double speed) {
-    double deg = getRotationDegrees();
+    double deg = _getPotentiometerDegrees();
 
-    if (deg <= 5)
+    if (deg <= -135)
       speed = Math.max(speed, 0);
-    else if (deg >= 300)
+    else if (deg >= 135)
       speed = Math.min(speed, 0);
 
     // if moving too slow, turn on friction break and don't move
@@ -85,8 +93,8 @@ public class ArmSubsystem extends SubsystemBase {
     return true;
   }
 
-  public void setRotation(double angleDeg) {
-    rotatingMotor.setSelectedSensorPosition(angleDeg / (Constants.ArmConstants.ROTATIONAL_TICKS2ROT * 360.0));
+  public void setRotationWithPot() {
+    rotatingMotor.setSelectedSensorPosition(_getPotentiometerDegrees() / (Constants.ArmConstants.ROTATIONAL_TICKS2ROT * 360.0));
   }
 
   public double getRotationDegrees() {
@@ -95,6 +103,13 @@ public class ArmSubsystem extends SubsystemBase {
 
   // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
+    if ((Math.abs(speed) < 0.1) || 
+    (getBottomStatus() && speed < 0) || 
+    (getTopStatus() && speed > 0)) {
+      // maintain position
+      extendingMotor.set(-0.1);
+      return;
+    }
     extendingMotor.set(speed);
   }
 
@@ -118,5 +133,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("potentiometer", _getPotentiometerDegrees());
     SmartDashboard.putNumber("arm angle", getRotationDegrees());
+
+    SmartDashboard.putNumber("extensionTicks", extendingMotor.getSelectedSensorPosition() * ArmConstants.EXTENSION_TICKS2ROT);
   }
 }

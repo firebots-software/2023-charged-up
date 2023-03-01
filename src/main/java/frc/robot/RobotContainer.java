@@ -32,7 +32,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private Joystick ps4_controller1;
   //private Joystick ps4_controller2; 
-  private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  //private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   private final ArmSubsystem clawAndArm = ArmSubsystem.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -41,8 +41,8 @@ public class RobotContainer {
     //this.ps4_controller2 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_2); 
     
     clawAndArm.setDefaultCommand(new ArmJoystickCmd(
-      () -> ps4_controller1.getRawAxis(0) * 0.1,
-      () -> ps4_controller1.getRawAxis(1) * 0.1
+      () -> ps4_controller1.getRawAxis(0) * 0.2,
+      () -> ps4_controller1.getRawAxis(5) * 0.5
     ));
 
     // Configure the button bindings

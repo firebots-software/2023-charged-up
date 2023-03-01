@@ -117,18 +117,18 @@ public final class Constants {
         public static final double ROTATIONAL_TICKS2ROT = ROTATIONAL_GEAR_RATIO / 2048;
 
         public static final double EXTENSION_GEAR_RATIO = 1 / 10.0;
-        public static final double EXTENSION_TICKS2ROT = EXTENSION_GEAR_RATIO / 1024.0;
+        public static final double EXTENSION_TICKS2ROT = EXTENSION_GEAR_RATIO / 4096.0;
 
-        public static final int POTENTIOMETER_PORT = 1; //subject to change
+        public static final int POTENTIOMETER_PORT = 3; //subject to change
         public static final int CLAW_SOLENOID_PORT = 0; //subject to change
-        public static final int FRICTION_BREAK_PORT = 14; //subject to change
-        public static final int BOTTOMHALLEFFECT_PORT = 0; //subject to change
+        public static final int FRICTION_BREAK_PORT = 1; //confirmed
+        public static final int BOTTOMHALLEFFECT_PORT = 1; //subject to change
         public static final int TOPHALLEFFECT_PORT = 0; //subject to change
         public static final int ROTATINGMOTOR_PORT = 1; // confirmed
-        public static final int EXTENDINGMOTOR_PORT = 14; // guess
+        public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         
-        public static final int RANGE_OF_MOTION = -6742; //subject to change
-        public static final int STARTING_POINT = 1836; //subject to change
+        public static final int RANGE_OF_MOTION = 1800; //subject to change
+        public static final int STARTING_POINT = -1517; //subject to change
 
         public static final double angleP = 0; //subject to change
         public static final double angleI = 0; //subject to change

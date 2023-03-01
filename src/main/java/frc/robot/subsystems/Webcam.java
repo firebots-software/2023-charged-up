@@ -14,8 +14,15 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Webcam extends SubsystemBase {
+
+  final NetworkTableInstance instance = NetworkTableInstance.getDefault();
+  final NetworkTable nt_vision = instance.getTable("Vision");
+
   Thread visionThread;
   public Webcam() {
     visionThread =
@@ -62,5 +69,9 @@ public class Webcam extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    
+    DoubleSubscriber pitchSub = nt_vision.getDoubleTopic("Relative Pitch").subscribe(0.0);
+    DoubleSubscriber yawSub = nt_vision.getDoubleTopic("Relative Yaw").subscribe(0.0);
+    DoubleSubscriber distSub = nt_vision.getDoubleTopic("Relative Distance").subscribe(0.0);
   }
 }

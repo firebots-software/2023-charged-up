@@ -7,7 +7,11 @@ package frc.robot;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
@@ -82,9 +86,7 @@ public class RobotContainer {
     this.ps4_controller1 = new Joystick(Constants.OI.PS4_CONTROLLER_PORT_1);
 
     swerveSubsystem.resetEncoders();
-
-    SmartDashboard.putNumber("p value", Constants.AutonConstants.kPDriving);
-
+    swerveSubsystem.zeroHeading();
     // Configure the button bindings
     configureButtonBindings();
 
@@ -104,20 +106,21 @@ public class RobotContainer {
 
         final Trigger damageControl = new JoystickButton(ps4_controller1, Constants.OI.CIRCLE_BUTTON_PORT);
         damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
-    
-        final Trigger wobbleWobble = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
-        wobbleWobble.whileTrue(new ChargeStation(swerveSubsystem, 1));
 
-      
-        MoveToTarget mtt = new MoveToTarget(swerveSubsystem);
-        final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.R1_BUTTON_PORT);
-        followPath.toggleOnTrue(mtt);
-    
-        final Trigger closePiston = new JoystickButton(ps4_controller1, Constants.OI.BIG_BUTTON_PORT);
-        closePiston.toggleOnTrue(new ClosePiston());
-    
-        final Trigger openPiston = new JoystickButton(ps4_controller1, Constants.OI.PS_BUTTON_PORT);
-        openPiston.toggleOnTrue(new OpenPiston());
+        PathPlannerTrajectory traj = PathPlanner.generatePath(
+          new PathConstraints(Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax),
+          new ArrayList<>(){{
+            add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0), new Rotation2d(0)));
+            add(new PathPoint(new Translation2d(1, 0), new Rotation2d(0), new Rotation2d(Math.PI/2.0)));
+          }}
+        );
+
+        final Trigger followPath = new JoystickButton(ps4_controller1, Constants.OI.TRIANGLE_BUTTON_PORT);
+        followPath.toggleOnTrue(new InstantCommand(() -> {
+          PathPlannerState initial = (PathPlannerState) traj.sample(0);
+          Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
+          swerveSubsystem.resetOdometry(initialPose);
+        }).andThen(autoBuilder.followPath(traj)));
   }
         // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
         // this value as a decimal to multiply and control the speed of the robot.

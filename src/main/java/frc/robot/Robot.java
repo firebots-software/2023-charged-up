@@ -23,7 +23,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    pv = PhotonVision.getInstance();
     swerveSubsystem = SwerveSubsystem.getInstance();
 
   }

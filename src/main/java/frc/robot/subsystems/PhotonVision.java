@@ -22,7 +22,7 @@ public class PhotonVision extends SubsystemBase{
     private NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private NetworkTable table = instance.getTable("limelightCam");
     
-    PhotonCamera camera = new PhotonCamera("limelightCam");
+    PhotonCamera camera;
     PhotonPipelineResult result = getLatestPipeline();
 
     static final double CAMERA_HEIGHT_METERS = 0.16;
@@ -37,13 +37,17 @@ public class PhotonVision extends SubsystemBase{
     //Add to yaw in getY();
     static final double RITVIKS_CONSTANT = -0.5709238051120222;
 
-    public static PhotonVision getInstance() {
-        if (pvInstance == null) {
-            pvInstance = new PhotonVision();
-        }
+    public PhotonVision(String camName){
+        camera = new PhotonCamera(camName);
+    }   
 
-        return pvInstance;
-    }
+    // public static PhotonVision getInstance() {
+    //     if (pvInstance == null) {
+    //         pvInstance = new PhotonVision();
+    //     }
+
+    //     return pvInstance;
+    // }
 
     //Have to use the same pipeline result each time you want to gather data.
     //Gets the processed data from the camera

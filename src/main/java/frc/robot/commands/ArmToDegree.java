@@ -28,7 +28,7 @@ public class ArmToDegree extends CommandBase{
     @Override
     public void execute(){
         double calculatedSpeed = pid.calculate(arm.getRotationDegrees());
-        calculatedSpeed = MathUtil.clamp(calculatedSpeed, -0.5, 0.5);
+        calculatedSpeed = MathUtil.clamp(calculatedSpeed, -ArmConstants.MAX_ROTATION_SPEED, ArmConstants.MAX_ROTATION_SPEED);
         arm.setRotatingMotor(calculatedSpeed);
     }
 

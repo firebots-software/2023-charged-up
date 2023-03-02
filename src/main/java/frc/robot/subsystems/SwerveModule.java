@@ -95,6 +95,21 @@ public class SwerveModule extends SubsystemBase {
         }
     */
     }
-}
 
+    public double getPosition(){
+        return driveMotor.getSelectedSensorPosition();
+    }
+
+    public void setMotor(double speed){
+        driveMotor.set(speed);
+    }
+
+    public double getDrivingTickValues(){
+        return (driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset);
+    }
+
+    public void setDrivingTickValues(double val){
+        driveMotor.setSelectedSensorPosition(val);
+    }
+}
 

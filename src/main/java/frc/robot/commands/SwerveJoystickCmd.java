@@ -13,18 +13,19 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class SwerveJoystickCmd extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
-    private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
+    private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction, speedControlFunction;
     private final Supplier<Boolean> fieldOrientedFunction;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
     public SwerveJoystickCmd(SwerveSubsystem swerveSubsystem,
         Supplier<Double> frontBackFunction, Supplier<Double> leftRightFunction, Supplier<Double> turningSpdFunction,
-        Supplier<Boolean> fieldOrientedFunction) {
+        Supplier<Double> speedControlFunction, Supplier<Boolean> fieldOrientedFunction) {
         
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunction = frontBackFunction;
         this.ySpdFunction = leftRightFunction;
         this.turningSpdFunction = turningSpdFunction;
+        this.speedControlFunction = speedControlFunction;
         this.fieldOrientedFunction = fieldOrientedFunction;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -57,9 +58,12 @@ public class SwerveJoystickCmd extends CommandBase {
         turningSpeed = Math.abs(turningSpeed) > OI.DEADBAND ? turningSpeed : 0.0;
 
         // 4. Make the driving smoother
-        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        turningSpeed = turningLimiter.calculate(turningSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        double driveSpeed = (DriveConstants.kTeleDriveMaxPercentSpeed - DriveConstants.kTeleDriveMinPercentSpeed)
+        * speedControlFunction.get() + DriveConstants.kTeleDriveMinPercentSpeed;
+
+        xSpeed = xLimiter.calculate(xSpeed) * driveSpeed * DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+        ySpeed = yLimiter.calculate(ySpeed) * driveSpeed * DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * driveSpeed * DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond;
 
         // 5. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;

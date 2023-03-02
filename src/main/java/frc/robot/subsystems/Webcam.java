@@ -15,8 +15,9 @@ import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableInstance;  
 
 public class Webcam extends SubsystemBase {
 
@@ -69,9 +70,27 @@ public class Webcam extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
+  }
+
+  public double getTargetRelativePitch() {
     DoubleSubscriber pitchSub = nt_vision.getDoubleTopic("Relative Pitch").subscribe(0.0);
+    return pitchSub.get();
+  }
+
+  public double getTargetRelativeYaw() {
     DoubleSubscriber yawSub = nt_vision.getDoubleTopic("Relative Yaw").subscribe(0.0);
+    return yawSub.get();
+  }
+
+  public double getTargetRelativeDistance() {
     DoubleSubscriber distSub = nt_vision.getDoubleTopic("Relative Distance").subscribe(0.0);
+    return distSub.get();
+  }
+
+  public double[] centerCoordinate() {
+    double[] holder= {};
+    DoubleArraySubscriber centerSub = nt_vision.getDoubleArrayTopic("Center Coordinate").subscribe(holder);
+    double[] coord = centerSub.get();
+    return coord;
   }
 }

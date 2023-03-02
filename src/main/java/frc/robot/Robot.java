@@ -37,6 +37,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     // System.out.println(photonInfo.getDistance());
+    SmartDashboard.putBoolean("Limelight One Has Target", pv.hasTarget(pv.getLatestPipeline()));
+    SmartDashboard.putBoolean("Limelight Two Has Target", pv.hasTarget(pv2.getLatestPipeline()));
   }
 
   @Override
@@ -65,8 +67,6 @@ public class Robot extends TimedRobot {
 //    SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
  //   SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());
 
-    SmartDashboard.putBoolean("Limelight One Has Target", pv.hasTarget(pv.getLatestPipeline()));
-    SmartDashboard.putBoolean("Limelight Two Has Target", pv.hasTarget(pv2.getLatestPipeline()));
 
     
   }

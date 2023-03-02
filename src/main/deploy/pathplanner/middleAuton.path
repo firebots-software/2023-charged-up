@@ -1,0 +1,127 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8624706311912627,
+        "y": 2.825463506829791
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8624706311912633,
+        "y": 2.825463506829791
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "raiseAndExtendArm",
+          "placeCubeHigh"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 1.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.357929490164537,
+        "y": 2.155760519854373
+      },
+      "prevControl": {
+        "x": 5.357929490164537,
+        "y": 2.155760519854373
+      },
+      "nextControl": {
+        "x": 5.357929490164537,
+        "y": 2.155760519854373
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "grabCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 0.6
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.8621806913752716,
+        "y": 2.1914811051844323
+      },
+      "prevControl": {
+        "x": 1.9628477954872576,
+        "y": 2.012588238718144
+      },
+      "nextControl": {
+        "x": 1.9628477954872576,
+        "y": 2.012588238718144
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "placeConeHigh"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 1.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.4414804437247764,
+        "y": 1.9944380062371236
+      },
+      "prevControl": {
+        "x": 2.143248348996698,
+        "y": 1.9966995368018516
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "chargeStationForward"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.132954545454545,
+      "names": [
+        "lowerAndRetractArm"
+      ]
+    },
+    {
+      "position": 1.1775213068181802,
+      "names": [
+        "raiseAndExtendArm"
+      ]
+    }
+  ]
+}

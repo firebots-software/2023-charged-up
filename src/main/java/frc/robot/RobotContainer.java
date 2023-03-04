@@ -68,8 +68,6 @@ public class RobotContainer {
   InstantCommand command;
   ArrayList<PathPoint> points = new ArrayList<>();
 
-  private PPSwerveControllerCommand pp;
-
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
@@ -96,10 +94,6 @@ public class RobotContainer {
     this.driverPS4 = new Joystick(Constants.OI.DRIVER_PS4_PORT);
     this.armJoystick = new Joystick(Constants.OI.ARM_JOYSTICK_PORT); 
     
-    clawAndArm.setDefaultCommand(new ArmJoystickCmd(
-      () -> armJoystick.getRawAxis(0) * 0.2,
-      () -> armJoystick.getRawAxis(1) * 0.5
-    ));
     swerveSubsystem.resetEncoders();
     swerveSubsystem.zeroHeading();
     // Configure the button bindings
@@ -118,15 +112,15 @@ public class RobotContainer {
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-      
+        /*
     clawAndArm.setDefaultCommand(new ArmJoystickCmd(
       () -> armJoystick.getRawAxis(0) * 0.2,
       () -> 0.0));//driverPS4.getRawAxis(1) * 0.5));
-
+      */
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
     armToDegree.whileTrue(new ArmToDegree(clawAndArm, -90));
-
+    
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
@@ -145,6 +139,20 @@ public class RobotContainer {
       Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
       swerveSubsystem.resetOdometry(initialPose);
     }).andThen(autoBuilder.followPath(traj)));
+
+    final Trigger conePivot = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
+    conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7, true));
+
+    final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    mtt.toggleOnTrue(new MoveToTarget(swerveSubsystem));
+
+    /*
+    final Trigger closePiston = new JoystickButton(driverPS4, Constants.OI.BIG_BUTTON_PORT);
+    closePiston.toggleOnTrue(new ClosePiston());
+
+    final Trigger openPiston = new JoystickButton(driverPS4, Constants.OI.PS_BUTTON_PORT);
+    openPiston.toggleOnTrue(new OpenPiston());
+    */
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.
@@ -159,21 +167,6 @@ public class RobotContainer {
     autonChooser.addOption("pidTuner", autoBuilder.fullAuto(AutonPaths.pidTuner));
 
     SmartDashboard.putData(autonChooser);
-    // ArrayList<PathPoint> points = new ArrayList<>();
-    // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));
-    // // points.add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0.0)));
-
-    final Trigger conePivot = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7, true));
-
-    final Trigger followPath = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    followPath.toggleOnTrue(new MoveToTarget(swerveSubsystem));
-
-    final Trigger closePiston = new JoystickButton(driverPS4, Constants.OI.BIG_BUTTON_PORT);
-    closePiston.toggleOnTrue(new ClosePiston());
-
-    final Trigger openPiston = new JoystickButton(driverPS4, Constants.OI.PS_BUTTON_PORT);
-    openPiston.toggleOnTrue(new OpenPiston());
   }
 
   public static SendableChooser<Command> getAutonChooser() {

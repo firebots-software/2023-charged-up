@@ -17,37 +17,39 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVision extends SubsystemBase{
-    private static PhotonVision pvInstance;
+    private static PhotonVision frontCam;
+    private static PhotonVision backCam;
 
     private NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private NetworkTable table = instance.getTable("limelightCam");
     
-    PhotonCamera camera;
+    PhotonCamera camera = new PhotonCamera("limelightCam");
     PhotonPipelineResult result = getLatestPipeline();
 
-    static final double CAMERA_HEIGHT_METERS = 0.16;
+    static final double CAMERA_HEIGHT_METERS = .23114;
     static final double TARGET_HEIGHT_METERS = 0.4699;
-    static final double CAMERA_YAW = 28;
+    static final double CAMERA_YAW = 10;
     //Multiply to pitch in getDistance();
-    static final double AAGRIMS_CONSTANT = 1.6214288372574428;
-    //Add to pitch in getDistance();
-    static final double YAJWINS_CONSTANT = -3.0414949031355434;
-    //Multiply to yaw in getY();
-    static final double ARYAVS_CONSTANT = -0.04146708961342199;
-    //Add to yaw in getY();
-    static final double RITVIKS_CONSTANT = -0.5709238051120222;
+    static final double AAGRIMS_CONSTANT = 1.0037986626;
+    static final double YAJWINS_CONSTANT = -0.9519198936;
+    static final double ARYAVS_CONSTANT = 1;
+    static final double RITVIKS_CONSTANT = 0;
+
+    public static final double CAM_TO_FIDUCIAL_METERS = 0.63;
 
     public PhotonVision(String camName){
         camera = new PhotonCamera(camName);
     }   
 
-    // public static PhotonVision getInstance() {
-    //     if (pvInstance == null) {
-    //         pvInstance = new PhotonVision();
-    //     }
+    public static PhotonVision getFrontCam() {
+        if (frontCam == null) frontCam = new PhotonVision("limelightCam");
+        return frontCam;
+    }
 
-    //     return pvInstance;
-    // }
+    public static PhotonVision getBackCam() {
+        if (backCam == null) backCam = new PhotonVision("limelightCam2");
+        return backCam;
+    }
 
     //Have to use the same pipeline result each time you want to gather data.
     //Gets the processed data from the camera
@@ -141,7 +143,7 @@ public class PhotonVision extends SubsystemBase{
         if(result.hasTargets()){
             yaw = getYaw(result.getBestTarget());
         }
-        return -getDistance() * Math.tan(Units.degreesToRadians(AAGRIMS_CONSTANT * yaw + YAJWINS_CONSTANT));
+        return -getDistance() * Math.tan(Units.degreesToRadians(ARYAVS_CONSTANT * yaw + RITVIKS_CONSTANT));
     }
 
     public double getX(){

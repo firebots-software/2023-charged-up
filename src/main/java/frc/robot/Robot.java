@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import org.opencv.photo.Photo;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,24 +14,24 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private PhotonVision pv;
   private SwerveSubsystem swerveSubsystem;
   private ArmSubsystem armSubsystem;
 
+  private PhotonVision frontCam, backCam;
+
   private RobotContainer m_robotContainer;
-  //private ClawAndArm clawAndArm;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     swerveSubsystem = SwerveSubsystem.getInstance();
     armSubsystem = ArmSubsystem.getInstance();
-
+    frontCam = PhotonVision.getFrontCam();
+    backCam = PhotonVision.getBackCam();
   }
     @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    // System.out.println(photonInfo.getDistance());
   }
 
   @Override
@@ -58,9 +56,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putNumber("forward distance", pv.getX());
-    SmartDashboard.putNumber("horizontal distance", pv.getY());
-    
     SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
     SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());;
     

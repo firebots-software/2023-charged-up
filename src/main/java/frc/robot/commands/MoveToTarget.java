@@ -27,8 +27,8 @@ import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class MoveToTarget extends CommandBase {
-  PhotonVision cam1 = new PhotonVision("limelightCam");
-  PhotonVision cam2 = new PhotonVision("limelightCam2");
+  PhotonVision frontCam = PhotonVision.getFrontCam();
+  PhotonVision backCam = PhotonVision.getBackCam();
 
   PhotonVision usedCam;
   
@@ -46,35 +46,27 @@ public class MoveToTarget extends CommandBase {
   @Override
   public void initialize() {
 
-    if(cam1.hasTarget(cam1.getLatestPipeline()) && cam2.hasTarget(cam2.getLatestPipeline())){
-      double dist1 = cam1.getDistance();
-      double dist2 = cam2.getDistance();
+    if(frontCam.hasTarget(frontCam.getLatestPipeline()) && backCam.hasTarget(backCam.getLatestPipeline())){
+      double dist1 = frontCam.getDistance();
+      double dist2 = backCam.getDistance();
 
       if(dist1 > dist2){
-        usedCam = cam1;
+        usedCam = frontCam;
       }
       else{
-        usedCam = cam2;
+        usedCam = backCam;
       }
     }
-    else if(!cam1.hasTarget(cam1.getLatestPipeline()) && cam2.hasTarget(cam2.getLatestPipeline())){
-      usedCam = cam2;
+    else if(!frontCam.hasTarget(frontCam.getLatestPipeline()) && backCam.hasTarget(backCam.getLatestPipeline())){
+      usedCam = backCam;
     }
     else{
-      usedCam = cam1;
+      usedCam = frontCam;
     }
 
-    ArrayList<PathPoint> points = new ArrayList<>();
-    points.clear();
-    points.add(new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0)));
-  
-    points.add(new PathPoint(new Translation2d(usedCam.getX()-0.4,usedCam.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
-    System.out.printf("going to %f, %f\n", usedCam.getX()-0.4, usedCam.getY());
-
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 2), points);
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 
                                                           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
-                                                          new PathPoint(new Translation2d(usedCam.getX()-0.4,usedCam.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
+                                                          new PathPoint(new Translation2d(usedCam.getX()-PhotonVision.CAM_TO_FIDUCIAL_METERS,usedCam.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
     field.getObject("trajectory").setTrajectory(traj);
     SmartDashboard.putData(field);
     PathPlannerState initialSample = (PathPlannerState) traj.sample(0);

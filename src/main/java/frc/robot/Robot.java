@@ -40,7 +40,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    //swerveSubsystem.zeroHeading();//
+  }
 
   @Override
   public void disabledExit() {

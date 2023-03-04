@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
+import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.ClosePiston;
 import frc.robot.commands.MoveToTarget;
@@ -107,11 +108,11 @@ public class RobotContainer {
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-        /*
+        
     clawAndArm.setDefaultCommand(new ArmJoystickCmd(
       () -> armJoystick.getRawAxis(0) * 0.2,
-      () -> 0.0));//driverPS4.getRawAxis(1) * 0.5));
-      */
+      () -> armJoystick.getRawAxis(1) * 0.5));
+      
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
     armToDegree.whileTrue(new ArmToDegree(clawAndArm, -90));

@@ -30,15 +30,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.ArmJoystickCmd;
-import frc.robot.commands.ArmToDegree;
-import frc.robot.commands.FrictionBreakOn;
-//import frc.robot.commands.FrictionBreakOn;
-import frc.robot.commands.RunMotor;
-import frc.robot.commands.RunMotor3;
 //import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
+import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.ClosePiston;
 import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.OpenPiston;
@@ -46,13 +41,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.Piston;
 import frc.robot.commandGroups.ConePivot;
-import frc.robot.commands.ClosePiston;
-import frc.robot.commands.MoveToTarget;
-import frc.robot.commands.OpenPiston;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroArmCmd;
 import frc.robot.commands.ZeroHeadingCmd;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -166,6 +157,7 @@ public class RobotContainer {
     autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
     autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
     autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
+    autonChooser.addOption("test", autoBuilder.fullAuto(AutonPaths.test));
     SmartDashboard.putData(autonChooser);
   }
 

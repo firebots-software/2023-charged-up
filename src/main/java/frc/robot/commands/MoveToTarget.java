@@ -27,11 +27,15 @@ import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class MoveToTarget extends CommandBase {
-  PhotonVision pv = new PhotonVision();
+  PhotonVision frontCam = PhotonVision.getFrontCam();
+  PhotonVision backCam = PhotonVision.getBackCam();
+
+  PhotonVision usedCam;
+  
   SwerveSubsystem ss;
   PPSwerveControllerCommand pp;
   Field2d field;
-  
+
   /** Creates a new MoveToTarget. */
   public MoveToTarget(SwerveSubsystem swerveSubsystem) {
     field = new Field2d();
@@ -41,17 +45,28 @@ public class MoveToTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    ArrayList<PathPoint> points = new ArrayList<>();
-    points.clear();
-    points.add(new PathPoint(new Translation2d(0,0), Rotation2d.fromDegrees(0)));
-  
-    points.add(new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
-    System.out.printf("going to %f, %f\n", pv.getX()-0.4, pv.getY());
 
-    PathPlannerTrajectory trajectory = PathPlanner.generatePath(new PathConstraints(2, 2), points);
+    if(frontCam.hasTarget(frontCam.getLatestPipeline()) && backCam.hasTarget(backCam.getLatestPipeline())){
+      double dist1 = frontCam.getDistance();
+      double dist2 = backCam.getDistance();
+
+      if(dist1 > dist2){
+        usedCam = frontCam;
+      }
+      else{
+        usedCam = backCam;
+      }
+    }
+    else if(!frontCam.hasTarget(frontCam.getLatestPipeline()) && backCam.hasTarget(backCam.getLatestPipeline())){
+      usedCam = backCam;
+    }
+    else{
+      usedCam = frontCam;
+    }
+
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 
                                                           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
-                                                          new PathPoint(new Translation2d(pv.getX()-0.4,pv.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
+                                                          new PathPoint(new Translation2d(usedCam.getX()-PhotonVision.CAM_TO_FIDUCIAL_METERS,usedCam.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
     field.getObject("trajectory").setTrajectory(traj);
     SmartDashboard.putData(field);
     PathPlannerState initialSample = (PathPlannerState) traj.sample(0);

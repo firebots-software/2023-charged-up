@@ -4,38 +4,40 @@
 
 package frc.robot;
 
-import org.opencv.photo.Photo;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private PhotonVision pv;
   private SwerveSubsystem swerveSubsystem;
+  private ArmSubsystem armSubsystem;
+
+  private PhotonVision frontCam, backCam;
 
   private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    pv = PhotonVision.getInstance();
     swerveSubsystem = SwerveSubsystem.getInstance();
-
+    armSubsystem = ArmSubsystem.getInstance();
+    frontCam = PhotonVision.getFrontCam();
+    backCam = PhotonVision.getBackCam();
   }
-
-  @Override
+    @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    // System.out.println(photonInfo.getDistance());
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    swerveSubsystem.zeroHeading();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -54,9 +56,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putNumber("forward distance", pv.getX());
-    SmartDashboard.putNumber("horizontal distance", pv.getY());
-    
     SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
     SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());;
     
@@ -73,7 +72,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    //SmartDashboard.putNumber("potentiometer", clawAndArm.getPot());
+  }
 
   @Override
   public void teleopExit() {}

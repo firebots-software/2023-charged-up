@@ -2,24 +2,24 @@ import math
 
 pitchData = [
     # (actual, pitch)
-    [0.5, 4.03],
-    [1, -4.4],
-    [1.5, -8.2],
-    [2, -9.9],
-    [3, -12]
+    [0.508, 16.02],
+    [1.0287, 4.15],
+    [1.4986, -0.11],
+    [1.9936, -2.09],
+    [2.4892, -3.77],
+    [2.9972, -4.37]
 ]
 
 yawData = [
     # ([distance to target straight, horizontal distance], yaw)
-    [[0.2, 0.1], 2.67],
-    [[0.3, 0.2], -6.68],
-    [[0.5, 0.3], -9.98],
-    [[0.2, -0.1], -13.87]
+    [[0.7874, 0.0], 1.14],
+    [[0.7874, 0.2413], 16.15],
+    [[0.7874, 0.3302], -22.3],
 ]
 
 tagHeight = 0.4699
-cameraHeight = 0.16
-cameraDegrees = 28
+cameraHeight = .23114
+cameraDegrees = 10
 
 def rad2Deg(x):
     return x*(180/math.pi)
@@ -28,7 +28,7 @@ def deg2Rad(x):
     return x*(math.pi/180)
 
 metersToTheoreticalPitch = lambda meters : rad2Deg(math.atan2((tagHeight-cameraHeight), meters) - deg2Rad(cameraDegrees))
-metersToTheoreticalYaw = lambda listXY : math.atan2(-listXY[1], listXY[0])
+metersToTheoreticalYaw = lambda listXY : rad2Deg(math.atan2(listXY[1], listXY[0]))
 
 # Find the m value in y = mx that best fits the data
 def findM(data, xindex, yindex):

@@ -14,11 +14,11 @@ public class ZeroHeadingCmd extends CommandBase {
 
     @Override
     public void initialize() {
+        swerveSubsystem.zeroHeading();
     }
 
     @Override
     public void execute() {
-        swerveSubsystem.zeroHeading();
     }
 
 

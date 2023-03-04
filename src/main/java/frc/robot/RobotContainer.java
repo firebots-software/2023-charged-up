@@ -74,7 +74,8 @@ public class RobotContainer {
   private final Map<String, Command> eventMap = Map.of(
       "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
       "chargeStationBackward", new ChargeStation(swerveSubsystem, -1),
-      "moveToTarget", new MoveToTarget(swerveSubsystem)
+      "moveToTarget", new MoveToTarget(swerveSubsystem),
+      "zeroGyro", new ZeroHeadingCmd(swerveSubsystem)
       );
 
   private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(

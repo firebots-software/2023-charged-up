@@ -37,12 +37,8 @@ public class ClawAndArm extends SubsystemBase {
         extendingMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    public double getVoltage() {
+    public double getDegrees() {
         return pot.get();
-    }
-
-    public double getAngle() {
-        return getVoltage() * clawConstants.VOLTAGE_TO_ANGLE_CONSTANT; //to be calculated
     }
 
     public void closeClaw() {

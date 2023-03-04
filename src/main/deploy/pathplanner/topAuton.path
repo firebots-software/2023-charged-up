@@ -2,23 +2,24 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8841001414641718,
+        "x": 1.88,
         "y": 4.957622925662518
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.884100141464174,
+        "x": 2.8800000000000017,
         "y": 4.957622925662518
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "raiseAndExtendArm",
-          "placeConeHigh"
+          "closeClaw",
+          "raiseArm",
+          "openClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -38,14 +39,15 @@
         "x": 4.753170596618971,
         "y": 5.005810923080179
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "grabCube"
+          "moveToTarget",
+          "closeClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -54,25 +56,26 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8871735035136736,
+        "x": 1.88,
         "y": 4.425293423503513
       },
       "prevControl": {
-        "x": 2.5659806007111987,
+        "x": 2.558807097197525,
         "y": 5.092618903987807
       },
       "nextControl": {
-        "x": 2.5659806007111987,
+        "x": 2.558807097197525,
         "y": 5.092618903987807
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "placeCubeHigh"
+          "moveToTarget",
+          "openClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -92,14 +95,15 @@
         "x": 5.614001910295487,
         "y": 5.185979524736822
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "grabCone"
+          "moveToObject",
+          "closeClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -108,21 +112,23 @@
     },
     {
       "anchorPoint": {
-        "x": 1.900220795233257,
+        "x": 1.88,
         "y": 3.8373534646374843
       },
       "prevControl": {
-        "x": 1.8898409498207887,
+        "x": 1.8696201545875315,
         "y": 5.524687217777213
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "closeClaw"
+        ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
         "waitTime": 1.0

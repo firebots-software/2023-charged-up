@@ -14,10 +14,14 @@ public class ClawToAngle extends CommandBase{
     private ClawAndArm claw; 
     private PIDController pid;
 
+    public static final double LOWEST_POS = 130;
+
     public ClawToAngle() {
         claw = ClawAndArm.getInstance(); 
         pid = new PIDController(clawConstants.angleP, clawConstants.angleI, clawConstants.angleD);
         pid.setTolerance(clawConstants.pidPositionToleranceDegrees);
+
+        addRequirements(claw);
 
     }
 
@@ -28,7 +32,7 @@ public class ClawToAngle extends CommandBase{
 
     @Override
     public void execute() {
-        double angle = claw.getAngle();
+        double angle = claw.getDegrees();
         double val = pid.calculate(angle);
         
         claw.setRotatingMotor(val);
@@ -43,11 +47,6 @@ public class ClawToAngle extends CommandBase{
     public boolean isFinished() {
         return pid.atSetpoint();
       }
-
-      @Override
-    public Set<Subsystem> getRequirements() {
-        return Set.of(claw);
-    }
 }
 
 

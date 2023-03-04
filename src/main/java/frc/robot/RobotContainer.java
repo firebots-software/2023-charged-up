@@ -59,7 +59,8 @@ public class RobotContainer {
   // PathPlanner
   private final Map<String, Command> eventMap = Map.of(
       "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
-      "chargeStationBackward", new ChargeStation(swerveSubsystem, -1)
+      "chargeStationBackward", new ChargeStation(swerveSubsystem, -1),
+      "moveToTarget", new MoveToTarget(swerveSubsystem)
       );
 
   private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
@@ -72,6 +73,7 @@ public class RobotContainer {
           Constants.AutonConstants.kDTurning),
       swerveSubsystem::setModuleStates,
       eventMap,
+      true,
       swerveSubsystem);
 
   /**
@@ -138,10 +140,6 @@ public class RobotContainer {
     autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
     autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
     autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
-    autonChooser.addOption("chargeStationTest", autoBuilder.fullAuto(AutonPaths.chargeStationTest));
-    autonChooser.addOption("visionTest", autoBuilder.fullAuto(AutonPaths.visionTest));
-    autonChooser.addOption("pidTuner", autoBuilder.fullAuto(AutonPaths.pidTuner));
-
     SmartDashboard.putData(autonChooser);
     // ArrayList<PathPoint> points = new ArrayList<>();
     // // points.add(new PathPoint(new Translation2d(0,0), new Rotation2d(0.0)));

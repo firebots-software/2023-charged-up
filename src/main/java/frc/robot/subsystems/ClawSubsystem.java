@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
 
 public class ClawSubsystem extends SubsystemBase {
   private Solenoid pistons;
@@ -14,7 +15,7 @@ public class ClawSubsystem extends SubsystemBase {
 
   /** Creates a new Piston. */
   public ClawSubsystem() {
-    pistons = new Solenoid(PneumaticsModuleType.REVPH, 0);
+    pistons = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_SOLENOID_PORT);
   }
 
   public static ClawSubsystem getInstance() {

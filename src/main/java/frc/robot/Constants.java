@@ -121,10 +121,10 @@ public final class Constants {
         public static final double EXTENSION_TICKS2ROT = EXTENSION_GEAR_RATIO / 4096.0;
 
         public static final int POTENTIOMETER_PORT = 3; //confirmed
-        public static final int CLAW_SOLENOID_PORT = 0; //subject to change
-        public static final int FRICTION_BREAK_PORT = 1; //confirmed
-        public static final int BOTTOMHALLEFFECT_PORT = 1; //subject to change
-        public static final int TOPHALLEFFECT_PORT = 0; //subject to change
+        public static final int CLAW_SOLENOID_PORT = 1; //Changing
+        public static final int FRICTION_BREAK_PORT = 0; //Changing?
+        public static final int BOTTOMHALLEFFECT_PORT = 1; //confirmed
+        public static final int TOPHALLEFFECT_PORT = 0; //confirmed
         public static final int ROTATINGMOTOR_PORT = 1; // confirmed
         public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         

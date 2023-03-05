@@ -100,11 +100,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
+    double length = getArmLength();
     if ((Math.abs(speed) < 0.1) ||
-    (getBottomStatus() && speed < 0) ||
-    (getTopStatus() && speed > 0)) {
+    (length < 0 && speed < 0) ||
+    (length > 26.6 && speed > 0)) {
       // maintain position
-      extendingMotor.set(-0.1);
+      extendingMotor.set(0);//-0.1);
       return;
     }
 
@@ -140,5 +141,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("bottomHalStatus", getBottomStatus());
 
     SmartDashboard.putNumber("extendLength", _ticksToLength(extendingMotor.getSelectedSensorPosition()));
+
+    getBottomStatus();
   }
 }

@@ -4,37 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Piston;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.ClawSubsystem;
 
-public class TogglePiston extends CommandBase {
-  /** Creates a new OpenPiston. */
-  Piston piston;
-  /** Creates a new ClosePiston. */
-  public TogglePiston() {
-    piston = Piston.getInstance();
-
-    addRequirements(piston);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    piston.togglePiston();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return true;
+public class TogglePiston extends InstantCommand {
+  public TogglePiston(ClawSubsystem p) {
+    super(() -> {p.toggle();}, p);
   }
 }

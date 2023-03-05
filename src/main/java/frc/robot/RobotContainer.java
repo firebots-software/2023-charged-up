@@ -14,15 +14,9 @@ import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,21 +24,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-//import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
-import frc.robot.commands.ClosePiston;
+import frc.robot.commands.MoveToTag;
 import frc.robot.commands.TogglePiston;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.robot.subsystems.PhotonVision;
-import frc.robot.subsystems.Piston;
 import frc.robot.commandGroups.ConePivot;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.ZeroArmCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -53,21 +43,18 @@ public class RobotContainer {
   private Joystick driverPS4;
   private Joystick armJoystick;
 
-  private final ArmSubsystem clawAndArm = ArmSubsystem.getInstance();
-  private static SendableChooser<Command> autonChooser = new SendableChooser<>();
-
-  InstantCommand command;
-  ArrayList<PathPoint> points = new ArrayList<>();
-
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private final ArmSubsystem arm = ArmSubsystem.getInstance();
+  private final ClawSubsystem claw = ClawSubsystem.getInstance();
+
   // PathPlanner
   private final Map<String, Command> eventMap = Map.of(
       "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
       "chargeStationBackward", new ChargeStation(swerveSubsystem, -1),
       // "moveToTarget", new MoveToTarget(swerveSubsystem),
-      "zeroGyro", new ZeroHeadingCmd(swerveSubsystem)
-      );
+      "zeroGyro", new ZeroHeadingCmd(swerveSubsystem));
+  private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       swerveSubsystem::getPose,
@@ -79,7 +66,7 @@ public class RobotContainer {
           Constants.AutonConstants.kDTurning),
       swerveSubsystem::setModuleStates,
       eventMap,
-      true,
+      true, // TODO: error?
       swerveSubsystem);
 
   /**
@@ -87,11 +74,11 @@ public class RobotContainer {
    */
   public RobotContainer() {
     this.driverPS4 = new Joystick(Constants.OI.DRIVER_PS4_PORT);
-    this.armJoystick = new Joystick(Constants.OI.ARM_JOYSTICK_PORT); 
-    
+    this.armJoystick = new Joystick(Constants.OI.ARM_JOYSTICK_PORT);
+
     swerveSubsystem.resetEncoders();
     swerveSubsystem.zeroHeading();
-    // Configure the button bindings
+
     configureButtonBindings();
 
     initializeAutonChooser();
@@ -107,15 +94,13 @@ public class RobotContainer {
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-        
-    clawAndArm.setDefaultCommand(new ArmJoystickCmd(
-      () -> armJoystick.getRawAxis(0) * 0.2,
-      () -> -armJoystick.getRawAxis(1) * 0.5));
-      
+    arm.setDefaultCommand(new ArmJoystickCmd(
+        () -> armJoystick.getRawAxis(0) * 0.2,
+        () -> -armJoystick.getRawAxis(1) * 0.5));
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new ArmToDegree(clawAndArm, 90));
-    
+    armToDegree.whileTrue(new ArmToDegree(arm, 90));
+
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
@@ -138,19 +123,11 @@ public class RobotContainer {
     final Trigger conePivot = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
     conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7, true));
 
-    //final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    //mtt.toggleOnTrue(new MoveToTarget(swerveSubsystem));
+    final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    mtt.toggleOnTrue(new MoveToTag(swerveSubsystem));
 
     final Trigger clawToggle = new JoystickButton(armJoystick, 1);
-    clawToggle.onTrue(new TogglePiston());
-
-    /*
-    final Trigger closePiston = new JoystickButton(driverPS4, Constants.OI.BIG_BUTTON_PORT);
-    closePiston.toggleOnTrue(new ClosePiston());
-
-    final Trigger openPiston = new JoystickButton(driverPS4, Constants.OI.PS_BUTTON_PORT);
-    openPiston.toggleOnTrue(new OpenPiston());
-    */
+    clawToggle.onTrue(new TogglePiston(claw));
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.

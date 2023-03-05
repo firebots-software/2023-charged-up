@@ -8,32 +8,32 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Piston extends SubsystemBase {
+public class ClawSubsystem extends SubsystemBase {
   private Solenoid pistons;
-  private static Piston instance;
+  private static ClawSubsystem instance;
 
   /** Creates a new Piston. */
-  public Piston() {
+  public ClawSubsystem() {
     pistons = new Solenoid(PneumaticsModuleType.REVPH, 0);
   }
 
-  public static Piston getInstance() {
+  public static ClawSubsystem getInstance() {
     if (instance == null) {
-      instance = new Piston();
+      instance = new ClawSubsystem();
     }
 
     return instance;
   }
 
-  public void extendPiston() {
-    pistons.set(true);
-  }
-
-  public void retractPiston() {
+  public void close() {
     pistons.set(false);
   }
 
-  public void togglePiston() {
+  public void open() {
+    pistons.set(true);
+  }
+
+  public void toggle() {
     System.out.println("************ to " + pistons.get());
     pistons.set(!pistons.get());
   }

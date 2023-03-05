@@ -103,22 +103,26 @@ public class ArmSubsystem extends SubsystemBase {
 
   // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
-    if ((Math.abs(speed) < 0.1) || 
-    (getBottomStatus() && speed < 0) || 
+    if ((Math.abs(speed) < 0.1) ||
+    (getBottomStatus() && speed < 0) ||
     (getTopStatus() && speed > 0)) {
       // maintain position
       extendingMotor.set(-0.1);
       return;
     }
+
     extendingMotor.set(speed);
   }
 
   public boolean getTopStatus() {
-    return topHall.get();
+    boolean status = !topHall.get();
+    return status;
   }
 
   public boolean getBottomStatus() {
-    return bottomHall.get();
+    boolean status = !bottomHall.get();
+    if (status) extendingMotor.setSelectedSensorPosition(0);
+    return status;
   }
 
   public double getArmLength() {
@@ -126,7 +130,8 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double _ticksToLength(double ticks) {
-    return 2*Math.PI*(0.375+(0.04 * ticks * ArmConstants.EXTENSION_TICKS2ROT));
+    double r = ticks * ArmConstants.EXTENSION_TICKS2ROT;
+    return (.75 + 0.04*(r+1) ) * Math.PI * r;
   }
 
   @Override
@@ -134,6 +139,9 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("potentiometer", _getPotentiometerDegrees());
     SmartDashboard.putNumber("arm angle", getRotationDegrees());
 
-    SmartDashboard.putNumber("extensionTicks", extendingMotor.getSelectedSensorPosition() * ArmConstants.EXTENSION_TICKS2ROT);
+    SmartDashboard.putBoolean("topHalStatus", getTopStatus());
+    SmartDashboard.putBoolean("bottomHalStatus", getBottomStatus());
+
+    SmartDashboard.putNumber("extendLength", _ticksToLength(extendingMotor.getSelectedSensorPosition()));
   }
 }

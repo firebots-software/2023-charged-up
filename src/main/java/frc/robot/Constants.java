@@ -142,7 +142,7 @@ public final class Constants {
         public static final double pidPositionToleranceDegrees = 1.0;
         public static final double angleP = 0.1; //subject to chagne
         public static final double angleI = 0;
-        public static final double angleD = 0.001;
+        public static final double angleD = 0;
 
         public static final double FRICTION_BREAK_DEADBAND = 0.05;
 

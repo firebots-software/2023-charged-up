@@ -7,19 +7,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Piston;
 
-public class OpenPiston extends CommandBase {
+public class TogglePiston extends CommandBase {
   /** Creates a new OpenPiston. */
   Piston piston;
   /** Creates a new ClosePiston. */
-  public OpenPiston() {
+  public TogglePiston() {
     piston = Piston.getInstance();
-    // Use addRequirements() here to declare subsystem dependencies.
+
+    addRequirements(piston);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    piston.extendPiston();
+    piston.togglePiston();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -28,7 +29,8 @@ public class OpenPiston extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

@@ -42,7 +42,7 @@ import frc.robot.commands.ExtendArmToMax;
 import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.MoveToTargetLeft;
 import frc.robot.commands.MoveToTargetRight;
-import frc.robot.commands.OpenPiston;
+import frc.robot.commands.TogglePiston;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.Piston;
@@ -128,11 +128,11 @@ public class RobotContainer {
         
     clawAndArm.setDefaultCommand(new ArmJoystickCmd(
       () -> armJoystick.getRawAxis(0) * 0.2,
-      () -> armJoystick.getRawAxis(1) * 0.5));
+      () -> -armJoystick.getRawAxis(1) * 0.5));
       
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new ArmToDegree(clawAndArm, -90));
+    armToDegree.whileTrue(new ArmToDegree(clawAndArm, 90));
     
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
@@ -156,8 +156,11 @@ public class RobotContainer {
     final Trigger conePivot = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
     conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7, true));
 
-    final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    mtt.toggleOnTrue(new MoveToTarget(swerveSubsystem));
+    //final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    //mtt.toggleOnTrue(new MoveToTarget(swerveSubsystem));
+
+    final Trigger clawToggle = new JoystickButton(armJoystick, 1);
+    clawToggle.onTrue(new TogglePiston());
 
     /*
     final Trigger closePiston = new JoystickButton(driverPS4, Constants.OI.BIG_BUTTON_PORT);

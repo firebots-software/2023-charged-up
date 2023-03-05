@@ -52,7 +52,7 @@ public class RobotContainer {
   private final Map<String, Command> eventMap = Map.of(
       "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
       "chargeStationBackward", new ChargeStation(swerveSubsystem, -1),
-      // "moveToTarget", new MoveToTarget(swerveSubsystem),
+      "moveToTarget", new MoveToTag(swerveSubsystem),
       "zeroGyro", new ZeroHeadingCmd(swerveSubsystem));
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -66,7 +66,7 @@ public class RobotContainer {
           Constants.AutonConstants.kDTurning),
       swerveSubsystem::setModuleStates,
       eventMap,
-      true, // TODO: error?
+      true, // TODO: maybe this is messing up auton?
       swerveSubsystem);
 
   /**
@@ -90,6 +90,9 @@ public class RobotContainer {
         () -> -driverPS4.getRawAxis(1),
         () -> -driverPS4.getRawAxis(0),
         () -> -driverPS4.getRawAxis(2),
+
+        // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
+        // this value as a decimal to multiply and control the speed of the robot.
         () -> (driverPS4.getRawAxis(4) + 1d) / 2d,
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
@@ -129,8 +132,6 @@ public class RobotContainer {
     final Trigger clawToggle = new JoystickButton(armJoystick, 1);
     clawToggle.onTrue(new TogglePiston(claw));
   }
-  // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
-  // this value as a decimal to multiply and control the speed of the robot.
 
   public void initializeAutonChooser() {
 

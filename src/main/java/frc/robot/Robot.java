@@ -17,7 +17,7 @@ public class Robot extends TimedRobot {
   private SwerveSubsystem swerveSubsystem;
   private ArmSubsystem armSubsystem;
 
-  private PhotonVision frontCam, backCam;
+  // private PhotonVision frontCam, backCam;
 
   private RobotContainer m_robotContainer;
 
@@ -26,8 +26,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     swerveSubsystem = SwerveSubsystem.getInstance();
     armSubsystem = ArmSubsystem.getInstance();
-    frontCam = PhotonVision.getFrontCam();
-    backCam = PhotonVision.getBackCam();
+    // frontCam = PhotonVision.getFrontCam();
+    // backCam = PhotonVision.getBackCam();
   }
     @Override
   public void robotPeriodic() {
@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    armSubsystem._frictionBreakOn();
     swerveSubsystem.zeroHeading();
   }
 

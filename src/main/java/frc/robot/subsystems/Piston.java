@@ -9,14 +9,12 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Piston extends SubsystemBase {
-  private Solenoid leftPiston;
-  private Solenoid rightPiston;
+  private Solenoid pistons;
   private static Piston instance;
 
   /** Creates a new Piston. */
   public Piston() {
-    leftPiston = new Solenoid(PneumaticsModuleType.CTREPCM, 3);
-    // piston = new Solenoid(PneumaticsModuleType.CTREPCM, 17);
+    pistons = new Solenoid(PneumaticsModuleType.REVPH, 0);
   }
 
   public static Piston getInstance() {
@@ -28,11 +26,16 @@ public class Piston extends SubsystemBase {
   }
 
   public void extendPiston() {
-    leftPiston.set(true);
+    pistons.set(true);
   }
 
   public void retractPiston() {
-    leftPiston.set(false);
+    pistons.set(false);
+  }
+
+  public void togglePiston() {
+    System.out.println("************ to " + pistons.get());
+    pistons.set(!pistons.get());
   }
 
   @Override

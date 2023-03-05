@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.pathplanner.lib.PathConstraints;
@@ -30,13 +31,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants;
 //import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.ClosePiston;
+import frc.robot.commands.ExtendArmToMax;
 import frc.robot.commands.MoveToTarget;
+import frc.robot.commands.MoveToTargetLeft;
+import frc.robot.commands.MoveToTargetRight;
 import frc.robot.commands.OpenPiston;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.PhotonVision;
@@ -45,6 +50,7 @@ import frc.robot.commandGroups.ConePivot;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroArmCmd;
 import frc.robot.commands.ZeroHeadingCmd;
+
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -63,12 +69,21 @@ public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
-  private final Map<String, Command> eventMap = Map.of(
-      "chargeStationForward", new ChargeStation(swerveSubsystem, 1),
-      "chargeStationBackward", new ChargeStation(swerveSubsystem, -1),
-      "moveToTarget", new MoveToTarget(swerveSubsystem),
-      "zeroGyro", new ZeroHeadingCmd(swerveSubsystem)
-      );
+  private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
+      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
+      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
+      put("MoveToTarget", new MoveToTarget(swerveSubsystem));
+      //put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
+      //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
+      put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));
+      //put("OpenClaw", new OpenPiston());
+      //put("CloseClaw", new ClosePiston());
+      put("ArmToHighCubeFront", new ArmToDegree(clawAndArm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      put("ArmToHighConeFront", new ArmToDegree(clawAndArm, ArmConstants.HIGH_CONE_FRONT_DEG));
+      put("ArmToGroundBack", new ArmToDegree(clawAndArm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      //put("ExtendArmToMax", new ExtendArmToMax(12));
+  }};
+  
 
   private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
       swerveSubsystem::getPose,
@@ -92,6 +107,8 @@ public class RobotContainer {
     
     swerveSubsystem.resetEncoders();
     swerveSubsystem.zeroHeading();
+
+    
     // Configure the button bindings
     configureButtonBindings();
 
@@ -158,13 +175,9 @@ public class RobotContainer {
     autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
     autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
     autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
-    autonChooser.addOption("test", autoBuilder.fullAuto(AutonPaths.test));
     SmartDashboard.putData(autonChooser);
   }
 
-  public static SendableChooser<Command> getAutonChooser() {
-    return autonChooser;
-  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

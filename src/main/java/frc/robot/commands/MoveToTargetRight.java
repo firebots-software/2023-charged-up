@@ -26,7 +26,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MoveToTarget extends CommandBase {
+public class MoveToTargetRight extends CommandBase {
   PhotonVision frontCam = PhotonVision.getFrontCam();
   PhotonVision backCam = PhotonVision.getBackCam();
 
@@ -38,7 +38,7 @@ public class MoveToTarget extends CommandBase {
   int dir;
 
   /** Creates a new MoveToTarget. */
-  public MoveToTarget(SwerveSubsystem swerveSubsystem) {
+  public MoveToTargetRight(SwerveSubsystem swerveSubsystem) {
     field = new Field2d();
     this.ss = swerveSubsystem;
   }
@@ -71,7 +71,7 @@ public class MoveToTarget extends CommandBase {
 
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 
                                                           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
-                                                          new PathPoint(new Translation2d(( usedCam.getX() - PhotonVision.CAM_TO_FIDUCIAL_METERS ) * dir,usedCam.getY()*dir), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
+                                                          new PathPoint(new Translation2d(( usedCam.getX() - PhotonVision.CAM_TO_FIDUCIAL_METERS ) * dir,(usedCam.getY() -  0.55)*dir), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
     field.getObject("trajectory").setTrajectory(traj);
     SmartDashboard.putData(field);
     PathPlannerState initialSample = (PathPlannerState) traj.sample(0);

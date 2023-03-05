@@ -17,13 +17,14 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "closeClaw",
-          "raiseArm",
-          "openClaw"
+          "CloseClaw",
+          "ArmToHighConeFront",
+          "ExtendArmToMax",
+          "OpenClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 1.0
+        "waitTime": 2.0
       }
     },
     {
@@ -46,8 +47,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "moveToTarget",
-          "closeClaw"
+          "CloseClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -74,12 +74,12 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "moveToTarget",
-          "openClaw"
+          "MoveToTarget",
+          "OpenClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 1.0
+        "waitTime": 1.2
       }
     },
     {
@@ -102,12 +102,11 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "moveToObject",
-          "closeClaw"
+          "CloseClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 1.0
+        "waitTime": 0.6
       }
     },
     {
@@ -127,11 +126,12 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "closeClaw"
+          "MoveToTargetLeft",
+          "OpenClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 1.0
+        "waitTime": 1.2
       }
     }
   ],
@@ -139,25 +139,25 @@
     {
       "position": 0.16633522727272732,
       "names": [
-        "lowerAndRetractArm"
+        "ArmToGroundBack"
       ]
     },
     {
       "position": 1.124857954545453,
       "names": [
-        "raiseAndExtendArm"
+        "ArmToHighCubeFront"
       ]
     },
     {
       "position": 2.191903409090907,
       "names": [
-        "lowerAndRetractArm"
+        "ArmToGroundBack"
       ]
     },
     {
       "position": 3.144602272727275,
       "names": [
-        "raiseAndExtendArm"
+        "ArmToHighConeFront"
       ]
     }
   ]

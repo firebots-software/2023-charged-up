@@ -137,6 +137,7 @@ public final class Constants {
         public static final int RANGE_OF_MOTION = 1800; //confirmed
         public static final int STARTING_POINT = -1517;
         public static final double MAX_ROTATION_SPEED = 0.5; //confirmed
+        public static final double MAX_ROTATION_ANGLE_DEG = 115;
 
         public static final double pidPositionToleranceDegrees = 1.0;
         public static final double angleP = 0.1; //subject to chagne

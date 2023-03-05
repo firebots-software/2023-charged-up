@@ -75,9 +75,9 @@ public class ArmSubsystem extends SubsystemBase {
   public boolean setRotatingMotor(double speed) {
     double deg = _getPotentiometerDegrees();
 
-    if (deg <= -115)
+    if (deg <= -ArmConstants.MAX_ROTATION_ANGLE_DEG)
       speed = Math.max(speed, 0);
-    else if (deg >= 115)
+    else if (deg >= ArmConstants.MAX_ROTATION_ANGLE_DEG)
       speed = Math.min(speed, 0);
 
     // if moving too slow, turn on friction break and don't move

@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
     SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());;
-    
+    SmartDashboard.putNumber("Relative Pitch", webcam.getTargetRelativePitch());
   }
 
   @Override

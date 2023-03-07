@@ -39,7 +39,7 @@ import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.ClosePiston;
-import frc.robot.commands.MoveToTarget;
+import frc.robot.commands.MoveToTag;
 import frc.robot.commands.MoveToTargetLeft;
 import frc.robot.commands.MoveToTargetRight;
 import frc.robot.commands.TogglePiston;
@@ -72,7 +72,7 @@ public class RobotContainer {
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
-      put("MoveToTarget", new MoveToTarget(swerveSubsystem));
+      put("MoveToTarget", new MoveToTag(swerveSubsystem));
       //put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
       put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));

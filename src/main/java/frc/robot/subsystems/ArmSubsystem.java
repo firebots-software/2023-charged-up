@@ -5,15 +5,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -103,11 +100,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
+    double length = getArmLength();
     if ((Math.abs(speed) < 0.1) ||
-    (getBottomStatus() && speed < 0) ||
-    (getTopStatus() && speed > 0)) {
+    (length < 0 && speed < 0) ||
+    (length > 26.6 && speed > 0)) {
       // maintain position
-      extendingMotor.set(-0.1);
+      extendingMotor.set(0);//-0.1);
       return;
     }
 
@@ -143,5 +141,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("bottomHalStatus", getBottomStatus());
 
     SmartDashboard.putNumber("extendLength", _ticksToLength(extendingMotor.getSelectedSensorPosition()));
+
+    getBottomStatus();
   }
 }

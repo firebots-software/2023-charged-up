@@ -4,9 +4,6 @@
 
 package frc.robot.commands;
 
-
-import java.util.ArrayList;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -26,7 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MoveToTarget extends CommandBase {
+public class MoveToTag extends CommandBase {
   PhotonVision frontCam = PhotonVision.getFrontCam();
   PhotonVision backCam = PhotonVision.getBackCam();
 
@@ -38,7 +35,7 @@ public class MoveToTarget extends CommandBase {
   int dir;
 
   /** Creates a new MoveToTarget. */
-  public MoveToTarget(SwerveSubsystem swerveSubsystem) {
+  public MoveToTag(SwerveSubsystem swerveSubsystem) {
     field = new Field2d();
     this.ss = swerveSubsystem;
   }

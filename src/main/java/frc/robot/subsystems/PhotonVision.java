@@ -10,18 +10,12 @@ import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVision extends SubsystemBase{
     private static PhotonVision frontCam;
     private static PhotonVision backCam;
-
-    private NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    private NetworkTable table = instance.getTable("limelightCam");
     
     PhotonCamera camera = new PhotonCamera("limelightCam");
     PhotonPipelineResult result = getLatestPipeline();

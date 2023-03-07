@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.pathplanner.lib.PathConstraints;
@@ -175,10 +176,10 @@ public class RobotContainer {
 
   public void initializeAutonChooser() {
 
-    autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
-    autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
-    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
-    autonChooser.addOption("test", autoBuilder.fullAuto(AutonPaths.test));
+    autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
+    autonChooser.addOption("middleAuton", makeAuton(AutonPaths.middleAuton));
+    autonChooser.addOption("bottomAuton", makeAuton(AutonPaths.bottomAuton));
+    autonChooser.addOption("test", makeAuton(AutonPaths.test));
 
     SmartDashboard.putData(autonChooser);
   }
@@ -192,6 +193,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     return autonChooser.getSelected();
+  }
+
+  public Command makeAuton(List<PathPlannerTrajectory> ppts) {
+    return new InstantCommand(() -> {
+      PathPlannerState initial = (PathPlannerState) ppts.get(0).sample(0);
+      Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
+      swerveSubsystem.resetOdometry(initialPose);
+    }).andThen(autoBuilder.fullAuto(ppts));
   }
 
 }

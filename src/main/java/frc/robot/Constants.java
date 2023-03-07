@@ -174,9 +174,9 @@ public final class Constants {
         public static final double kIDriving = 0;
         public static final double kDDriving = 0;
 
-        public static final double kPTurning = 4;
+        public static final double kPTurning = 3; //4 og
         public static final double kITurning = 0;
-        public static final double kDTurning = 0.69;
+        public static final double kDTurning = 0;
 
         public static final double kVMax = 1;
         public static final double kAMax = 1;

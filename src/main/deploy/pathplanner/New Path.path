@@ -18,21 +18,21 @@
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "waitBehavior": "minimum",
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
         "x": 1.0,
-        "y": 0.0
+        "y": 1.0
       },
       "prevControl": {
         "x": 0.75,
-        "y": 0.0
+        "y": 0.75k
       },
       "nextControl": null,
-      "holonomicAngle": 90,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,

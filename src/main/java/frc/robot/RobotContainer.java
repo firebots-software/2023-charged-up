@@ -178,6 +178,8 @@ public class RobotContainer {
     autonChooser.addOption("topAuton", autoBuilder.fullAuto(AutonPaths.topAuton));
     autonChooser.addOption("middleAuton", autoBuilder.fullAuto(AutonPaths.middleAuton));
     autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(AutonPaths.bottomAuton));
+    autonChooser.addOption("test", autoBuilder.fullAuto(AutonPaths.test));
+
     SmartDashboard.putData(autonChooser);
   }
 

@@ -41,12 +41,12 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     armSubsystem._frictionBreakOn();
-    swerveSubsystem.zeroHeading();
+    //swerveSubsystem.zeroHeading();
   }
 
   @Override
   public void disabledPeriodic() {
-    armSubsystem._frictionBreakOn();
+   // armSubsystem._frictionBreakOn();
   }
 
   @Override
@@ -55,7 +55,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    onInit();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -105,7 +104,7 @@ public class Robot extends TimedRobot {
   public void onInit() {
     armSubsystem._frictionBreakOn();
     clawSubsystem.open();
-    swerveSubsystem.zeroHeading();
+    //swerveSubsystem.zeroHeading();
   }
 
 }

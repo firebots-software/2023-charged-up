@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -70,17 +71,18 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
-      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
-      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
+      // put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
+      // put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      //put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
+      // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
-      put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));
-      //put("OpenClaw", new OpenPiston());
-      //put("CloseClaw", new ClosePiston());
-      put("ArmToHighCubeFront", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
-      put("ArmToHighConeFront", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
-      put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      // put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));
+      // put("OpenClaw", new OpenPiston());
+      // put("CloseClaw", new ClosePiston());
+      // put("ArmToHighCubeFront", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      // put("ArmToHighConeFront", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
+      // put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      
   }};
   
 
@@ -177,6 +179,7 @@ public class RobotContainer {
     autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
     autonChooser.addOption("middleAuton", makeAuton(AutonPaths.middleAuton));
     autonChooser.addOption("bottomAuton", makeAuton(AutonPaths.bottomAuton));
+    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAutonPart1, AutonPaths.testTopAutonPart2));
 
 
     SmartDashboard.putData(autonChooser);
@@ -200,5 +203,30 @@ public class RobotContainer {
       swerveSubsystem.resetOdometry(initialPose);
     }).andThen(autoBuilder.fullAuto(ppts));
   }
+
+  public Command makeAuton(List<PathPlannerTrajectory> ppt1, List<PathPlannerTrajectory> ppt2){
+    return new InstantCommand(() -> {
+      PathPlannerState initial1 = (PathPlannerState) ppt1.get(0).sample(0);
+      Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
+      swerveSubsystem.resetOdometry(initial1Pose);
+    }).andThen(autoBuilder.fullAuto(ppt1))
+    .andThen(new InstantCommand(() -> {
+      PathPlannerState initial2 = (PathPlannerState) ppt2.get(0).sample(0);
+      Pose2d initial2Pose = new Pose2d(initial2.poseMeters.getTranslation(), initial2.holonomicRotation);
+      swerveSubsystem.resetOdometry(initial2Pose);
+    })).andThen(autoBuilder.fullAuto(ppt2));
+  }
+
+  // public Command makeAuton(List<PathPlannerTrajectory> ppts) {
+  //   Command current = new InstantCommand();
+
+  //   for (int i = 1; i < ppts.size(); i++) {
+  //     current = current.andThen(new InstantCommand(() -> {
+  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(0).sample(0);
+  //       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
+  //       swerveSubsystem.resetOdometry(initial1Pose);
+  //     })).andThen(autoBuilder.fullAuto(ppts.get(i)));
+  //   }
+  // }
 
 }

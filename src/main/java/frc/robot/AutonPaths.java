@@ -20,10 +20,6 @@ public class AutonPaths {
         "middleAuton", 
         Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
 
-    public static List<PathPlannerTrajectory> test = PathPlanner.loadPathGroup(
-        "New Path", 
-        Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
-
         
     
 }

@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.Constants.ArmConstants;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 
 public class ArmToDegreeFriction extends CommandBase{
 
@@ -38,7 +37,7 @@ public class ArmToDegreeFriction extends CommandBase{
             return;
         }
 
-        double calculatedSpeed = (targetDeg - arm.getRotationDegrees()) * ArmConstants.angleP + (ArmConstants.FRICTION_BREAK_DEADBAND * direction);
+        double calculatedSpeed = (targetDeg - arm.getRotationDegrees()) * ArmConstants.ANGLE_P + (ArmConstants.FRICTION_BREAK_DEADBAND * direction);
         calculatedSpeed = MathUtil.clamp(calculatedSpeed, -ArmConstants.MAX_ROTATION_SPEED, ArmConstants.MAX_ROTATION_SPEED);
         arm.setRotatingMotor(calculatedSpeed);
     }

@@ -15,7 +15,7 @@ public class ArmToDegree extends CommandBase{
     public ArmToDegree(ArmSubsystem arm, double targetDegrees){
         this.arm = arm;
         this.targetDeg = targetDegrees;
-        pid = new PIDController(ArmConstants.angleP, ArmConstants.angleI, ArmConstants.angleD);
+        pid = new PIDController(ArmConstants.ANGLE_P, ArmConstants.ANGLE_I, ArmConstants.ANGLE_D);
         pid.setTolerance(ArmConstants.pidPositionToleranceDegrees);
         addRequirements(arm);
     }

@@ -7,8 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ClawSubsystem;
 
-public class TogglePiston extends InstantCommand {
-  public TogglePiston(ClawSubsystem p) {
+public class ToggleClaw extends InstantCommand {
+  public ToggleClaw(ClawSubsystem p) {
     super(() -> {p.toggle();}, p);
+  }
+
+  public ToggleClaw(boolean open, ClawSubsystem p) {
+    super(() -> {if (open) { p.open(); } else { p.close(); } }, p);
   }
 }

@@ -39,6 +39,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     extendingMotor = new WPI_TalonSRX(ArmConstants.EXTENDINGMOTOR_PORT);
     extendingMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
     topHall = new DigitalInput(ArmConstants.TOPHALLEFFECT_PORT);
     bottomHall = new DigitalInput(ArmConstants.BOTTOMHALLEFFECT_PORT);
     setRotationWithPot();
@@ -57,16 +58,16 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void _frictionBreakOn() {
     if (!_isFrictionBreakOn())
-      frictionBreakSolenoid.set(true);
+      frictionBreakSolenoid.set(false);
   }
 
   public void _frictionBreakOff() {
     if (_isFrictionBreakOn())
-      frictionBreakSolenoid.set(false);
+      frictionBreakSolenoid.set(true);
   }
 
   public boolean _isFrictionBreakOn() {
-    return frictionBreakSolenoid.get();
+    return !frictionBreakSolenoid.get();
   }
 
   public boolean setRotatingMotor(double speed) {
@@ -100,12 +101,11 @@ public class ArmSubsystem extends SubsystemBase {
 
   // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
-    double length = getArmLength();
     if ((Math.abs(speed) < 0.1) ||
-    (length < 0 && speed < 0) ||
-    (length > 26.6 && speed > 0)) {
+    (getBottomStatus() && speed < 0) ||
+    (getTopStatus() && speed > 0)) {
       // maintain position
-      extendingMotor.set(0);//-0.1);
+      extendingMotor.set(-0.1);
       return;
     }
 
@@ -124,12 +124,12 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getArmLength() {
-    return 0.0;
+    return _ticksToLength(extendingMotor.getSelectedSensorPosition());
   }
 
   public double _ticksToLength(double ticks) {
     double r = ticks * ArmConstants.EXTENSION_TICKS2ROT;
-    return (.75 + 0.04*(r+1) ) * Math.PI * r;
+    return ((.75 + 0.04*(r+1) ) * Math.PI * r) + 25.65;
   }
 
   @Override

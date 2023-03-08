@@ -15,8 +15,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -33,10 +34,17 @@ public class MoveToTag extends CommandBase {
   PPSwerveControllerCommand pp;
   Field2d field;
 
+  double yoffset;
+
   /** Creates a new MoveToTarget. */
   public MoveToTag(SwerveSubsystem swerveSubsystem) {
     field = new Field2d();
     this.ss = swerveSubsystem;
+  }
+
+  public MoveToTag(int pos, SwerveSubsystem swerveSubsystem) {
+    this(swerveSubsystem);
+    this.yoffset = ((double) pos) * 0.55 * (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
   }
 
   // Called when the command is initially scheduled.
@@ -63,9 +71,7 @@ public class MoveToTag extends CommandBase {
 
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2), 
                                                           new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0)),
-                                                          new PathPoint(new Translation2d(usedCam.getX()-PhotonVision.CAM_TO_FIDUCIAL_METERS,usedCam.getY()), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
-    field.getObject("trajectory").setTrajectory(traj);
-    SmartDashboard.putData(field);
+                                                          new PathPoint(new Translation2d(usedCam.getX()-PhotonVision.CAM_TO_FIDUCIAL_METERS,usedCam.getY()-yoffset), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-ss.getHeading())));
     PathPlannerState initialSample = (PathPlannerState) traj.sample(0);
     Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
       initialSample.holonomicRotation);

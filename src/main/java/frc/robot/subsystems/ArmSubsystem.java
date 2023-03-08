@@ -23,7 +23,7 @@ public class ArmSubsystem extends SubsystemBase {
   // rotating
   private WPI_TalonFX rotatingMotor;
   private AnalogPotentiometer pot;
-  private Solenoid frictionBreakSolenoid;
+  private Solenoid frictionBreakSolenoid0, frictionBreakSolenoid1;
 
   // extending
   private WPI_TalonSRX extendingMotor;
@@ -33,8 +33,10 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     pot = new AnalogPotentiometer(ArmConstants.POTENTIOMETER_PORT, ArmConstants.RANGE_OF_MOTION,
         ArmConstants.STARTING_POINT);
-    frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
-        ArmConstants.FRICTION_BREAK_PORT);
+    frictionBreakSolenoid0 = new Solenoid(PneumaticsModuleType.REVPH,
+        ArmConstants.FRICTION_BREAK_PORT0);
+    frictionBreakSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH,
+        ArmConstants.FRICTION_BREAK_PORT1);
     rotatingMotor = new WPI_TalonFX(ArmConstants.ROTATINGMOTOR_PORT);
 
     extendingMotor = new WPI_TalonSRX(ArmConstants.EXTENDINGMOTOR_PORT);
@@ -57,17 +59,21 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void _frictionBreakOn() {
-    if (!_isFrictionBreakOn())
-      frictionBreakSolenoid.set(false);
+    if (!_isFrictionBreakOn()) {
+      frictionBreakSolenoid0.set(false);
+      frictionBreakSolenoid1.set(true);
+    }
   }
 
   public void _frictionBreakOff() {
-    if (_isFrictionBreakOn())
-      frictionBreakSolenoid.set(true);
+    if (_isFrictionBreakOn()) {
+      frictionBreakSolenoid0.set(true);
+      frictionBreakSolenoid1.set(false);
+    }
   }
 
   public boolean _isFrictionBreakOn() {
-    return !frictionBreakSolenoid.get();
+    return frictionBreakSolenoid1.get();
   }
 
   public boolean setRotatingMotor(double speed) {
@@ -77,6 +83,11 @@ public class ArmSubsystem extends SubsystemBase {
       speed = Math.max(speed, 0);
     else if (deg >= 115)
       speed = Math.min(speed, 0);
+
+    if (Math.abs(deg) <= 60 && !getBottomStatus()) {
+      setExtendingMotor(-0.5);
+      return false;
+    }
 
     // if moving too slow, turn on friction break and don't move
     if (Math.abs(speed) < ArmConstants.FRICTION_BREAK_DEADBAND) {
@@ -132,6 +143,10 @@ public class ArmSubsystem extends SubsystemBase {
     return ((.75 + 0.04*(r+1) ) * Math.PI * r) + 25.65;
   }
 
+  public double getTicks() {
+    return extendingMotor.getSelectedSensorPosition();
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("potentiometer", _getPotentiometerDegrees());
@@ -139,6 +154,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("topHalStatus", getTopStatus());
     SmartDashboard.putBoolean("bottomHalStatus", getBottomStatus());
+    SmartDashboard.putNumber("ticks", getTicks());
+
 
     SmartDashboard.putNumber("extendLength", _ticksToLength(extendingMotor.getSelectedSensorPosition()));
 

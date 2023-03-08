@@ -15,8 +15,8 @@ public class ClawSubsystem extends SubsystemBase {
 
   /** Creates a new Piston. */
   public ClawSubsystem() {
-    left = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_LEFT_SOLENOID_PORT);
-    right = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_RIGHT_SOLENOID_PORT);
+    left = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_SOLENOID_PORT0);
+    right = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_SOLENOID_PORT1);
   }
 
   public static ClawSubsystem getInstance() {
@@ -28,13 +28,13 @@ public class ClawSubsystem extends SubsystemBase {
   }
 
   public void close() {
-    left.set(false);
-    right.set(true);
+    left.set(true);
+    right.set(false);
   }
 
   public void open() {
-    left.set(true);
-    right.set(false);
+    left.set(false);
+    right.set(true);
   }
 
   public void toggle() {

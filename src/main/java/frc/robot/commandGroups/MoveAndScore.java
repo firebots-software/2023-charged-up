@@ -41,9 +41,9 @@ public class MoveAndScore extends SequentialCommandGroup {
         addCommands(
             new ParallelCommandGroup(
                 new MoveToTag(pos, swerveSubsystem),
-                new ArmToDegree(arm, deginches[0]),
-                new ExtendToCmd(arm, deginches[1])
+                new ArmToDegree(arm, deginches[0])
             ),
+            new ExtendToCmd(arm, deginches[1]),
             new ToggleClaw(true, claw)
         );
     }

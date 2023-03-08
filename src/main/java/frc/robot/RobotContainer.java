@@ -100,19 +100,27 @@ public class RobotContainer {
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
+        /* 
     arm.setDefaultCommand(new ArmJoystickCmd(
         () -> armJoystick.getRawAxis(0) * 0.2,
         () -> -armJoystick.getRawAxis(1) * 0.5));
+        */
     
-    for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).onTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, true, swerveSubsystem, arm, claw));
-    }
+    // for (int button = 1; button < 10; button++) {
+    //   new JoystickButton(numpad, button).onTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, true, swerveSubsystem, arm, claw));
+    // }
 
-    // final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    // armToDegree.whileTrue(new ArmToDegree(arm, 90));
+    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
+    armToDegree.whileTrue(new ArmToDegree(arm, 90));
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+
+    final Trigger thing = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
+    thing.toggleOnTrue(new InstantCommand(() -> {claw.close();}));
+
+    final Trigger thing2 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    thing2.toggleOnTrue(new InstantCommand(() -> {arm._frictionBreakOff();}));
 
     // PathPlannerTrajectory traj = PathPlanner.generatePath(
     //     new PathConstraints(Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax),
@@ -136,8 +144,8 @@ public class RobotContainer {
     // final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
     // mtt.toggleOnTrue(new MoveToTag(swerveSubsystem));
 
-    // final Trigger clawToggle = new JoystickButton(armJoystick, 1);
-    // clawToggle.onTrue(new TogglePiston(claw));
+    final Trigger clawToggle = new JoystickButton(armJoystick, 1);
+    clawToggle.onTrue(new ToggleClaw(claw));
   }
 
   public void initializeAutonChooser() {

@@ -23,6 +23,7 @@ public class ArmToDegree extends CommandBase{
     @Override
     public void initialize(){
         pid.setSetpoint(this.targetDeg);
+        // arm._frictionBreakOff();
     }
 
     @Override
@@ -30,11 +31,13 @@ public class ArmToDegree extends CommandBase{
         double calculatedSpeed = pid.calculate(arm.getRotationDegrees());
         calculatedSpeed = MathUtil.clamp(calculatedSpeed, -ArmConstants.MAX_ROTATION_SPEED, ArmConstants.MAX_ROTATION_SPEED);
         arm.setRotatingMotor(calculatedSpeed);
+        System.out.println("going!");
     }
 
     @Override
     public void end(boolean interrupted){
         arm.setRotatingMotor(0);
+        // arm._frictionBreakOn();
     }
 
     @Override

@@ -76,9 +76,9 @@ public class RobotContainer {
       put("MoveToTargetRight", new MoveToTag(-1, swerveSubsystem));
       put("OpenClaw", new ToggleClaw(true, claw));
       put("CloseClaw", new ToggleClaw(false, claw));
-      put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
-      put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
-      put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      //  put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
+      put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
       //put("RetractArmToMin", new ExtendToCmd(arm));
 
@@ -191,6 +191,8 @@ public class RobotContainer {
     autonChooser.addOption("bottomAuton", makeAuton((AutonPaths.bottomAuton)));
     autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAutonPart1, AutonPaths.testTopAutonPart2));
     autonChooser.addOption("chargeStation", makeAuton(AutonPaths.chargeStationAndMobility));
+    autonChooser.addOption("yetAnotherTestAuton", makeAuton(AutonPaths.yetAnotherTestAuton));
+    
 
     SmartDashboard.putData(autonChooser);
   }

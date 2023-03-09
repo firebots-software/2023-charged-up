@@ -49,7 +49,7 @@ public final class Constants {
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kDriveEncoderTicks2Meter = kDriveEncoderRot2Meter / kDriveEncoderTicksPerRotation;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
-    public static final double kPTurning = 0.75;
+    public static final double kPTurning = 0.79;
     }
 
     public static final class DriveConstants {
@@ -173,13 +173,13 @@ public final class Constants {
     }
 
     public static final class AutonConstants {
-        public static final double kPDriving = 3;
+        public static final double kPDriving = 3.2;
         public static final double kIDriving = 0;
         public static final double kDDriving = 0;
 
-        public static final double kPTurning = 3; //4 og
+        public static final double kPTurning = 2; //4 og
         public static final double kITurning = 0;
-        public static final double kDTurning = 0;
+        public static final double kDTurning = 0.69;
 
         public static final double kVMax = 1;
         public static final double kAMax = 1;

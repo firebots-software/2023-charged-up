@@ -40,6 +40,7 @@ import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.ClosePiston;
+import frc.robot.commands.ExtendToCmd;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.commandGroups.ConePivot;
@@ -72,6 +73,16 @@ public class RobotContainer {
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
+      put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
+      put("MoveToTargetRight", new MoveToTag(-1, swerveSubsystem));
+      put("OpenClaw", new ToggleClaw(true, claw));
+      put("CloseClaw", new ToggleClaw(false, claw));
+      put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
+      put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      //put("ExtendArmToMax", new ExtendToCmd(arm));
+      //put("RetractArmToMin", new ExtendToCmd(arm));
+
       // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
       // put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));

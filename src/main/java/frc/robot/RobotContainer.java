@@ -71,8 +71,8 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
-      // put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
-      // put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
+      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
+      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
       // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
@@ -176,11 +176,11 @@ public class RobotContainer {
 
   public void initializeAutonChooser() {
 
-    autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
-    autonChooser.addOption("middleAuton", makeAuton(AutonPaths.middleAuton));
-    autonChooser.addOption("bottomAuton", makeAuton(AutonPaths.bottomAuton));
+    autonChooser.addOption("topAuton", makeAuton((AutonPaths.topAuton)));
+    autonChooser.addOption("middleAuton", makeAuton((AutonPaths.middleAuton)));
+    autonChooser.addOption("bottomAuton", makeAuton((AutonPaths.bottomAuton)));
     autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAutonPart1, AutonPaths.testTopAutonPart2));
-
+    autonChooser.addOption("chargeStation", makeAuton(AutonPaths.chargeStationAndMobility));
 
     SmartDashboard.putData(autonChooser);
   }
@@ -196,15 +196,17 @@ public class RobotContainer {
     return autonChooser.getSelected();
   }
 
-  public Command makeAuton(List<PathPlannerTrajectory> ppts) {
+  public Command makeAuton(List<PathPlannerTrajectory> ppt1){
+    
     return new InstantCommand(() -> {
-      PathPlannerState initial = (PathPlannerState) ppts.get(0).sample(0);
-      Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
-      swerveSubsystem.resetOdometry(initialPose);
-    }).andThen(autoBuilder.fullAuto(ppts));
+      PathPlannerState initial1 = (PathPlannerState) ppt1.get(0).sample(0);
+      Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
+      swerveSubsystem.resetOdometry(initial1Pose);
+    }).andThen(autoBuilder.fullAuto(ppt1));
   }
 
   public Command makeAuton(List<PathPlannerTrajectory> ppt1, List<PathPlannerTrajectory> ppt2){
+    
     return new InstantCommand(() -> {
       PathPlannerState initial1 = (PathPlannerState) ppt1.get(0).sample(0);
       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
@@ -217,16 +219,19 @@ public class RobotContainer {
     })).andThen(autoBuilder.fullAuto(ppt2));
   }
 
-  // public Command makeAuton(List<PathPlannerTrajectory> ppts) {
+  // public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
   //   Command current = new InstantCommand();
 
-  //   for (int i = 1; i < ppts.size(); i++) {
+  //   for (int i = 0; i < ppts.size(); i++) {
   //     current = current.andThen(new InstantCommand(() -> {
-  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(0).sample(0);
+  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(i).get(0).sample(0);
   //       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
   //       swerveSubsystem.resetOdometry(initial1Pose);
   //     })).andThen(autoBuilder.fullAuto(ppts.get(i)));
   //   }
+  //   return current;
   // }
+  
 
+  
 }

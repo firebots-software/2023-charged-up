@@ -28,4 +28,8 @@ public class AutonPaths {
     public static List<PathPlannerTrajectory> testTopAutonPart2 = PathPlanner.loadPathGroup(
         "testTopAutonPart2", 
         Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
+        public static List<PathPlannerTrajectory> chargeStationAndMobility = PathPlanner.loadPathGroup(
+            "chargeStation", 
+            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
 }

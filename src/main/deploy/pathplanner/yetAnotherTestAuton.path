@@ -1,0 +1,100 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8722126090085516,
+        "y": 4.406853251206503
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.7382380127929906,
+        "y": 4.906853251206503
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ArmToHighCube",
+          "ExtendArmToMax",
+          "OpenClaw"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 2.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.85,
+        "y": 4.61
+      },
+      "prevControl": {
+        "x": 4.85,
+        "y": 4.61
+      },
+      "nextControl": {
+        "x": 4.85,
+        "y": 4.61
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "CloseClaw"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 0.5
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.2004244807100726,
+        "y": 4.404591720641775
+      },
+      "prevControl": {
+        "x": 2.9075312618966187,
+        "y": 5.1116985018283225
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "MoveToTargetLeft",
+          "OpenClaw"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 2.0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.07002840909090914,
+      "names": [
+        "RetractArmToMin",
+        "ArmToGroundBack",
+        "ExtendArmToMax"
+      ]
+    },
+    {
+      "position": 1.074360795454546,
+      "names": [
+        "RetractArmToMin",
+        "ArmToHighCone",
+        "ExtendArmToMax"
+      ]
+    }
+  ]
+}

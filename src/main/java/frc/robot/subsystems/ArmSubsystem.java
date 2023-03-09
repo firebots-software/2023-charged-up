@@ -23,7 +23,7 @@ public class ArmSubsystem extends SubsystemBase {
   // rotating
   private WPI_TalonFX rotatingMotor;
   private AnalogPotentiometer pot;
-  private Solenoid frictionBreakSolenoid0, frictionBreakSolenoid1;
+  private Solenoid frictionBreakSolenoid;
 
   // extending
   private WPI_TalonSRX extendingMotor;
@@ -33,10 +33,8 @@ public class ArmSubsystem extends SubsystemBase {
   public ArmSubsystem() {
     pot = new AnalogPotentiometer(ArmConstants.POTENTIOMETER_PORT, ArmConstants.RANGE_OF_MOTION,
         ArmConstants.STARTING_POINT);
-    frictionBreakSolenoid0 = new Solenoid(PneumaticsModuleType.REVPH,
-        ArmConstants.FRICTION_BREAK_PORT0);
-    frictionBreakSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH,
-        ArmConstants.FRICTION_BREAK_PORT1);
+    frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
+        ArmConstants.FRICTION_BREAK_PORT);
     rotatingMotor = new WPI_TalonFX(ArmConstants.ROTATINGMOTOR_PORT);
 
     extendingMotor = new WPI_TalonSRX(ArmConstants.EXTENDINGMOTOR_PORT);
@@ -59,44 +57,43 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void _frictionBreakOn() {
-    if (!_isFrictionBreakOn()) {
-      frictionBreakSolenoid0.set(false);
-      frictionBreakSolenoid1.set(true);
-    }
+    if (!_isFrictionBreakOn())
+      frictionBreakSolenoid.set(false);
   }
 
   public void _frictionBreakOff() {
-    if (_isFrictionBreakOn()) {
-      frictionBreakSolenoid0.set(true);
-      frictionBreakSolenoid1.set(false);
-    }
+    if (_isFrictionBreakOn())
+      frictionBreakSolenoid.set(true);
   }
 
   public boolean _isFrictionBreakOn() {
-    return frictionBreakSolenoid1.get();
+    return !frictionBreakSolenoid.get();
   }
 
   public boolean setRotatingMotor(double speed) {
     double deg = _getPotentiometerDegrees();
 
+    // Guard 1: don't allow the arm to go below 115 degrees from the vertical
     if (deg <= -115)
       speed = Math.max(speed, 0);
     else if (deg >= 115)
       speed = Math.min(speed, 0);
 
+    // Guard 2: if the arm is in between -60 and 60 degrees, we need to retract the arm fully to not extend past 6' 4"
+    // TODO: when encoder works, do trig to figure out the actual limit based on the arm length.
     if (Math.abs(deg) <= 60 && !getBottomStatus()) {
       setExtendingMotor(-0.5);
       return false;
     }
 
-    // if moving too slow, turn on friction break and don't move
+    // Guard 3: if the requested speed moves too slow, turn on friction break and don't move
     if (Math.abs(speed) < ArmConstants.FRICTION_BREAK_DEADBAND) {
       rotatingMotor.set(0);
       _frictionBreakOn();
       return false;
     }
 
-    // else, set the speed and turn the friction break off
+    // set the arm to the requested speed and turn the friction break off
     _frictionBreakOff();
     rotatingMotor.set(speed);
     return true;
@@ -107,7 +104,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getRotationDegrees() {
-    return _getPotentiometerDegrees();// rotatingMotor.getSelectedSensorPosition() * Constants.ArmConstants.ROTATIONAL_TICKS2ROT * 360.0;
+    return _getPotentiometerDegrees();
   }
 
   // retracting is negative, extending is positive
@@ -149,15 +146,13 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("potentiometer", _getPotentiometerDegrees());
     SmartDashboard.putNumber("arm angle", getRotationDegrees());
 
     SmartDashboard.putBoolean("topHalStatus", getTopStatus());
     SmartDashboard.putBoolean("bottomHalStatus", getBottomStatus());
     SmartDashboard.putNumber("ticks", getTicks());
 
-
-    SmartDashboard.putNumber("extendLength", _ticksToLength(extendingMotor.getSelectedSensorPosition()));
+    SmartDashboard.putNumber("calculated extend length (inches)", getArmLength());
 
     getBottomStatus();
   }

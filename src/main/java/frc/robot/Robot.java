@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 
   public void onInit() {
     armSubsystem._frictionBreakOn();
-    clawSubsystem.open();
+    clawSubsystem.close();
     swerveSubsystem.zeroHeading();
   }
 

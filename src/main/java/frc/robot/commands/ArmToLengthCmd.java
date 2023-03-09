@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class ExtendToCmd extends CommandBase {
+public class ArmToLengthCmd extends CommandBase {
     private ArmSubsystem arm;
     private double targetInches;
     private PIDController pid;
 
-    public ExtendToCmd(ArmSubsystem arm, double targetInches){
+    public ArmToLengthCmd(ArmSubsystem arm, double targetInches){
         this.arm = arm;
         this.targetInches = targetInches;
         pid = new PIDController(ArmConstants.EXTENTION_P, ArmConstants.EXTENTION_I, ArmConstants.EXTENTION_D);

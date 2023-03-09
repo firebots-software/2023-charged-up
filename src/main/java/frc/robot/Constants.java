@@ -123,10 +123,8 @@ public final class Constants {
 
         public static final int POTENTIOMETER_PORT = 3; //confirmed
 
-        public static final int CLAW_SOLENOID_PORT0 = 3; //Changing
-        public static final int CLAW_SOLENOID_PORT1 = 5; //Changing
-        public static final int FRICTION_BREAK_PORT0 = 6; //Changing?
-        public static final int FRICTION_BREAK_PORT1 = 7; //Changing?
+        public static final int CLAW_SOLENOID_PORT = 5; //Changing
+        public static final int FRICTION_BREAK_PORT = 4; //Changing?
 
         public static final int BOTTOMHALLEFFECT_PORT = 1; //confirmed
         public static final int TOPHALLEFFECT_PORT = 0; //confirmed

@@ -5,7 +5,8 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ArmToDegree;
-import frc.robot.commands.ExtendToCmd;
+import frc.robot.commands.ArmToLengthCmd;
+import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
@@ -27,6 +28,12 @@ public class MoveAndScore extends SequentialCommandGroup {
         put(2, new double[]{ArmConstants.HIGH_CONE_FRONT_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
     }};
 
+    private static final HashMap<Integer, double[]> degreesTickies = new HashMap<>(){{
+        put(0, new double[]{ArmConstants.LOW_GOAL_BACK_DEG, ArmConstants.LOW_GOAL_DIST_IN});
+        put(1, new double[]{ArmConstants.MID_CONE_BACK_DEG, 78585});
+        put(2, new double[]{ArmConstants.HIGH_CONE_BACK_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
+    }};
+
     /**
      * Move and score a loaded pieces
      * @param pos -1 if to the left, 0 if in the middle, 1 if to the right
@@ -36,14 +43,15 @@ public class MoveAndScore extends SequentialCommandGroup {
      * @param arm
      * @param claw
      */
-    public MoveAndScore(int pos, int level, boolean cone, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
-        double[] deginches = cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
+    public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
+        boolean cone = pos != 0;
+        double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(
             new ParallelCommandGroup(
-                new MoveToTag(pos, swerveSubsystem),
+                // new MoveToTag(pos, swerveSubsystem),
                 new ArmToDegree(arm, deginches[0])
             ),
-            new ExtendToCmd(arm, deginches[1]),
+            new JankArmToTicks(deginches[1], arm),
             new ToggleClaw(true, claw)
         );
     }

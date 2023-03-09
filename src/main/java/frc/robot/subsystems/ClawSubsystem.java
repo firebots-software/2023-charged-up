@@ -10,13 +10,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
 public class ClawSubsystem extends SubsystemBase {
-  private Solenoid left, right;
+  private Solenoid piston;
   private static ClawSubsystem instance;
 
   /** Creates a new Piston. */
   public ClawSubsystem() {
-    left = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_SOLENOID_PORT0);
-    right = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_SOLENOID_PORT1);
+    piston = new Solenoid(PneumaticsModuleType.REVPH, ArmConstants.CLAW_SOLENOID_PORT);
   }
 
   public static ClawSubsystem getInstance() {
@@ -28,18 +27,15 @@ public class ClawSubsystem extends SubsystemBase {
   }
 
   public void close() {
-    left.set(true);
-    right.set(false);
+    piston.set(false);
   }
 
   public void open() {
-    left.set(false);
-    right.set(true);
+    piston.set(true);
   }
 
   public void toggle() {
-    left.set(!left.get());
-    right.set(!right.get());
+    piston.set(!piston.get());
   }
 
   @Override

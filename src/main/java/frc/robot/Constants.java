@@ -19,7 +19,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static class OI {
         public static final int DRIVER_PS4_PORT = 3;
-        public static final int ARM_JOYSTICK_PORT = 1; // change
+        public static final int ARM_JOYSTICK_PORT = 1;
+        public static final int NUMPAD_PORT = 0; 
 
         // Buttons on PS4 Controller
         public static final int SQUARE_BUTTON_PORT = 1;
@@ -38,7 +39,7 @@ public final class Constants {
         public static final int BIG_BUTTON_PORT = 14;
 
         // Joystick constants 
-        public static final double DEADBAND = 0.05; 
+        public static final double DEADBAND = 0.05;
     }
 
    public static final class ModuleConstants {
@@ -121,22 +122,32 @@ public final class Constants {
         public static final double EXTENSION_TICKS2ROT = EXTENSION_GEAR_RATIO / 4096.0;
 
         public static final int POTENTIOMETER_PORT = 3; //confirmed
-        public static final int CLAW_SOLENOID_PORT = 1; //Changing
-        public static final int FRICTION_BREAK_PORT = 0; //Changing?
+
+        public static final int CLAW_SOLENOID_PORT0 = 3; //Changing
+        public static final int CLAW_SOLENOID_PORT1 = 5; //Changing
+        public static final int FRICTION_BREAK_PORT0 = 6; //Changing?
+        public static final int FRICTION_BREAK_PORT1 = 7; //Changing?
+
         public static final int BOTTOMHALLEFFECT_PORT = 1; //confirmed
         public static final int TOPHALLEFFECT_PORT = 0; //confirmed
         public static final int ROTATINGMOTOR_PORT = 1; // confirmed
         public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
-        public static final int STARTING_POINT = -1517;
+        public static final int STARTING_POINT = -1153;
         public static final double MAX_ROTATION_SPEED = 0.5; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 115;
+        public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
 
         public static final double pidPositionToleranceDegrees = 1.0;
-        public static final double angleP = 0.1; //subject to chagne
-        public static final double angleI = 0;
-        public static final double angleD = 0;
+        public static final double pidExtentionToleranceInches = 1.0;
+        public static final double ANGLE_P = 0.05; //subject to chagne
+        public static final double ANGLE_I = 0;
+        public static final double ANGLE_D = 0;
+
+        public static final double EXTENTION_P = 0.1; //subject to chagne
+        public static final double EXTENTION_I = 0;
+        public static final double EXTENTION_D = 0;
 
         public static final double FRICTION_BREAK_DEADBAND = 0.05;
 
@@ -151,14 +162,14 @@ public final class Constants {
         public static final double MID_CUBE_FRONT_DEG = 104.4;
         public static final double MID_CUBE_BACK_DEG = -MID_CUBE_FRONT_DEG;
 
-        public static final double LOW_CUBE_FRONT_DEG = 130.0;
-        public static final double LOW_CUBE_BACK_DEG = -LOW_CUBE_FRONT_DEG;
+        public static final double LOW_GOAL_FRONT_DEG = 130.0;
+        public static final double LOW_GOAL_BACK_DEG = -LOW_GOAL_FRONT_DEG;
 
         //ALL IN INCHES
         public static final double HIGH_GOAL_DIST_IN = 52.0;
         public static final double MID_CONE_DIST_IN = 35.0;
         public static final double MID_CUBE_DIST_IN = 38.0;
-        public static final double LOW_CUBE_DIST_IN = 38.0;
+        public static final double LOW_GOAL_DIST_IN = 38.0;
 		
 
     }

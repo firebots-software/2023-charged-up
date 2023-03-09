@@ -12,14 +12,15 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Webcam;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private SwerveSubsystem swerveSubsystem;
   private ArmSubsystem armSubsystem;
   private ClawSubsystem clawSubsystem;
-
-  private PhotonVision frontCam, backCam;
+  private Webcam frontWebcam, backWebcam;
+  private PhotonVision frontLimelight, backLimelight;
 
   private RobotContainer m_robotContainer;
 
@@ -28,9 +29,11 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     swerveSubsystem = SwerveSubsystem.getInstance();
     armSubsystem = ArmSubsystem.getInstance();
-    frontCam = PhotonVision.getFrontCam();
-    backCam = PhotonVision.getBackCam();
+    frontLimelight = PhotonVision.getFrontCam();
+    backLimelight = PhotonVision.getBackCam();
     clawSubsystem = ClawSubsystem.getInstance();
+    frontWebcam = Webcam.getFrontWebcam();
+    backWebcam = Webcam.getBackWebcam();
   }
 
   @Override
@@ -40,13 +43,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    armSubsystem._frictionBreakOn();
-    //swerveSubsystem.zeroHeading();
+    onInit();
   }
 
   @Override
   public void disabledPeriodic() {
-   // armSubsystem._frictionBreakOn();
   }
 
   @Override

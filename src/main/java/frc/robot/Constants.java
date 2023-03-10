@@ -150,6 +150,8 @@ public final class Constants {
         public static final double FRICTION_BREAK_DEADBAND = 0.05;
 
         // ALL IN DEGREES
+        public static final double SHELF_PICKUP = 0; // IDENTIFY ANGLE
+
         public static final double HIGH_CONE_FRONT_DEG = 75.5;
         public static final double HIGH_CONE_BACK_DEG = -HIGH_CONE_FRONT_DEG;
         public static final double HIGH_CUBE_FRONT_DEG = 70.0;

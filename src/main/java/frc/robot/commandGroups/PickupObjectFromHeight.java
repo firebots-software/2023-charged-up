@@ -9,7 +9,7 @@ import frc.robot.Constants;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTargetLeftPickup;
-import frc.robot.commands.RetractArmCmd;
+import frc.robot.commands.ExtendArmCmd;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -22,7 +22,7 @@ public class PickupObjectFromHeight extends SequentialCommandGroup {
 
   /** Creates a new PickupObjectFromHeight. */
   public PickupObjectFromHeight() {
-    addCommands(new RetractArmCmd(arm), new ArmToDegree(arm, Constants.ArmConstants.SHELF_PICKUP),
+    addCommands(new ExtendArmCmd(arm), new ArmToDegree(arm, Constants.ArmConstants.SHELF_PICKUP),
         new MoveToTargetLeftPickup(ss), new JankArmToTicks(7000, arm)); // TODO: FIND ACTUAL VALUES
   }
 }

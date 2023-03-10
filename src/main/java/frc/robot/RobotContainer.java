@@ -73,7 +73,7 @@ public class RobotContainer {
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
       put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
-      put("MoveToTargetRight", new MoveToTag(-1, swerveSubsystem));
+      put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
       put("OpenClaw", new ToggleClaw(true, claw));
       put("CloseClaw", new ToggleClaw(false, claw));
       //  put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));

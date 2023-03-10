@@ -82,7 +82,7 @@ public class ArmSubsystem extends SubsystemBase {
     // TODO: when encoder works, do trig to figure out the actual limit based on the arm length.
     if (Math.abs(deg) <= 60 && !getBottomStatus()) {
       setExtendingMotor(-0.5);
-      return false;
+      speed = 0; // make sure arm doesn't continue moving
     }
 
     // Guard 3: if the requested speed moves too slow, turn on friction break and don't move

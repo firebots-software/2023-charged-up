@@ -32,6 +32,6 @@ public class PickupObjectFromHeight extends SequentialCommandGroup {
         new ArmToDegree(arm, -Constants.ArmConstants.SHELF_PICKUP_DEG),
         new MoveToTag(-ArmConstants.SHELF_BACKUP_METERS, -.648, ss), 
         new ToggleClaw(true,ClawSubsystem.getInstance()),
-        new JankArmToTicks(ArmConstants.SHELF_JANK_TICKS, arm)); // TODO: FIND ACTUAL VALUES
+        new JankArmToTicks(ArmConstants.SHELF_JANK_TICKS, arm));
   }
 }

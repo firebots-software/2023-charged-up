@@ -81,7 +81,7 @@ public class RobotContainer {
       //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
       //put("OpenClaw", new ToggleClaw(true, claw));
       //put("CloseClaw", new ToggleClaw(false, claw));
-      put("PickupFromGroundBack", new PickupFromGround(true, arm, claw));
+      put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
       //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
       put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
@@ -145,29 +145,26 @@ public class RobotContainer {
         () -> -armJoystick.getRawAxis(1) * 0.5));
     
     for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, true, swerveSubsystem, arm, claw));
+      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
     }
 
-    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new PickupFromGround(true, arm, claw));
-
-    final Trigger charge = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    charge.whileTrue(new ChargeStation(swerveSubsystem, 1));
+    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
+    armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
     
     final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
     tri.whileTrue(new PickupObjectFromHeight());
 
-    final Trigger ark = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
-    ark.whileTrue(new MoveToTag(swerveSubsystem));
-
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
-    damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+    damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
 
     final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
     limpArm.whileTrue(new LimpArm(arm));
 
     final Trigger clawToggle = new JoystickButton(armJoystick, 1);
     clawToggle.onTrue(new ToggleClaw(claw));
+
+    final Trigger goUp = new JoystickButton(armJoystick, 6);
+    goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.

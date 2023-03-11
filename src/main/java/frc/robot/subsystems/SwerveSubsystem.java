@@ -73,6 +73,10 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    public void zeroHeading(double deg) {
+        gyro.setYaw(deg);
+    }
+
     public double getHeading() {
         return Math.IEEEremainder(gyro.getYaw(), 360); // TODO: maybe should be negative?
     }

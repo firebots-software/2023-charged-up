@@ -133,7 +133,7 @@ public final class Constants {
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
         public static final int STARTING_POINT = -1153;
-        public static final double MAX_ROTATION_SPEED = 0.5; //confirmed
+        public static final double MAX_ROTATION_SPEED = 0.3; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 120;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
 
@@ -150,7 +150,9 @@ public final class Constants {
         public static final double FRICTION_BREAK_DEADBAND = 0.05;
 
         // ALL IN DEGREES
-        public static final double SHELF_PICKUP = 75; // IDENTIFY ANGLE
+        public static final double SHELF_PICKUP_DEG = 85; // IDENTIFY ANGLE
+        public static final double SHELF_BACKUP_METERS = Units.inchesToMeters(31 + 9);
+        public static final double SHELF_JANK_TICKS = 169381;
 
         public static final double HIGH_CONE_FRONT_DEG = -75.5;
         public static final double HIGH_CONE_BACK_DEG = -HIGH_CONE_FRONT_DEG;
@@ -162,7 +164,7 @@ public final class Constants {
         public static final double MID_CUBE_FRONT_DEG = -104.4;
         public static final double MID_CUBE_BACK_DEG = -MID_CUBE_FRONT_DEG;
 
-        public static final double LOW_GOAL_FRONT_DEG = -130.0;
+        public static final double LOW_GOAL_FRONT_DEG = -115.0;
         public static final double LOW_GOAL_BACK_DEG = -LOW_GOAL_FRONT_DEG;
 
         //ALL IN INCHES

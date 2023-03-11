@@ -47,6 +47,8 @@ import frc.robot.commands.RetractArmCmd;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.commandGroups.ConePivot;
 import frc.robot.commandGroups.MoveAndScore;
+import frc.robot.commandGroups.PickupFromGround;
+import frc.robot.commandGroups.PickupObjectFromHeight;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 
@@ -147,7 +149,13 @@ public class RobotContainer {
     }
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new ChargeStation(swerveSubsystem, 1));
+    armToDegree.whileTrue(new PickupFromGround(arm, claw));
+
+    final Trigger charge = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    charge.whileTrue(new ChargeStation(swerveSubsystem, 1));
+    
+    final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
+    tri.whileTrue(new PickupObjectFromHeight());
 
     final Trigger ark = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
     ark.whileTrue(new MoveToTag(swerveSubsystem));

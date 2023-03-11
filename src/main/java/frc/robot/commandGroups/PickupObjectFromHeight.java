@@ -6,11 +6,16 @@ package frc.robot.commandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
+import frc.robot.commands.MoveToTag;
 import frc.robot.commands.MoveToTargetLeftPickup;
+import frc.robot.commands.RetractArmCmd;
+import frc.robot.commands.ToggleClaw;
 import frc.robot.commands.ExtendArmCmd;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -22,7 +27,11 @@ public class PickupObjectFromHeight extends SequentialCommandGroup {
 
   /** Creates a new PickupObjectFromHeight. */
   public PickupObjectFromHeight() {
-    addCommands(new ExtendArmCmd(arm), new ArmToDegree(arm, Constants.ArmConstants.SHELF_PICKUP),
-        new MoveToTargetLeftPickup(ss), new JankArmToTicks(7000, arm)); // TODO: FIND ACTUAL VALUES
+    addCommands(
+        new RetractArmCmd(arm), 
+        new ArmToDegree(arm, -Constants.ArmConstants.SHELF_PICKUP_DEG),
+        new MoveToTag(-ArmConstants.SHELF_BACKUP_METERS, -.648, ss), 
+        new ToggleClaw(true,ClawSubsystem.getInstance()),
+        new JankArmToTicks(ArmConstants.SHELF_JANK_TICKS, arm)); // TODO: FIND ACTUAL VALUES
   }
 }

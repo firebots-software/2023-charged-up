@@ -58,24 +58,28 @@ public class MoveToTag extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    double frontdist = -1;
+    double backdist = -1;
 
-    if (frontCam.hasTarget(frontCam.getLatestPipeline()) && backCam.hasTarget(backCam.getLatestPipeline())) {
-      double dist1 = frontCam.getDistance();
-      double dist2 = backCam.getDistance();
+    if (frontCam.hasTarget(frontCam.getLatestPipeline())) frontdist = frontCam.getDistance();
+    if (backCam.hasTarget(backCam.getLatestPipeline())) backdist = backCam.getDistance();
 
-      if (dist1 > dist2) {
-        usedCam = frontCam;
-        dir = 1;
-      } else {
-        usedCam = backCam;
-        dir = -1;
-      }
-    } else if (!frontCam.hasTarget(frontCam.getLatestPipeline()) && backCam.hasTarget(backCam.getLatestPipeline())) {
-      usedCam = backCam;
-      dir = -1;
-    } else {
+    if (frontdist != -1 && backdist != -1) {
+      // eliminate furthest cam
+      frontdist = frontdist <= backdist ? frontdist : -1;
+      backdist = backdist < frontdist ? backdist : -1;
+    }
+
+    if (frontdist == -1 && backdist == -1) {
+      // if neither exist, don't do anything.
+      dir = 0;
       usedCam = frontCam;
+    } else if (backdist == -1) {
       dir = 1;
+      usedCam = frontCam;
+    } else if (frontdist == -1) {
+      dir = -1;
+      usedCam = backCam;
     }
 
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2),

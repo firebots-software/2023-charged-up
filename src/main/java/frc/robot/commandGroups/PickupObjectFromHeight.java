@@ -4,6 +4,7 @@
 
 package frc.robot.commandGroups;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -29,8 +30,8 @@ public class PickupObjectFromHeight extends SequentialCommandGroup {
   public PickupObjectFromHeight() {
     addCommands(
         new RetractArmCmd(arm), 
-        new ArmToDegree(arm, -Constants.ArmConstants.SHELF_PICKUP_DEG),
-        new MoveToTag(-ArmConstants.SHELF_BACKUP_METERS, -.648, ss), 
+        new ArmToDegree(arm, () -> Math.signum(arm.getRotationDegrees()) * Constants.ArmConstants.SHELF_PICKUP_DEG),
+        new MoveToTag(-ArmConstants.SHELF_BACKUP_METERS, -Units.inchesToMeters(25), ss), 
         new ToggleClaw(true,ClawSubsystem.getInstance()),
         new JankArmToTicks(ArmConstants.SHELF_JANK_TICKS, arm));
   }

@@ -32,7 +32,7 @@ public class MoveToTag extends CommandBase {
 
   SwerveSubsystem ss;
   PPSwerveControllerCommand pp;
-  private int dir;
+  private int dir = 0;
 
   private double xoffset;
   private double yoffset;
@@ -53,6 +53,10 @@ public class MoveToTag extends CommandBase {
     this(swerveSubsystem);
     this.xoffset = frontOffset;
     this.yoffset = sideOffset * (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
+  }
+
+  public int currentCamDir() {
+    return dir;
   }
 
   // Called when the command is initially scheduled.

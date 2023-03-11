@@ -74,8 +74,8 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
-      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
-      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
+      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 2.5));
+      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -2.5));
       //put("MoveToTarget", new MoveToTag(swerveSubsystem));
       //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
@@ -136,7 +136,7 @@ public class RobotContainer {
         () -> -driverPS4.getRawAxis(1),
         () -> -driverPS4.getRawAxis(0),
         () -> -driverPS4.getRawAxis(2),
-        () -> driverPS4.getRawAxis(4) > -0.75 ? 0.80 : (driverPS4.getRawAxis(3) > -0.75 ? 0.15 : 0.40),
+        () -> driverPS4.getRawAxis(4) > -0.75 ? 1 : (driverPS4.getRawAxis(3) > -0.75 ? 0.15 : 0.50),
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
@@ -172,7 +172,7 @@ public class RobotContainer {
   public void initializeAutonChooser() {
 
     autonChooser.addOption("oranjeUp", makeAuton((AutonPaths.oranjeup)));
-    autonChooser.addOption("oranjeMid", makeAuton((AutonPaths.oranjemid)));
+    autonChooser.addOption("oranjeMid", eventMap.get("ArmToMidCube").andThen(eventMap.get("ChargeStationBackward")));
     autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
     autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
     autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));

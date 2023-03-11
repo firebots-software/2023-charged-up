@@ -57,14 +57,15 @@ public class MoveAndScore extends SequentialCommandGroup {
      */
     public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
         boolean cone = pos != 0;
+        MoveToTag mtt = new MoveToTag(pos, swerveSubsystem);
         double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(
             new ParallelCommandGroup(
-                new MoveToTag(pos, swerveSubsystem),
-                new ArmToDegree(arm, () -> Math.signum(-arm.getRotationDegrees()) * deginches[0])
+                mtt,
+                new ArmToDegree(arm, () -> mtt.currentCamDir() * deginches[0])
             ),
-            new JankArmToTicks(deginches[1], arm),
-            new ToggleClaw(true, claw)
+            new JankArmToTicks(deginches[1], arm)
+            //new ToggleClaw(true, claw)
         );
     }
     

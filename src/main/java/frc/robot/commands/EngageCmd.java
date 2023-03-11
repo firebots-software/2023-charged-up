@@ -42,7 +42,7 @@ public class EngageCmd extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return pid.atSetpoint(); // stop when robot is leveled, gyro gives zero
+        return false; // stop when robot is leveled, gyro gives zero
     }
 
 }

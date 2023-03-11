@@ -139,7 +139,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean getBottomStatus() {
-    boolean status = !bottomHall.get();
+    boolean status = !bottomHall.get() && extendingMotor.getSelectedSensorPosition() < 100;
     if (status) extendingMotor.setSelectedSensorPosition(0);
     return status;
   }

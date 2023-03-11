@@ -176,6 +176,9 @@ public class RobotContainer {
 
     autonChooser.addOption("oranjeUp", makeAuton((AutonPaths.oranjeup)));
     autonChooser.addOption("oranjeMid", makeAuton((AutonPaths.oranjemid)));
+    autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
+    autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
+    autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
     
 
     SmartDashboard.putData(autonChooser);

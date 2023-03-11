@@ -81,9 +81,9 @@ public class RobotContainer {
       //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
       //put("OpenClaw", new ToggleClaw(true, claw));
       //put("CloseClaw", new ToggleClaw(false, claw));
-      //  put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      put("PickupFromGroundBack", new PickupFromGround(true, arm, claw));
       //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
-      put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw));
+      put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
       put("RetractArmToMin", new RetractArmCmd(arm));
 
@@ -149,7 +149,7 @@ public class RobotContainer {
     }
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new PickupFromGround(arm, claw));
+    armToDegree.whileTrue(new PickupFromGround(true, arm, claw));
 
     final Trigger charge = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
     charge.whileTrue(new ChargeStation(swerveSubsystem, 1));
@@ -165,28 +165,6 @@ public class RobotContainer {
 
     final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
     limpArm.whileTrue(new LimpArm(arm));
-
-    // PathPlannerTrajectory traj = PathPlanner.generatePath(
-    //     new PathConstraints(Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax),
-    //     new ArrayList<>() {
-    //       {
-    //         add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0), new Rotation2d(0)));
-    //         add(new PathPoint(new Translation2d(1, 0), new Rotation2d(0), new Rotation2d(Math.PI / 2.0)));
-    //       }
-    //     });
-
-    // final Trigger followPath = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
-    // followPath.toggleOnTrue(new InstantCommand(() -> {
-    //   PathPlannerState initial = (PathPlannerState) traj.sample(0);
-    //   Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
-    //   swerveSubsystem.resetOdometry(initialPose);
-    // }).andThen(autoBuilder.followPath(traj)));
-
-    // final Trigger conePivot = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    // conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7, true));
-
-    // final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    // mtt.toggleOnTrue(new MoveToTag(swerveSubsystem));
 
     final Trigger clawToggle = new JoystickButton(armJoystick, 1);
     clawToggle.onTrue(new ToggleClaw(claw));

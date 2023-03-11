@@ -5,13 +5,11 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ArmToDegree;
-import frc.robot.commands.ArmToLengthCmd;
 import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.ArmConstants;
 
@@ -35,6 +33,19 @@ public class MoveAndScore extends SequentialCommandGroup {
         put(2, new double[]{ArmConstants.HIGH_CONE_FRONT_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
     }};
 
+    public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw, boolean auton) {
+        boolean cone = pos != 0;
+        double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
+        addCommands(
+            new ParallelCommandGroup(
+                // new MoveToTag(pos, swerveSubsystem),
+                new ArmToDegree(arm, deginches[0])
+            ),
+            new JankArmToTicks(deginches[1], arm),
+            new ToggleClaw(true, claw)
+        );
+    }
+
     /**
      * Move and score a loaded pieces
      * @param pos -1 if to the left, 0 if in the middle, 1 if to the right
@@ -55,10 +66,6 @@ public class MoveAndScore extends SequentialCommandGroup {
             new JankArmToTicks(deginches[1], arm),
             new ToggleClaw(true, claw)
         );
-    }
-
-    public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
-        this(pos, level, false, swerveSubsystem, arm, claw);
     }
     
 }

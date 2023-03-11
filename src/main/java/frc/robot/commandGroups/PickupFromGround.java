@@ -11,10 +11,10 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 
 public class PickupFromGround extends SequentialCommandGroup {
-    public PickupFromGround(ArmSubsystem arm, ClawSubsystem claw) {
+    public PickupFromGround(boolean back, ArmSubsystem arm, ClawSubsystem claw) {
         addCommands(
             new ToggleClaw(true, claw),
-            new ArmToDegree(arm, 120),
+            new ArmToDegree(arm, 120 * (back ? 1 : -1)),
             new JankArmToTicks(277552, arm),
             new ToggleClaw(false, claw),
             new WaitCommand(.75),

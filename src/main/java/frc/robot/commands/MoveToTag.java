@@ -46,7 +46,7 @@ public class MoveToTag extends CommandBase {
 
   public MoveToTag(int pos, SwerveSubsystem swerveSubsystem) {
     this(swerveSubsystem);
-    this.yoffset = 0.55 * -pos * (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
+    this.yoffset = -0.55 * pos * (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
   }
 
   public MoveToTag(double frontOffset, double sideOffset, SwerveSubsystem swerveSubsystem) {

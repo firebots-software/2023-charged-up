@@ -11,6 +11,7 @@ import frc.robot.commands.MoveToTag;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.ArmConstants;
 
@@ -29,9 +30,9 @@ public class MoveAndScore extends SequentialCommandGroup {
     }};
 
     private static final HashMap<Integer, double[]> degreesTickies = new HashMap<>(){{
-        put(0, new double[]{ArmConstants.LOW_GOAL_BACK_DEG, ArmConstants.LOW_GOAL_DIST_IN});
-        put(1, new double[]{ArmConstants.MID_CONE_BACK_DEG, 78585});
-        put(2, new double[]{ArmConstants.HIGH_CONE_BACK_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
+        put(0, new double[]{ArmConstants.LOW_GOAL_FRONT_DEG, 0});
+        put(1, new double[]{ArmConstants.MID_CONE_FRONT_DEG, 78585});
+        put(2, new double[]{ArmConstants.HIGH_CONE_FRONT_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
     }};
 
     /**
@@ -43,17 +44,21 @@ public class MoveAndScore extends SequentialCommandGroup {
      * @param arm
      * @param claw
      */
-    public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
+    public MoveAndScore(int pos, int level, boolean back, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
         boolean cone = pos != 0;
         double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(
             new ParallelCommandGroup(
-                // new MoveToTag(pos, swerveSubsystem),
-                new ArmToDegree(arm, deginches[0])
+                new MoveToTag(pos, swerveSubsystem),
+                new ArmToDegree(arm, deginches[0] * (back ? -1 : 1))
             ),
             new JankArmToTicks(deginches[1], arm),
             new ToggleClaw(true, claw)
         );
+    }
+
+    public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
+        this(pos, level, false, swerveSubsystem, arm, claw);
     }
     
 }

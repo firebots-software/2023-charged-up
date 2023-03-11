@@ -15,7 +15,7 @@ public class RetractArmCmd extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setExtendingMotor(-.3);
+        arm.setExtendingMotor(-.4);
     }
 
     @Override

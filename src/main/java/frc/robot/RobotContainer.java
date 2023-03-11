@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,7 +41,9 @@ import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
+import frc.robot.commands.LimpArm;
 import frc.robot.commands.MoveToTag;
+import frc.robot.commands.RetractArmCmd;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.commandGroups.ConePivot;
 import frc.robot.commandGroups.MoveAndScore;
@@ -71,16 +74,16 @@ public class RobotContainer {
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
-      put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
-      put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
-      put("OpenClaw", new ToggleClaw(true, claw));
-      put("CloseClaw", new ToggleClaw(false, claw));
+      //put("MoveToTarget", new MoveToTag(swerveSubsystem));
+      //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
+      //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
+      //put("OpenClaw", new ToggleClaw(true, claw));
+      //put("CloseClaw", new ToggleClaw(false, claw));
       //  put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
       //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
       put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
-      //put("RetractArmToMin", new ExtendToCmd(arm));
+      put("RetractArmToMin", new RetractArmCmd(arm));
 
       // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
@@ -131,30 +134,29 @@ public class RobotContainer {
         () -> -driverPS4.getRawAxis(1),
         () -> -driverPS4.getRawAxis(0),
         () -> -driverPS4.getRawAxis(2),
-        () -> (driverPS4.getRawAxis(4) + 1d) / 2d,
+        () -> driverPS4.getRawAxis(4) > -0.75 ? 0.80 : (driverPS4.getRawAxis(3) > -0.75 ? 0.15 : 0.40),
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-      
     arm.setDefaultCommand(new ArmJoystickCmd(
-        () -> armJoystick.getRawAxis(0) * 0.2,
+        () -> armJoystick.getRawAxis(0) * 0.4,
         () -> -armJoystick.getRawAxis(1) * 0.5));
     
     for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).onTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
+      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, true, swerveSubsystem, arm, claw));
     }
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new JankArmToTicks(78585, arm));
+    armToDegree.whileTrue(new ChargeStation(swerveSubsystem, 1));
 
-    final Trigger ark = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    ark.whileTrue(new ArmToDegree(arm, 90));
+    final Trigger ark = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
+    ark.whileTrue(new MoveToTag(swerveSubsystem));
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
 
-    final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
-    limpArm.toggleOnTrue(new InstantCommand(() -> {claw.close(); arm._frictionBreakOff();}));
+    final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
+    limpArm.whileTrue(new LimpArm(arm));
 
     // PathPlannerTrajectory traj = PathPlanner.generatePath(
     //     new PathConstraints(Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax),
@@ -186,12 +188,8 @@ public class RobotContainer {
 
   public void initializeAutonChooser() {
 
-    autonChooser.addOption("topAuton", makeAuton((AutonPaths.topAuton)));
-    autonChooser.addOption("middleAuton", makeAuton((AutonPaths.middleAuton)));
-    autonChooser.addOption("bottomAuton", makeAuton((AutonPaths.bottomAuton)));
-    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAutonPart1, AutonPaths.testTopAutonPart2));
-    autonChooser.addOption("chargeStation", makeAuton(AutonPaths.chargeStationAndMobility));
-    autonChooser.addOption("yetAnotherTestAuton", makeAuton(AutonPaths.yetAnotherTestAuton));
+    autonChooser.addOption("oranjeUp", makeAuton((AutonPaths.oranjeup)));
+    autonChooser.addOption("oranjeMid", makeAuton((AutonPaths.oranjemid)));
     
 
     SmartDashboard.putData(autonChooser);

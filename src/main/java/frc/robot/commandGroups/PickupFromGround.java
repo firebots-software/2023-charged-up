@@ -12,7 +12,7 @@ public class PickupFromGround extends SequentialCommandGroup {
     public PickupFromGround(ArmSubsystem arm, ClawSubsystem claw) {
         addCommands(
             new ToggleClaw(true, claw),
-            new ArmToDegree(arm, 115),
+            new ArmToDegree(arm, 120),
             new ExtendArmCmd(arm),
             new ToggleClaw(false, claw),
             new RetractArmCmd(arm)

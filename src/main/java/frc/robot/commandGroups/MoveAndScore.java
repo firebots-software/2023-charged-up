@@ -37,10 +37,7 @@ public class MoveAndScore extends SequentialCommandGroup {
         boolean cone = pos != 0;
         double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(
-            new ParallelCommandGroup(
-                // new MoveToTag(pos, swerveSubsystem),
-                new ArmToDegree(arm, deginches[0]) // always forwards bc auton
-            ),
+            new ArmToDegree(arm, deginches[0]),
             new JankArmToTicks(deginches[1], arm),
             new ToggleClaw(true, claw)
         );
@@ -60,10 +57,9 @@ public class MoveAndScore extends SequentialCommandGroup {
         MoveToTag mtt = new MoveToTag(pos, swerveSubsystem);
         double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(
-            new ParallelCommandGroup(
                 mtt,
-                new ArmToDegree(arm, () -> mtt.currentCamDir() * deginches[0])
-            ),
+                new ArmToDegree(arm, () -> mtt.currentCamDir() * deginches[0]),
+            
             new JankArmToTicks(deginches[1], arm)
             //new ToggleClaw(true, claw)
         );

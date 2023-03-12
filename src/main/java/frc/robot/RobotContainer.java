@@ -62,6 +62,7 @@ public class RobotContainer {
   private Joystick driverPS4;
   private Joystick armJoystick;
   private Joystick numpad;
+  private double startPitch;
 
   private final ArmSubsystem arm = ArmSubsystem.getInstance();
   private final ClawSubsystem claw = ClawSubsystem.getInstance();
@@ -74,14 +75,14 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
-      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 2.5));
-      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -2.5));
+      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 2.5, () -> startPitch));
+      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -2.5, () -> startPitch));
       //put("MoveToTarget", new MoveToTag(swerveSubsystem));
       //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
       //put("OpenClaw", new ToggleClaw(true, claw));
       //put("CloseClaw", new ToggleClaw(false, claw));
-      put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
+      //put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
       //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
       put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
@@ -157,6 +158,9 @@ public class RobotContainer {
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
 
+    final Trigger thing = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
+    thing.whileTrue(new ChargeStation(swerveSubsystem, -2.5, () -> startPitch));
+
     final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
     limpArm.whileTrue(new LimpArm(arm));
 
@@ -170,15 +174,21 @@ public class RobotContainer {
   // this value as a decimal to multiply and control the speed of the robot.
 
   public void initializeAutonChooser() {
-
-    autonChooser.addOption("oranjeUp", makeAuton((AutonPaths.oranjeup)));
-    autonChooser.addOption("oranjeMid", eventMap.get("ArmToMidCube").andThen(eventMap.get("ChargeStationBackward")));
+    autonChooser.setDefaultOption("default", new WaitCommand(1));
+    
+    autonChooser.addOption("oranje bottom", makeAuton((AutonPaths.oranjebottom)));
+    autonChooser.addOption("oranje no charge up", makeAuton((AutonPaths.oranjeup)));
+    autonChooser.addOption("oranjeMid", new RetractArmCmd(arm)
+    .andThen(
+      new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true), 
+      new ChargeStation(swerveSubsystem, -2.5, () -> startPitch))
+    );
     autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
     autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
     autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
-    
+    autonChooser.addOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true), new RetractArmCmd(arm)));
 
-    SmartDashboard.putData(autonChooser);
+    SmartDashboard.putData("auton chooser",autonChooser);
   }
 
 
@@ -190,6 +200,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     return autonChooser.getSelected();
+  }
+
+  public void setPitch(double x) {
+    startPitch = x;
   }
 
   public Command makeAuton(List<PathPlannerTrajectory> ppt1){
@@ -213,6 +227,11 @@ public class RobotContainer {
       Pose2d initial2Pose = new Pose2d(initial2.poseMeters.getTranslation(), initial2.holonomicRotation);
       swerveSubsystem.resetOdometry(initial2Pose);
     })).andThen(autoBuilder.fullAuto(ppt2));
+  }
+
+  public void printAuton() {
+    
+    SmartDashboard.putString("selected auton", getAutonomousCommand().getName());
   }
 
   // public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {

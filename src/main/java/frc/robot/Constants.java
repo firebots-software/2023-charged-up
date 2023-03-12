@@ -132,9 +132,9 @@ public final class Constants {
         public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
-        public static final int STARTING_POINT = -1185;
+        public static final int STARTING_POINT = -1191;
         public static final double MAX_ROTATION_SPEED = 0.3; //confirmed
-        public static final double MAX_ROTATION_ANGLE_DEG = 120;
+        public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
 
         public static final double pidPositionToleranceDegrees = 1.0;
@@ -150,7 +150,7 @@ public final class Constants {
         public static final double FRICTION_BREAK_DEADBAND = 0.05;
 
         // ALL IN DEGREES
-        public static final double SHELF_PICKUP_DEG = 85; // IDENTIFY ANGLE
+        public static final double SHELF_PICKUP_DEG = 78; // IDENTIFY ANGLE
         public static final double SHELF_BACKUP_METERS = Units.inchesToMeters(31 + 9);
         public static final double SHELF_JANK_TICKS = 169381;
 
@@ -172,6 +172,7 @@ public final class Constants {
         public static final double MID_CONE_DIST_IN = 35.0;
         public static final double MID_CUBE_DIST_IN = 38.0;
         public static final double LOW_GOAL_DIST_IN = 38.0;
+        public static final double MAX_RETRACTED_DEG = 160;
 		
 
     }
@@ -190,11 +191,11 @@ public final class Constants {
     }
 
     public static final class DockingConstants {
-        public static final double DOCKING_TOLERANCE = 5;
+        public static final double DOCKING_TOLERANCE = 7;
 
-        public static final double kPEngage = 0.09;
+        public static final double kPEngage = 0.08;
         public static final double KIEngage = 0;
-        public static final double KDEngage = 0.01;
+        public static final double KDEngage = 0;
     }
 
     

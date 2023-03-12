@@ -1,8 +1,10 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -16,6 +18,7 @@ public class EngageCmd extends CommandBase{
         this.swerve = swerve;
 
         pid.setSetpoint(swerve.getPitch());
+        pid.setTolerance(0.5, 0.0005);
 
         addRequirements(swerve);
     }
@@ -29,8 +32,13 @@ public class EngageCmd extends CommandBase{
     public void execute() {
         double pitch = swerve.getPitch();
         double calculated = pid.calculate(pitch);
-        SwerveModuleState state = new SwerveModuleState(calculated, new Rotation2d(0d));
+        double clamped = MathUtil.clamp(calculated, -1, 1);
+        SwerveModuleState state = new SwerveModuleState(clamped, new Rotation2d(0d));
         swerve.setModuleStates(new SwerveModuleState[]{state, state, state, state});
+        SmartDashboard.putNumber("pid calculated value", calculated);
+        SmartDashboard.putNumber("clamped value", clamped);
+        
+        
     }
 
 
@@ -42,7 +50,7 @@ public class EngageCmd extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return false; // stop when robot is leveled, gyro gives zero
+        return pid.atSetpoint(); // stop when robot is leveled, gyro gives zero
     }
 
 }

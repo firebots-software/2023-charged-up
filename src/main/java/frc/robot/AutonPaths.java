@@ -9,11 +9,11 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 public class AutonPaths {
 
     public static List<PathPlannerTrajectory> oranjeup = PathPlanner.loadPathGroup(
-            "oranjeUp",
+            "oranjeTopNoCharge",
             Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
 
-    public static List<PathPlannerTrajectory> oranjemid = PathPlanner.loadPathGroup(
-            "oranjeMid",
+    public static List<PathPlannerTrajectory> oranjebottom = PathPlanner.loadPathGroup(
+            "oranjeBottomNoCharge",
             Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
 
     public static List<PathPlannerTrajectory> oranjeComplexTop = PathPlanner.loadPathGroup(

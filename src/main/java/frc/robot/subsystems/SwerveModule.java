@@ -72,6 +72,10 @@ public class SwerveModule extends SubsystemBase {
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 
+    public void setTurnState(double toRad) {
+        turningMotor.set(turningPidController.calculate(getTurningPosition(), toRad));
+    }
+
     public SwerveModulePosition getModulePosition() {
         return new SwerveModulePosition((driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset) * Constants.ModuleConstants.kDriveEncoderTicks2Meter, getState().angle);
     }

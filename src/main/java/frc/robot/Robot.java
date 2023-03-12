@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_robotContainer.printAuton();
   }
 
   @Override
@@ -57,6 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     onInit();
+    m_robotContainer.setPitch(swerveSubsystem.getPitch());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {

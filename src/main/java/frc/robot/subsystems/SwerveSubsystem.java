@@ -134,6 +134,13 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    public void setTurning(double rad) {
+        frontLeft.setTurnState(rad);
+        frontRight.setTurnState(rad);
+        backLeft.setTurnState(rad);
+        backRight.setTurnState(rad);
+    }
+
     public static SwerveSubsystem getInstance() {
         if (instance == null) {
             instance = new SwerveSubsystem();

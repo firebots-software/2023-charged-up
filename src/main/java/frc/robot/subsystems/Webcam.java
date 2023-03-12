@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;  
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;  
 
 public class Webcam extends SubsystemBase {
 
@@ -73,6 +74,10 @@ public class Webcam extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Relative Pitch", getTargetRelativePitch());
+    SmartDashboard.putNumber("Relative Yaw", getTargetRelativeYaw());
+    SmartDashboard.putNumber("Relative Distance", getTargetRelativeDistance());
+    SmartDashboard.putNumberArray("Center Coordinate", centerCoordinate());
   }
 
   public double getTargetRelativePitch() {

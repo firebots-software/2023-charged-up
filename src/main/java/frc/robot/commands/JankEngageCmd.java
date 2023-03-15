@@ -11,7 +11,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class JankEngageCmd extends CommandBase{
 
     private SwerveSubsystem swerve;
-    double startPicth = 0;
+    double startPitch = 0;
     double speed = 0.5;
     Supplier<Double> initial;
 
@@ -23,12 +23,12 @@ public class JankEngageCmd extends CommandBase{
 
     @Override
     public void initialize() {
-        startPicth = initial.get();
+        startPitch = initial.get();
     }
 
     @Override
     public void execute() {
-        double pitch = swerve.getPitch() - startPicth;
+        double pitch = swerve.getPitch() - startPitch;
         
         if (pitch>DockingConstants.DOCKING_TOLERANCE) {
             SwerveModuleState state = new SwerveModuleState(-speed, new Rotation2d(0d));

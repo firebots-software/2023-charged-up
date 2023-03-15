@@ -174,10 +174,7 @@ public class RobotContainer {
 
   public void initializeAutonChooser() {
 
-    autonChooser.addOption(
-      "my auton", 
-      makeAuton(AutonPaths.testTopAuton)
-      );
+    
     
     SmartDashboard.putData(autonChooser);
   }
@@ -203,11 +200,13 @@ public class RobotContainer {
     
     // Instantiate the auton path
     Command auton = new InstantCommand();
+
+    
     
     // loop through every trajectory (each ending with a translational and/or rotational command outside of pathplanner)
-    for (List<PathPlannerTrajectory> ppt : ppts) {
+      for (List<PathPlannerTrajectory> ppt : ppts) {
       
-      if (ppt != null){ // check if the trajectory exists, or if the filename was misspelled
+        if (ppt != null){ // check if the trajectory exists, or if the filename was misspelled
 
         auton = auton.andThen(
         //reset odometry to the initial pose of each trajectory
@@ -219,13 +218,17 @@ public class RobotContainer {
           // build the trajectory
           autoBuilder.fullAuto(ppt));
 
-      } 
-      // reports null trajectory, and prevents any path from running
-      else {
-        System.out.println("************** a pathplannertrajectory is null! *************");
+       }
+       
+       else {
+        System.out.println("************** path is null! *************");
         return new InstantCommand();
-      }
-    }
+        }
+
+      } 
+
+      // reports null trajectory, and prevents any path from running
+      
     
     return auton;
 

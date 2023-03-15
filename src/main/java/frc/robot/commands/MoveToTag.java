@@ -40,7 +40,7 @@ public class MoveToTag extends CommandBase {
   /** Creates a new MoveToTarget. */
   public MoveToTag(SwerveSubsystem swerveSubsystem) {
     field = new Field2d();
-    this.ss = SwerveSubsystem.getInstance();
+    this.ss = swerveSubsystem;
   }
 
   public MoveToTag(int pos, SwerveSubsystem swerveSubsystem) {

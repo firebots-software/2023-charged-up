@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,14 +42,17 @@ import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTag;
-import frc.robot.commands.ToggleClaw;
+import frc.robot.commands.RetractArmCmd;
 import frc.robot.commandGroups.ConePivot;
 import frc.robot.commandGroups.MoveAndScore;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
-
+import frc.robot.commands.claw.Intake;
+import frc.robot.commands.claw.Outtake;
+import frc.robot.commands.claw.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.NewClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -60,6 +64,7 @@ public class RobotContainer {
 
   private final ArmSubsystem arm = ArmSubsystem.getInstance();
   private final ClawSubsystem claw = ClawSubsystem.getInstance();
+  private final NewClawSubsystem newClaw = NewClawSubsystem.getInstance();
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   InstantCommand command;
@@ -71,16 +76,15 @@ public class RobotContainer {
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
-      put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
-      put("MoveToTargetRight", new MoveToTag(-1, swerveSubsystem));
-      put("OpenClaw", new ToggleClaw(true, claw));
-      put("CloseClaw", new ToggleClaw(false, claw));
-      //  put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      put("MoveToTag", new MoveToTag(swerveSubsystem));
+      //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
+      //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
+      //put("OpenClaw", new ToggleClaw(true, claw));
+      //put("CloseClaw", new ToggleClaw(false, claw));
       //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
       put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
-      //put("RetractArmToMin", new ExtendToCmd(arm));
+      put("RetractArmToMin", new RetractArmCmd(arm));
 
       // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
@@ -131,72 +135,95 @@ public class RobotContainer {
         () -> -driverPS4.getRawAxis(1),
         () -> -driverPS4.getRawAxis(0),
         () -> -driverPS4.getRawAxis(2),
-        () -> (driverPS4.getRawAxis(4) + 1d) / 2d,
+        () -> driverPS4.getRawAxis(4) > -0.75 ? 0.80 : (driverPS4.getRawAxis(3) > -0.75 ? 0.15 : 0.40),
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-      
     arm.setDefaultCommand(new ArmJoystickCmd(
-        () -> armJoystick.getRawAxis(0) * 0.2,
+        () -> armJoystick.getRawAxis(0) * 0.4,
         () -> -armJoystick.getRawAxis(1) * 0.5));
     
     for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).onTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
+      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
     }
 
-    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    armToDegree.whileTrue(new JankArmToTicks(78585, arm));
+    final Trigger intake = new JoystickButton(armJoystick, 1);
+    intake.whileTrue(new Intake(newClaw));
 
-    final Trigger ark = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    ark.whileTrue(new ArmToDegree(arm, 90));
+    final Trigger outtake = new JoystickButton(armJoystick, 2);
+    outtake.whileTrue(new Outtake(newClaw));
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
-    damageControl.toggleOnTrue(new ZeroHeadingCmd(swerveSubsystem));
+    damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
 
-    final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
-    limpArm.toggleOnTrue(new InstantCommand(() -> {claw.close(); arm._frictionBreakOff();}));
-
-    // PathPlannerTrajectory traj = PathPlanner.generatePath(
-    //     new PathConstraints(Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax),
-    //     new ArrayList<>() {
-    //       {
-    //         add(new PathPoint(new Translation2d(0, 0), new Rotation2d(0), new Rotation2d(0)));
-    //         add(new PathPoint(new Translation2d(1, 0), new Rotation2d(0), new Rotation2d(Math.PI / 2.0)));
-    //       }
-    //     });
-
-    // final Trigger followPath = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
-    // followPath.toggleOnTrue(new InstantCommand(() -> {
-    //   PathPlannerState initial = (PathPlannerState) traj.sample(0);
-    //   Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
-    //   swerveSubsystem.resetOdometry(initialPose);
-    // }).andThen(autoBuilder.followPath(traj)));
-
-    // final Trigger conePivot = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    // conePivot.whileTrue(new ConePivot(swerveSubsystem, 0.7, true));
-
-    // final Trigger mtt = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    // mtt.toggleOnTrue(new MoveToTag(swerveSubsystem));
 
     final Trigger clawToggle = new JoystickButton(armJoystick, 1);
     clawToggle.onTrue(new ToggleClaw(claw));
+
+    final Trigger goUp = new JoystickButton(armJoystick, 6);
+    goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.
 
   public void initializeAutonChooser() {
 
-    autonChooser.addOption("topAuton", makeAuton((AutonPaths.topAuton)));
-    autonChooser.addOption("middleAuton", makeAuton((AutonPaths.middleAuton)));
-    autonChooser.addOption("bottomAuton", makeAuton((AutonPaths.bottomAuton)));
-    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAutonPart1, AutonPaths.testTopAutonPart2));
-    autonChooser.addOption("chargeStation", makeAuton(AutonPaths.chargeStationAndMobility));
-    autonChooser.addOption("yetAnotherTestAuton", makeAuton(AutonPaths.yetAnotherTestAuton));
+    autonChooser.addOption(
+      "my auton", 
+      makeAuton(AutonPaths.testTopAuton)
+      );
     
-
     SmartDashboard.putData(autonChooser);
   }
 
+  /**
+   * <p> Commands in the eventMap that change the robot position (including rotation)
+   while a PathPlannerTrajectory is running accumulate PID error. PathPlanner tries to compensate by
+   quickly correcting the PID error and then running the scheduled path, often overriding the maximum
+   velocity in order to run on time. 
+
+   <p> An example of this is {@link MoveToTag}. This command will find an AprilTag during autonomous
+   and try to align the robot for scoring. However, if we try to align to the tag, score, and try running
+   a trajectory that moves to a game piece, the error accumulates over time.
+
+   <p> Ending each trajectory with the command that changes the robot position (e.g. MoveToTag),
+   and then chaining each trajectory, will prevent any PID error from accumulating.
+
+   * @param ppts A List comprised of a List of PathPlannerTrajectories, loaded in {@link AutonPaths}
+   * @return A full autonomous command made by autoBuilder
+   */
+
+  public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
+    
+    // Instantiate the auton path
+    Command auton = new InstantCommand();
+    
+    // loop through every trajectory (each ending with a translational and/or rotational command outside of pathplanner)
+    for (List<PathPlannerTrajectory> ppt : ppts) {
+      
+      if (ppt != null){ // check if the trajectory exists, or if the filename was misspelled
+
+        auton = auton.andThen(
+        //reset odometry to the initial pose of each trajectory
+        new InstantCommand(() -> {
+          PathPlannerState initial = (PathPlannerState) ppt.get(0).sample(0);
+          Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
+          swerveSubsystem.resetOdometry(initialPose);
+        })).andThen(
+          // build the trajectory
+          autoBuilder.fullAuto(ppt));
+
+      } 
+      // reports null trajectory, and prevents any path from running
+      else {
+        System.out.println("************** a pathplannertrajectory is null! *************");
+        return new InstantCommand();
+      }
+    }
+    
+    return auton;
+
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -204,46 +231,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
+    
     return autonChooser.getSelected();
-  }
-
-  public Command makeAuton(List<PathPlannerTrajectory> ppt1){
     
-    return new InstantCommand(() -> {
-      PathPlannerState initial1 = (PathPlannerState) ppt1.get(0).sample(0);
-      Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
-      swerveSubsystem.resetOdometry(initial1Pose);
-    }).andThen(autoBuilder.fullAuto(ppt1));
   }
 
-  public Command makeAuton(List<PathPlannerTrajectory> ppt1, List<PathPlannerTrajectory> ppt2){
-    
-    return new InstantCommand(() -> {
-      PathPlannerState initial1 = (PathPlannerState) ppt1.get(0).sample(0);
-      Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
-      swerveSubsystem.resetOdometry(initial1Pose);
-    }).andThen(autoBuilder.fullAuto(ppt1))
-    .andThen(new InstantCommand(() -> {
-      PathPlannerState initial2 = (PathPlannerState) ppt2.get(0).sample(0);
-      Pose2d initial2Pose = new Pose2d(initial2.poseMeters.getTranslation(), initial2.holonomicRotation);
-      swerveSubsystem.resetOdometry(initial2Pose);
-    })).andThen(autoBuilder.fullAuto(ppt2));
-  }
-
-  // public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
-  //   Command current = new InstantCommand();
-
-  //   for (int i = 0; i < ppts.size(); i++) {
-  //     current = current.andThen(new InstantCommand(() -> {
-  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(i).get(0).sample(0);
-  //       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
-  //       swerveSubsystem.resetOdometry(initial1Pose);
-  //     })).andThen(autoBuilder.fullAuto(ppts.get(i)));
-  //   }
-  //   return current;
-  // }
-  
-
-  
 }

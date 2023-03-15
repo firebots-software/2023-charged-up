@@ -8,7 +8,7 @@ import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.ArmToLengthCmd;
 import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTag;
-import frc.robot.commands.ToggleClaw;
+import frc.robot.commands.claw.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;

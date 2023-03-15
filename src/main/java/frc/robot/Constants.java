@@ -123,8 +123,8 @@ public final class Constants {
 
         public static final int POTENTIOMETER_PORT = 3; //confirmed
 
-        public static final int CLAW_SOLENOID_PORT = 5; //Changing
         public static final int FRICTION_BREAK_PORT = 4; //Changing?
+        public static final int INTAKE_MOTOR_PORT = 0; //subject to change
 
         public static final int BOTTOMHALLEFFECT_PORT = 1; //confirmed
         public static final int TOPHALLEFFECT_PORT = 0; //confirmed
@@ -136,7 +136,6 @@ public final class Constants {
         public static final double MAX_ROTATION_SPEED = 0.5; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 115;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
-
         public static final double pidPositionToleranceDegrees = 1.0;
         public static final double pidExtentionToleranceInches = 1.0;
         public static final double ANGLE_P = 0.05; //subject to chagne
@@ -169,6 +168,16 @@ public final class Constants {
         public static final double MID_CUBE_DIST_IN = 38.0;
         public static final double LOW_GOAL_DIST_IN = 38.0;
 		
+
+    }
+
+    public static final class ClawConstants {
+
+        public static final double MAX_INTAKE_SPEED = 1.0;
+        public static final double MIN_INTAKE_SPEED = 0.0; // subject to change
+        public static final double MAX_OUTTAKE_SPEED = -1.0;
+        public static final double MIN_OUTTAKE_SPEED = -0.0; // subject to change, must be negative
+        public static final int CLAW_SOLENOID_PORT = 5; //Changing
 
     }
 

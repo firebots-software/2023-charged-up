@@ -1,8 +1,7 @@
 package frc.robot;
 
-import java.nio.file.Path;
+
 import java.util.ArrayList;
-import java.util.FormatFlagsConversionMismatchException;
 import java.util.List;
 
 import com.pathplanner.lib.PathPlanner;
@@ -12,7 +11,6 @@ import frc.robot.Constants.AutonConstants;
 
 public class AutonPaths {
 
-<<<<<<< HEAD
     public static List<List<PathPlannerTrajectory>> testTopAuton = makePPTList(
         "testTopAutonPart1", "testTopAutonPart2"
     );
@@ -52,7 +50,6 @@ public class AutonPaths {
         return ppts;
     }
     
-=======
     public static List<PathPlannerTrajectory> oranjeup = PathPlanner.loadPathGroup(
             "oranjeTopNoCharge",
             Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
@@ -72,5 +69,4 @@ public class AutonPaths {
     public static List<PathPlannerTrajectory> oranjeComplexMid = PathPlanner.loadPathGroup(
             "oranjeComplexMid",
             Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
->>>>>>> origin/orange-county
 }

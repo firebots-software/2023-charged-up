@@ -5,7 +5,6 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ArmToDegree;
-import frc.robot.commands.ArmToLengthCmd;
 import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.claw.ToggleClaw;
@@ -29,10 +28,20 @@ public class MoveAndScore extends SequentialCommandGroup {
     }};
 
     private static final HashMap<Integer, double[]> degreesTickies = new HashMap<>(){{
-        put(0, new double[]{ArmConstants.LOW_GOAL_BACK_DEG, ArmConstants.LOW_GOAL_DIST_IN});
-        put(1, new double[]{ArmConstants.MID_CONE_BACK_DEG, 78585});
-        put(2, new double[]{ArmConstants.HIGH_CONE_BACK_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
+        put(0, new double[]{ArmConstants.LOW_GOAL_FRONT_DEG, 0});
+        put(1, new double[]{ArmConstants.MID_CONE_FRONT_DEG, 78585});
+        put(2, new double[]{ArmConstants.HIGH_CONE_FRONT_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
     }};
+
+    public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw, boolean auton) {
+        boolean cone = pos != 0;
+        double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
+        addCommands(
+            new ArmToDegree(arm, deginches[0]),
+            new JankArmToTicks(deginches[1], arm),
+            new ToggleClaw(true, claw)
+        );
+    }
 
     /**
      * Move and score a loaded pieces
@@ -45,14 +54,14 @@ public class MoveAndScore extends SequentialCommandGroup {
      */
     public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
         boolean cone = pos != 0;
+        MoveToTag mtt = new MoveToTag(pos, swerveSubsystem);
         double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(
-            new ParallelCommandGroup(
-                // new MoveToTag(pos, swerveSubsystem),
-                new ArmToDegree(arm, deginches[0])
-            ),
-            new JankArmToTicks(deginches[1], arm),
-            new ToggleClaw(true, claw)
+                mtt,
+                new ArmToDegree(arm, () -> mtt.currentCamDir() * deginches[0]),
+            
+            new JankArmToTicks(deginches[1], arm)
+            //new ToggleClaw(true, claw)
         );
     }
     

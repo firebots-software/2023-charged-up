@@ -12,6 +12,7 @@ import frc.robot.Constants.AutonConstants;
 
 public class AutonPaths {
 
+<<<<<<< HEAD
     public static List<List<PathPlannerTrajectory>> testTopAuton = makePPTList(
         "testTopAutonPart1", "testTopAutonPart2"
     );
@@ -51,4 +52,25 @@ public class AutonPaths {
         return ppts;
     }
     
+=======
+    public static List<PathPlannerTrajectory> oranjeup = PathPlanner.loadPathGroup(
+            "oranjeTopNoCharge",
+            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
+    public static List<PathPlannerTrajectory> oranjebottom = PathPlanner.loadPathGroup(
+            "oranjeBottomNoCharge",
+            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
+    public static List<PathPlannerTrajectory> oranjeComplexTop = PathPlanner.loadPathGroup(
+            "oranjeComplexTop",
+            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
+    public static List<PathPlannerTrajectory> oranjeComplexBottom = PathPlanner.loadPathGroup(
+            "oranjeComplexBottom",
+            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+
+    public static List<PathPlannerTrajectory> oranjeComplexMid = PathPlanner.loadPathGroup(
+            "oranjeComplexMid",
+            Constants.AutonConstants.kVMax, Constants.AutonConstants.kAMax);
+>>>>>>> origin/orange-county
 }

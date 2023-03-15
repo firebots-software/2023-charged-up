@@ -23,7 +23,7 @@ public class Webcam extends SubsystemBase {
   }
 
   public static Webcam getBackWebcam() {
-    if (backWebcam == null) backWebcam = new Webcam(3);
+    if (backWebcam == null) backWebcam = new Webcam(1);
     return backWebcam;
   }
 

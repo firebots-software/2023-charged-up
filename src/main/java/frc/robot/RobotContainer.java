@@ -41,18 +41,18 @@ import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
+import frc.robot.commands.LimpArm;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.RetractArmCmd;
+import frc.robot.commands.ToggleClaw;
 import frc.robot.commandGroups.ConePivot;
 import frc.robot.commandGroups.MoveAndScore;
+import frc.robot.commandGroups.PickupFromGround;
+import frc.robot.commandGroups.PickupObjectFromHeight;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
-import frc.robot.commands.claw.Intake;
-import frc.robot.commands.claw.Outtake;
-import frc.robot.commands.claw.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.NewClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -61,10 +61,10 @@ public class RobotContainer {
   private Joystick driverPS4;
   private Joystick armJoystick;
   private Joystick numpad;
+  private double startPitch;
 
   private final ArmSubsystem arm = ArmSubsystem.getInstance();
   private final ClawSubsystem claw = ClawSubsystem.getInstance();
-  private final NewClawSubsystem newClaw = NewClawSubsystem.getInstance();
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
   InstantCommand command;
@@ -74,15 +74,16 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
-      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 1));
-      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -1));
-      put("MoveToTag", new MoveToTag(swerveSubsystem));
+      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 2.5, () -> startPitch));
+      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -2.5, () -> startPitch));
+      //put("MoveToTarget", new MoveToTag(swerveSubsystem));
       //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
       //put("OpenClaw", new ToggleClaw(true, claw));
       //put("CloseClaw", new ToggleClaw(false, claw));
+      //put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
       //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
-      put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw));
+      put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true));
       //put("ExtendArmToMax", new ExtendToCmd(arm));
       put("RetractArmToMin", new RetractArmCmd(arm));
 
@@ -135,7 +136,7 @@ public class RobotContainer {
         () -> -driverPS4.getRawAxis(1),
         () -> -driverPS4.getRawAxis(0),
         () -> -driverPS4.getRawAxis(2),
-        () -> driverPS4.getRawAxis(4) > -0.75 ? 0.80 : (driverPS4.getRawAxis(3) > -0.75 ? 0.15 : 0.40),
+        () -> driverPS4.getRawAxis(4) > -0.75 ? 1 : (driverPS4.getRawAxis(3) > -0.75 ? 0.15 : 0.50),
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
@@ -147,15 +148,20 @@ public class RobotContainer {
       new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
     }
 
-    final Trigger intake = new JoystickButton(armJoystick, 1);
-    intake.whileTrue(new Intake(newClaw));
-
-    final Trigger outtake = new JoystickButton(armJoystick, 2);
-    outtake.whileTrue(new Outtake(newClaw));
+    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
+    armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
+    
+    final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
+    tri.whileTrue(new PickupObjectFromHeight());
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
 
+    final Trigger thing = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
+    thing.whileTrue(new ChargeStation(swerveSubsystem, -2.5, () -> startPitch));
+
+    final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
+    limpArm.whileTrue(new LimpArm(arm));
 
     final Trigger clawToggle = new JoystickButton(armJoystick, 1);
     clawToggle.onTrue(new ToggleClaw(claw));
@@ -231,9 +237,34 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
+
     return autonChooser.getSelected();
-    
   }
 
+  public void setPitch(double x) {
+    startPitch = x;
+  }
+
+  
+
+  public void printAuton() {
+    
+    SmartDashboard.putString("selected auton", getAutonomousCommand().getName());
+  }
+
+  // public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
+  //   Command current = new InstantCommand();
+
+  //   for (int i = 0; i < ppts.size(); i++) {
+  //     current = current.andThen(new InstantCommand(() -> {
+  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(i).get(0).sample(0);
+  //       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
+  //       swerveSubsystem.resetOdometry(initial1Pose);
+  //     })).andThen(autoBuilder.fullAuto(ppts.get(i)));
+  //   }
+  //   return current;
+  // }
+  
+
+  
 }

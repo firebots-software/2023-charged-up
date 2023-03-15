@@ -19,6 +19,7 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
   private static ArmSubsystem instance;
+  private boolean canExtend;
 
   // rotating
   private WPI_TalonFX rotatingMotor;
@@ -72,17 +73,21 @@ public class ArmSubsystem extends SubsystemBase {
 
   public boolean setRotatingMotor(double speed) {
     double deg = _getPotentiometerDegrees();
+    boolean retracted = getBottomStatus();
 
-    if (deg <= -ArmConstants.MAX_ROTATION_ANGLE_DEG)
+    if ((deg <= -ArmConstants.MAX_ROTATION_ANGLE_DEG && !retracted) || (deg <= -ArmConstants.MAX_RETRACTED_DEG))
       speed = Math.max(speed, 0);
-    else if (deg >= ArmConstants.MAX_ROTATION_ANGLE_DEG)
+    else if ((deg >= ArmConstants.MAX_ROTATION_ANGLE_DEG && !retracted) || (deg >= ArmConstants.MAX_RETRACTED_DEG))
       speed = Math.min(speed, 0);
 
     // Guard 2: if the arm is in between -60 and 60 degrees, we need to retract the arm fully to not extend past 6' 4"
     // TODO: when encoder works, do trig to figure out the actual limit based on the arm length.
-    if (Math.abs(deg) <= 60 && !getBottomStatus()) {
-      setExtendingMotor(-0.5);
-      return false;
+    if (Math.abs(deg) <= 60 && !retracted) {
+      canExtend = false;
+      priorityExtend(-0.3);
+      speed = 0; // make sure arm doesn't continue moving
+    } else {
+      canExtend = true;
     }
 
     // Guard 3: if the requested speed moves too slow, turn on friction break and don't move
@@ -108,6 +113,11 @@ public class ArmSubsystem extends SubsystemBase {
 
   // retracting is negative, extending is positive
   public void setExtendingMotor(double speed) {
+    if (canExtend) priorityExtend(speed);
+  }
+
+  private void priorityExtend(double speed) {
+    double deg = getRotationDegrees();
     if ((Math.abs(speed) < 0.1) ||
     (getBottomStatus() && speed < 0) ||
     (getTopStatus() && speed > 0)) {
@@ -115,6 +125,14 @@ public class ArmSubsystem extends SubsystemBase {
       extendingMotor.set(-0.1);
       return;
     }
+
+    if ((Math.abs(deg) <= 60 && speed > 0) ||
+    (Math.abs(deg) >= ArmConstants.MAX_ROTATION_ANGLE_DEG+10 && speed > 0)) {
+      // cant extend when 
+      extendingMotor.set(-0.1);
+      return;
+    }
+
 
     extendingMotor.set(speed);
   }

@@ -3,6 +3,9 @@
     "Persistent Values": {
       "open": false
     },
+    "Transitory Values": {
+      "open": false
+    },
     "transitory": {
       "FMSInfo": {
         "open": true
@@ -34,7 +37,8 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Field": "Field2d"
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
     }
   },
   "NetworkTables Info": {
@@ -64,7 +68,7 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 332
+          "height": 0
         }
       ]
     }

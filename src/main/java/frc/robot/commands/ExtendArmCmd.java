@@ -3,10 +3,10 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class RetractArmCmd extends CommandBase {
+public class ExtendArmCmd extends CommandBase {
     private ArmSubsystem arm;
 
-    public RetractArmCmd(ArmSubsystem arm) {
+    public ExtendArmCmd(ArmSubsystem arm) {
         this.arm = arm;
     }
 
@@ -15,12 +15,12 @@ public class RetractArmCmd extends CommandBase {
 
     @Override
     public void execute() {
-        arm.setExtendingMotor(-.4);
+        arm.setExtendingMotor(.3);
     }
 
     @Override
     public boolean isFinished() {
-        return arm.getBottomStatus();
+        return arm.getTopStatus();
     }
 
     @Override

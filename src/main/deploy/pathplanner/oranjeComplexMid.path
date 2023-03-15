@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8867675877712868,
-        "y": 4.390906561327012
+        "x": 1.8943640109502442,
+        "y": 2.712618930446194
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.56557468496881,
-        "y": 5.058232041811306
+        "x": 4.051516241921373,
+        "y": 2.504848058307227
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -16,47 +16,49 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "ArmToMidCube"
+        ],
         "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 1.0
+        "waitBehavior": "minimum",
+        "waitTime": 2.0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.396491485691305,
-        "y": 3.3740296386842776
+        "x": 5.75,
+        "y": 2.1543108207744193
       },
       "prevControl": {
-        "x": 5.614001910295487,
-        "y": 5.185979524736822
+        "x": 5.281498929317303,
+        "y": 2.051962065729686
       },
       "nextControl": {
-        "x": 5.614001910295487,
-        "y": 5.185979524736822
+        "x": 6.11249660470557,
+        "y": 2.233501837660452
       },
       "holonomicAngle": 180.0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "CloseClaw"
+          "PickupFromGroundBack"
         ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
-        "waitTime": 0.6
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 2.2,
-        "y": 4.43
+        "x": 5.463987049501877,
+        "y": 2.7555880111760223
       },
       "prevControl": {
-        "x": 3.8617308031401407,
-        "y": 4.7230079752679535
+        "x": 6.2265867535207295,
+        "y": 2.9898593824965425
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -66,14 +68,16 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "MoveToTarget",
-          "OpenClaw"
+          "ChargeStationForward"
         ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
-        "waitTime": 1.2
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     }
   ],
+  "maxVelocity": 1.0,
+  "maxAcceleration": 1.0,
+  "isReversed": null,
   "markers": []
 }

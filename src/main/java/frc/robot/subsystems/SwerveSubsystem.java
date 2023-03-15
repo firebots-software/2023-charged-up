@@ -73,6 +73,10 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    public void zeroHeading(double deg) {
+        gyro.setYaw(deg);
+    }
+
     public double getHeading() {
         return Math.IEEEremainder(gyro.getYaw(), 360); // TODO: maybe should be negative?
     }
@@ -128,6 +132,13 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public void setTurning(double rad) {
+        frontLeft.setTurnState(rad);
+        frontRight.setTurnState(rad);
+        backLeft.setTurnState(rad);
+        backRight.setTurnState(rad);
     }
 
     public static SwerveSubsystem getInstance() {

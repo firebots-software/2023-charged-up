@@ -11,30 +11,25 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class JankEngageCmd extends CommandBase{
 
     private SwerveSubsystem swerve;
-    double startPitch = 0;
-    double speed = 0.5;
-    Supplier<Double> initial;
+    double speed = 0.42;
 
-    public JankEngageCmd(SwerveSubsystem swerve, Supplier<Double> initialPitch) {
+    public JankEngageCmd(SwerveSubsystem swerve) {
         this.swerve = swerve;
-        this.initial = initialPitch;
         addRequirements(swerve);
     }
 
     @Override
-    public void initialize() {
-        startPitch = initial.get();
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
-        double pitch = swerve.getPitch() - startPitch;
+        double pitch = swerve.getPitch();
         
-        if (pitch>DockingConstants.DOCKING_TOLERANCE) {
+        if (pitch>DockingConstants.ENGAGE_TOLERANCE) {
             SwerveModuleState state = new SwerveModuleState(-speed, new Rotation2d(0d));
             swerve.setModuleStates(new SwerveModuleState[]{state, state, state, state});
         }
-        else if (pitch<-DockingConstants.DOCKING_TOLERANCE){
+        else if (pitch<-DockingConstants.ENGAGE_TOLERANCE){
             SwerveModuleState state = new SwerveModuleState(speed, new Rotation2d(0d));
             swerve.setModuleStates(new SwerveModuleState[]{state, state, state, state});
         }

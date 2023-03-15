@@ -35,12 +35,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants.DockingConstants;
 //import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
+import frc.robot.commands.LevelCmd;
 import frc.robot.commands.LimpArm;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.RetractArmCmd;
@@ -61,7 +64,6 @@ public class RobotContainer {
   private Joystick driverPS4;
   private Joystick armJoystick;
   private Joystick numpad;
-  private double startPitch;
 
   private final ArmSubsystem arm = ArmSubsystem.getInstance();
   private final ClawSubsystem claw = ClawSubsystem.getInstance();
@@ -74,8 +76,8 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
-      put("ChargeStationForward", new ChargeStation(swerveSubsystem, 2.5, () -> startPitch));
-      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -2.5, () -> startPitch));
+      put("ChargeStationForward", new ChargeStation(swerveSubsystem, DockingConstants.DOCKING_SPEED));
+      put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
       //put("MoveToTarget", new MoveToTag(swerveSubsystem));
       //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
@@ -148,6 +150,9 @@ public class RobotContainer {
       new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
     }
 
+    final Trigger runfor = new JoystickButton(driverPS4, Constants.OI.OPTIONS_BUTTON_PORT);
+    runfor.whileTrue(new LevelCmd(swerveSubsystem, 1, 1350));
+
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
     armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
     
@@ -158,7 +163,7 @@ public class RobotContainer {
     damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
 
     final Trigger thing = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
-    thing.whileTrue(new ChargeStation(swerveSubsystem, -2.5, () -> startPitch));
+    thing.whileTrue(new ChargeStation(swerveSubsystem, -2.0));
 
     final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
     limpArm.whileTrue(new LimpArm(arm));
@@ -176,7 +181,23 @@ public class RobotContainer {
 
     
     
-    SmartDashboard.putData(autonChooser);
+    // autonChooser.addOption("oranje bottom", makeAuton((AutonPaths.oranjebottom)));
+    // autonChooser.addOption("oranje no charge up", makeAuton((AutonPaths.oranjeup)));
+    // autonChooser.addOption("oranjeMid", new RetractArmCmd(arm)
+    // .andThen(
+    //   new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true),
+    //   new WaitCommand(0.25), 
+    //   new RetractArmCmd(arm),
+    //   new WaitCommand(0.25),
+    //   new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED))
+    // );
+    // autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
+    // autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
+    // autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
+    autonChooser.addOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
+    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAuton));
+
+    SmartDashboard.putData("auton chooser",autonChooser);
   }
 
   /**
@@ -244,9 +265,7 @@ public class RobotContainer {
     return autonChooser.getSelected();
   }
 
-  public void setPitch(double x) {
-    startPitch = x;
-  }
+  
 
   
 

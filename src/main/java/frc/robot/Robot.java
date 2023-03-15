@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     onInit();
-    m_robotContainer.setPitch(swerveSubsystem.getPitch());
+    swerveSubsystem.zeroPitch();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     onInit();
-    swerveSubsystem.zeroHeading(180);
+    swerveSubsystem.setHeading(180);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

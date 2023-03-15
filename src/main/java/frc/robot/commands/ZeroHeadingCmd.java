@@ -5,6 +5,9 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class ZeroHeadingCmd extends InstantCommand {
     public ZeroHeadingCmd(SwerveSubsystem swerveSubsystem) {
-        super(() -> {swerveSubsystem.zeroHeading();}, swerveSubsystem);
+        super(() -> {
+            swerveSubsystem.zeroHeading();
+            swerveSubsystem.zeroPitch();
+        }, swerveSubsystem);
     }
 }

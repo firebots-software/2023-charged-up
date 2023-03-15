@@ -50,6 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
     );
 
     private final PigeonIMU gyro = new PigeonIMU(DriveConstants.PIGEON_PORT);
+    private double flatPitch = 0;
     
     private final edu.wpi.first.math.kinematics.SwerveDriveOdometry odometer = new edu.wpi.first.math.kinematics.SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -73,8 +74,16 @@ public class SwerveSubsystem extends SubsystemBase {
         gyro.setYaw(0);
     }
 
-    public void zeroHeading(double deg) {
+    public void setHeading(double deg) {
         gyro.setYaw(deg);
+    }
+
+    public void setPitch(double deg) {
+        flatPitch = deg;
+    }
+
+    public void zeroPitch() {
+        flatPitch = getPitch();
     }
 
     public double getHeading() {
@@ -82,7 +91,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getPitch() {
-        return gyro.getPitch();
+        return gyro.getPitch() - flatPitch;
     }
 
     public double getRoll() {

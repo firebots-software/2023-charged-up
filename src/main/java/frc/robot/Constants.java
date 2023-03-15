@@ -133,7 +133,7 @@ public final class Constants {
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
         public static final int STARTING_POINT = -1191;
-        public static final double MAX_ROTATION_SPEED = 0.3; //confirmed
+        public static final double MAX_ROTATION_SPEED = 0.5; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
 
@@ -191,12 +191,12 @@ public final class Constants {
     }
 
     public static final class DockingConstants {
-        public static final double DOCKING_TOLERANCE = 7;
+        public static final double DOCKING_TOLERANCE = 15;
+        public static final double ENGAGE_TOLERANCE = 9;
 
+        public static final double DOCKING_SPEED = 2.0;
         public static final double kPEngage = 0.08;
         public static final double KIEngage = 0;
         public static final double KDEngage = 0;
     }
-
-    
 }

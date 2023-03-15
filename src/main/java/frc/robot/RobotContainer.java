@@ -186,7 +186,7 @@ public class RobotContainer {
     autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
     autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
     autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
-    autonChooser.addOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true), new RetractArmCmd(arm)));
+    autonChooser.addOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
 
     SmartDashboard.putData("auton chooser",autonChooser);
   }

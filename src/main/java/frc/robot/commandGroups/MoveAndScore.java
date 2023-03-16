@@ -14,6 +14,14 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.ArmConstants;
 
 public class MoveAndScore extends SequentialCommandGroup {
+public static int LEFT_POS = -1;
+public static int RIGHT_POS = 1;
+public static int MIDDLE_POS = 0;
+
+public static int LOW_LEVEL = 0;
+public static int MID_LEVEL = 1;
+public static int HIGH_LEVEL = 2;
+
 
     private static final HashMap<Integer, double[]> cubeLevelToDegInches = new HashMap<>(){{
         put(0, new double[]{ArmConstants.LOW_GOAL_FRONT_DEG, ArmConstants.LOW_GOAL_DIST_IN});

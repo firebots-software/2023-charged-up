@@ -31,7 +31,7 @@ public class PhotonVision extends SubsystemBase{
 
     public static final double CAM_TO_FIDUCIAL_METERS = 0.63;
 
-    public PhotonVision(String camName){
+    private PhotonVision(String camName){
         camera = new PhotonCamera(camName);
     }   
 
@@ -40,10 +40,11 @@ public class PhotonVision extends SubsystemBase{
         return frontCam;
     }
 
+    /*
     public static PhotonVision getBackCam() {
         if (backCam == null) backCam = new PhotonVision("limelightCam2");
         return backCam;
-    }
+    }*/
 
     //Have to use the same pipeline result each time you want to gather data.
     //Gets the processed data from the camera

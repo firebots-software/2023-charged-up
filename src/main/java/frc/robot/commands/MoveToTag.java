@@ -26,7 +26,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class MoveToTag extends CommandBase {
   PhotonVision frontCam = PhotonVision.getFrontCam();
-  PhotonVision backCam = PhotonVision.getBackCam();
+  //PhotonVision backCam = PhotonVision.getBackCam();
 
   PhotonVision usedCam;
 
@@ -37,6 +37,9 @@ public class MoveToTag extends CommandBase {
   private double xoffset;
   private double yoffset;
 
+  public static int LEFT = 1;
+  public static int RIGHT = -1;
+
   /** Creates a new MoveToTarget. */
   public MoveToTag(SwerveSubsystem swerveSubsystem) {
     this.ss = SwerveSubsystem.getInstance();
@@ -46,13 +49,13 @@ public class MoveToTag extends CommandBase {
 
   public MoveToTag(int pos, SwerveSubsystem swerveSubsystem) {
     this(swerveSubsystem);
-    this.yoffset = -0.55 * pos * (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
+    this.yoffset = -0.55 * pos; //* (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
   }
 
   public MoveToTag(double frontOffset, double sideOffset, SwerveSubsystem swerveSubsystem) {
     this(swerveSubsystem);
     this.xoffset = frontOffset;
-    this.yoffset = sideOffset * (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
+    this.yoffset = sideOffset; //* (DriverStation.getAlliance() != Alliance.Red ? 1 : -1);
   }
 
   public int currentCamDir() {
@@ -66,7 +69,7 @@ public class MoveToTag extends CommandBase {
     double backdist = -1;
 
     if (frontCam.hasTarget(frontCam.getLatestPipeline())) frontdist = frontCam.getDistance();
-    if (backCam.hasTarget(backCam.getLatestPipeline())) backdist = backCam.getDistance();
+    //if (backCam.hasTarget(backCam.getLatestPipeline())) backdist = backCam.getDistance();
 
     if (frontdist != -1 && backdist != -1) {
       // eliminate furthest cam
@@ -81,10 +84,12 @@ public class MoveToTag extends CommandBase {
     } else if (backdist == -1) {
       dir = 1;
       usedCam = frontCam;
-    } else if (frontdist == -1) {
+    }/* 
+    else if (frontdist == -1) {
       dir = -1;
       usedCam = backCam;
     }
+    */
 
     PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2),
         new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), //TODO: if we ever get around to calculating vision, change to ss.getHeading()
@@ -106,6 +111,7 @@ public class MoveToTag extends CommandBase {
         new PIDController(Constants.AutonConstants.kPTurning, Constants.AutonConstants.kITurning,
             Constants.AutonConstants.kDTurning),
         ss::setModuleStates,
+        true,
         ss);
 
     pp.initialize();

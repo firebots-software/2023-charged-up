@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8778355388379817,
-        "y": 4.3797804000743525
+        "x": 1.8879273470352498,
+        "y": 4.395313646530071
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1408510720017158,
-        "y": 3.990974829310571
+        "x": 1.8344044570033584,
+        "y": 4.769336009158129
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -18,21 +18,22 @@
       "stopEvent": {
         "names": [
           "RetractArmToMin",
-          "ArmToMidCube"
+          "ScoreMidCube",
+          "RetractArmToMin"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 2.0
+        "waitTime": 4.0
       }
     },
     {
       "anchorPoint": {
-        "x": 1.8989450600428979,
-        "y": 2.703572808187283
+        "x": 5.853956102009427,
+        "y": 3.4178105508988796
       },
       "prevControl": {
-        "x": 1.635929526879164,
-        "y": 3.1495556687692665
+        "x": 6.919194985959418,
+        "y": 5.565394767942319
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -42,8 +43,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ChargeStationBackward",
-          "MoveToTag"
+          "ChargeStationForward"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

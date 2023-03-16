@@ -78,17 +78,14 @@ public class RobotContainer {
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, DockingConstants.DOCKING_SPEED));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
-      //put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      //put("MoveToTargetLeft", new MoveToTag(-1, swerveSubsystem));
-      //put("MoveToTargetRight", new MoveToTag(1, swerveSubsystem));
-      //put("OpenClaw", new ToggleClaw(true, claw));
-      //put("CloseClaw", new ToggleClaw(false, claw));
-      //put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
-      //put("ArmToHighCone", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
-      put("ArmToMidCube", new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true));
-      //put("ExtendArmToMax", new ExtendToCmd(arm));
+      put("MoveToTarget", new MoveToTag(swerveSubsystem));
+      put("MoveToTargetLeft", new MoveToTag(MoveToTag.LEFT, swerveSubsystem));
+      put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
+      put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ScoreMidCone", new MoveAndScore(MoveAndScore.LEFT_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ExtendArmToMax", new JankArmToTicks(78585, arm));
       put("RetractArmToMin", new RetractArmCmd(arm));
-
+      put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
       // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
       //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
       // put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));
@@ -194,8 +191,13 @@ public class RobotContainer {
     // autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
     // autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
     // autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
-    autonChooser.addOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
-    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.testTopAuton));
+    autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
+    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.complexTopAuton));
+    autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
+    autonChooser.addOption("midAuton", makeAuton(AutonPaths.midAuton));
+    autonChooser.addOption("bottomAuton", makeAuton(AutonPaths.bottomAuton));
+    autonChooser.addOption("topAutonNoCharge", makeAuton(AutonPaths.topAutonNoCharge));
+    autonChooser.addOption("bottomAutonNoCharge", makeAuton(AutonPaths.bottomAutonNoCharge));
 
     SmartDashboard.putData("auton chooser",autonChooser);
   }

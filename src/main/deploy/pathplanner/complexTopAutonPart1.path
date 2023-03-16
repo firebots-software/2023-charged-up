@@ -16,8 +16,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "RetractArmToMin",
+          "ScoreMidCube",
+          "RetractArmToMin"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "minimum",
         "waitTime": 0.5
       }
@@ -38,12 +42,21 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "ToggleClaw"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "minimum",
         "waitTime": 0.5
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.16857244318181827,
+      "names": [
+        "ArmToGroundBack"
+      ]
+    }
+  ]
 }

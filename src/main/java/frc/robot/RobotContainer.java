@@ -83,18 +83,9 @@ public class RobotContainer {
       put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
       put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
       put("ScoreMidCone", new MoveAndScore(MoveAndScore.LEFT_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ExtendArmToMax", new JankArmToTicks(78585, arm));
       put("RetractArmToMin", new RetractArmCmd(arm));
-      put("PickupFromGroundBack", new PickupFromGround(() -> true, arm, claw, true));
-      // put("MoveToTargetLeft", new MoveToTargetLeft(swerveSubsystem));
-      //put("MoveToTargetRight", new MoveToTargetRight(swerveSubsystem));
-      // put("ZeroGyro", new ZeroHeadingCmd(swerveSubsystem));
-      // put("OpenClaw", new OpenPiston());
-      // put("CloseClaw", new ClosePiston());
-      // put("ArmToHighCubeFront", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
-      // put("ArmToHighConeFront", new ArmToDegree(arm, ArmConstants.HIGH_CONE_FRONT_DEG));
-      // put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
-      
+      put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      put("ToggleClaw", new ToggleClaw(claw));
   }};
   
 

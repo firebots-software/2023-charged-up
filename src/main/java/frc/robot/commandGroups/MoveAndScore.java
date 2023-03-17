@@ -37,8 +37,8 @@ public static int HIGH_LEVEL = 2;
 
     private static final HashMap<Integer, double[]> degreesTickies = new HashMap<>(){{
         put(0, new double[]{ArmConstants.LOW_GOAL_FRONT_DEG, 0});
-        put(1, new double[]{ArmConstants.MID_CONE_FRONT_DEG, 78585});
-        put(2, new double[]{ArmConstants.HIGH_CONE_FRONT_DEG, ArmConstants.HIGH_GOAL_DIST_IN});
+        put(1, new double[]{ArmConstants.MID_CUBE_FRONT_DEG, 78585});
+        put(2, new double[]{ArmConstants.HIGH_CUBE_FRONT_DEG, 228818});
     }};
 
     public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw, boolean auton) {

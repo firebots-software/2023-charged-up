@@ -39,6 +39,7 @@ import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DockingConstants;
 //import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commandGroups.ArmToGround;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
@@ -82,9 +83,10 @@ public class RobotContainer {
       put("MoveToTargetLeft", new MoveToTag(MoveToTag.LEFT, swerveSubsystem));
       put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
       put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreMidCone", new MoveAndScore(MoveAndScore.LEFT_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ScoreHighCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
       put("RetractArmToMin", new RetractArmCmd(arm));
-      put("ArmToGroundBack", new ArmToDegree(arm, -ArmConstants.MAX_ROTATION_ANGLE_DEG));
+      put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
+      put("ExtendArmToMax", new JankArmToTicks(304433, arm));
       put("ToggleClaw", new ToggleClaw(claw));
   }};
   
@@ -131,21 +133,23 @@ public class RobotContainer {
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
     arm.setDefaultCommand(new ArmJoystickCmd(
-        () -> armJoystick.getRawAxis(0) * 0.4,
+        () -> armJoystick.getRawAxis(0) * 0.5,
         () -> -armJoystick.getRawAxis(1) * 0.5));
     
     for (int button = 1; button < 10; button++) {
       new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
     }
 
-    final Trigger runfor = new JoystickButton(driverPS4, Constants.OI.OPTIONS_BUTTON_PORT);
-    runfor.whileTrue(new LevelCmd(swerveSubsystem, 1, 1350));
+    
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
     armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
     
     final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
     tri.whileTrue(new PickupObjectFromHeight());
+
+    final Trigger to90 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    to90.whileTrue(new ArmToDegree(arm, () -> 90d));
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
@@ -183,7 +187,7 @@ public class RobotContainer {
     // autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
     // autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
     autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
-    autonChooser.addOption("testTopAuton", makeAuton(AutonPaths.complexTopAuton));
+    autonChooser.addOption("complexTopAuton", makeAuton(AutonPaths.complexTopAuton));
     autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
     autonChooser.addOption("midAuton", makeAuton(AutonPaths.midAuton));
     autonChooser.addOption("bottomAuton", makeAuton(AutonPaths.bottomAuton));

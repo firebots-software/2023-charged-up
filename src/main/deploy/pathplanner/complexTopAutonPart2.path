@@ -39,13 +39,13 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "MoveToTargetLeft",
-          "ScoreMidCone",
+          "MoveToTarget",
+          "ScoreMidCube",
           "RetractArmToMin"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 4.0
+        "waitTime": 0.5
       }
     }
   ],

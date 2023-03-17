@@ -18,7 +18,7 @@
       "stopEvent": {
         "names": [
           "RetractArmToMin",
-          "ScoreMidCube",
+          "ScoreHighCube",
           "RetractArmToMin"
         ],
         "executionBehavior": "sequential",
@@ -43,6 +43,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "ExtendArmToMax",
           "ToggleClaw"
         ],
         "executionBehavior": "sequential",

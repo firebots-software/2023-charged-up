@@ -4,26 +4,25 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DockingConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class LevelCmd extends CommandBase {
 
     private SwerveSubsystem swerveSubsystem;
     private final SwerveModuleState[] forwardModuleStates;
-    private long startTime;
-    private long duration;
+    // private long startTime;
+    // private long duration;
 
-    public LevelCmd(SwerveSubsystem swerveSubsystem, double speed, long timeMillis) {
+    public LevelCmd(SwerveSubsystem swerveSubsystem, double speed) {
         this.swerveSubsystem = swerveSubsystem;
         SwerveModuleState moduleState = new SwerveModuleState(speed, new Rotation2d());
         this.forwardModuleStates = new SwerveModuleState[]{moduleState, moduleState, moduleState, moduleState};
-        this.duration = timeMillis;
         addRequirements(swerveSubsystem);
     }
 
     @Override
     public void initialize() {
-        this.startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -33,7 +32,7 @@ public class LevelCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (System.currentTimeMillis() - startTime) >= duration;
+        return Math.abs(swerveSubsystem.getPitch()) <= DockingConstants.LEVEL_TOLERANCE;
     }
 
     @Override

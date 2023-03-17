@@ -12,18 +12,17 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 
 public class ArmToGround extends SequentialCommandGroup {
-    public ArmToGround(Supplier<Boolean> back, ArmSubsystem arm, ClawSubsystem claw, boolean auton) {
+    public ArmToGround(Supplier<Boolean> back, ArmSubsystem arm, boolean auton) {
         addCommands(
             new ArmToDegree(arm, () -> 125d * (back.get() ? 1d : -1d)),
             new JankArmToTicks(277552, arm)
         );
     }
 
-    public ArmToGround(Supplier<Boolean> back, ArmSubsystem arm, ClawSubsystem claw) {
+    public ArmToGround(Supplier<Boolean> back, ArmSubsystem arm) {
         addCommands(
-            new ToggleClaw(true, claw),
-            new ArmToDegree(arm, () -> 125d * (back.get() ? 1d : -1d)),
-            new JankArmToTicks(277552, arm)
+            new ArmToDegree(arm, () -> 125d * (back.get() ? 1d : -1d))
+            //new JankArmToTicks(277552, arm)
         );
     }
 }

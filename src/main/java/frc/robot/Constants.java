@@ -49,7 +49,7 @@ public final class Constants {
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kDriveEncoderTicks2Meter = kDriveEncoderRot2Meter / kDriveEncoderTicksPerRotation;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
-    public static final double kPTurning = 0.79;
+    public static final double kPTurning = 0.926;
     }
 
     public static final class DriveConstants {
@@ -133,7 +133,7 @@ public final class Constants {
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
         public static final int STARTING_POINT = -1191;
-        public static final double MAX_ROTATION_SPEED = 0.5; //confirmed
+        public static final double MAX_ROTATION_SPEED = 0.65; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
         public static final double pidPositionToleranceDegrees = 1.0;
@@ -155,12 +155,12 @@ public final class Constants {
 
         public static final double HIGH_CONE_FRONT_DEG = -75.5;
         public static final double HIGH_CONE_BACK_DEG = -HIGH_CONE_FRONT_DEG;
-        public static final double HIGH_CUBE_FRONT_DEG = -70.0;
+        public static final double HIGH_CUBE_FRONT_DEG = -86.0;
         public static final double HIGH_CUBE_BACK_DEG = -HIGH_CUBE_FRONT_DEG;
 
         public static final double MID_CONE_FRONT_DEG = -88.4;
         public static final double MID_CONE_BACK_DEG = -MID_CONE_FRONT_DEG;
-        public static final double MID_CUBE_FRONT_DEG = -104.4;
+        public static final double MID_CUBE_FRONT_DEG = -88.4;
         public static final double MID_CUBE_BACK_DEG = -MID_CUBE_FRONT_DEG;
 
         public static final double LOW_GOAL_FRONT_DEG = -115.0;
@@ -195,15 +195,19 @@ public final class Constants {
         public static final double kITurning = 0;
         public static final double kDTurning = 0.69;
 
-        public static final double kVMax = 1;
-        public static final double kAMax = 1;
+        public static final double kVMax = 3;
+        public static final double kAMax = 3;
     }
 
     public static final class DockingConstants {
-        public static final double DOCKING_TOLERANCE = 15;
+        public static final double DOCKING_TOLERANCE = 17;
+        public static final double LEVEL_TOLERANCE = 12;
         public static final double ENGAGE_TOLERANCE = 9;
 
+
+        public static final double OSCILLATION_SPEED_INCREMENT = 0.02;
         public static final double DOCKING_SPEED = 2.0;
+        public static final double ENGAGE_SPEED = 0.6;
         public static final double kPEngage = 0.08;
         public static final double KIEngage = 0;
         public static final double KDEngage = 0;

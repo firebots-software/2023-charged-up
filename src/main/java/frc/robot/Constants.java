@@ -123,7 +123,7 @@ public final class Constants {
 
         public static final int POTENTIOMETER_PORT = 3; //confirmed
 
-        public static final int FRICTION_BREAK_PORT = 4; //Changing?
+        public static final int FRICTION_BREAK_PORT = 3; //Changing?
         public static final int INTAKE_MOTOR_PORT = 0; //subject to change
 
         public static final int BOTTOMHALLEFFECT_PORT = 1; //confirmed
@@ -182,7 +182,7 @@ public final class Constants {
         public static final double MIN_INTAKE_SPEED = 0.0; // subject to change
         public static final double MAX_OUTTAKE_SPEED = -1.0;
         public static final double MIN_OUTTAKE_SPEED = -0.0; // subject to change, must be negative
-        public static final int CLAW_SOLENOID_PORT = 5; //Changing
+        public static final int CLAW_SOLENOID_PORT = 2; //Changing
 
     }
 

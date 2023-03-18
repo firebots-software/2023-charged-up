@@ -2,12 +2,11 @@ package frc.robot.commandGroups;
 
 import java.util.HashMap;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
 import frc.robot.commands.MoveToTag;
-import frc.robot.commands.claw.ToggleClaw;
+import frc.robot.commands.ToggleClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -62,6 +61,7 @@ public static int HIGH_LEVEL = 2;
      */
     public MoveAndScore(int pos, int level, SwerveSubsystem swerveSubsystem, ArmSubsystem arm, ClawSubsystem claw) {
         boolean cone = pos != 0;
+
         MoveToTag mtt = new MoveToTag(pos, swerveSubsystem);
         double[] deginches = degreesTickies.get(level); // cone ? coneLevelToDegInches.get(level) : cubeLevelToDegInches.get(level);
         addCommands(

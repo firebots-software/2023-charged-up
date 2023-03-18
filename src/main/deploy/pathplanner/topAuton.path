@@ -54,5 +54,12 @@
   "maxVelocity": 4.0,
   "maxAcceleration": 5.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.029048295454545427,
+      "names": [
+        "TuckArm"
+      ]
+    }
+  ]
 }

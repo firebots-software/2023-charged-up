@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8821285507154348,
-        "y": 4.984703304476054
+        "x": 1.8683274154742753,
+        "y": 0.5031035687071365
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6471637491886097,
-        "y": 4.542661061016567
+        "x": 2.868327415474276,
+        "y": 0.5031035687071365
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -18,22 +18,22 @@
       "stopEvent": {
         "names": [
           "RetractArmToMin",
-          "ScoreHighCube",
+          "ScoreHighCone",
           "RetractArmToMin"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
-        "waitTime": 0.5
+        "waitTime": 4.0
       }
     },
     {
       "anchorPoint": {
         "x": 5.8,
-        "y": 4.59
+        "y": 0.9332582797110035
       },
       "prevControl": {
-        "x": 4.8,
-        "y": 4.59
+        "x": 5.065551754367398,
+        "y": 0.4453475573617806
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -54,7 +54,7 @@
   ],
   "markers": [
     {
-      "position": 0.02315340909090885,
+      "position": 0.02315340909090909,
       "names": [
         "ArmToGroundBack"
       ]

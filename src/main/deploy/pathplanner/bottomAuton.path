@@ -17,7 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreMidCube",
+          "RetractArmToMin",
+          "ScoreHighCube",
           "RetractArmToMin"
         ],
         "executionBehavior": "sequential",
@@ -53,5 +54,12 @@
   "maxVelocity": 4.0,
   "maxAcceleration": 4.0,
   "isReversed": null,
-  "markers": []
+  "markers": [
+    {
+      "position": 0.02,
+      "names": [
+        "TuckArm"
+      ]
+    }
+  ]
 }

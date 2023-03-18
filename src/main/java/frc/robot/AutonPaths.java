@@ -15,6 +15,10 @@ public class AutonPaths {
         "complexTopAutonPart1", "complexTopAutonPart2", "complexTopAutonPart3"
     );
 
+    public static List<List<PathPlannerTrajectory>> complexBottomAuton = makePPTList(
+        "complexBottomAutonPart1", "complexBottomAutonPart2", "complexBottomAutonPart3"
+    );
+
     public static List<List<PathPlannerTrajectory>> topAuton = makePPTList(
         "topAuton"
     );
@@ -34,6 +38,8 @@ public class AutonPaths {
     public static List<List<PathPlannerTrajectory>> bottomAutonNoCharge = makePPTList(
         "bottomAutonNoCharge"
     );
+
+    
 
 
     private static List<List<PathPlannerTrajectory>> makePPTList(String... pathNames) {

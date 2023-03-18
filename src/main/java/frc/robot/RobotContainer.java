@@ -51,6 +51,8 @@ import frc.robot.commands.RetractArmCmd;
 import frc.robot.commands.ToggleClaw;
 import frc.robot.commandGroups.ConePivot;
 import frc.robot.commandGroups.MoveAndScore;
+import frc.robot.commandGroups.MoveToCubeAndExtend;
+import frc.robot.commandGroups.MoveToTargetAndExtend;
 import frc.robot.commandGroups.PickupFromGround;
 import frc.robot.commandGroups.PickupObjectFromHeight;
 import frc.robot.commands.SwerveJoystickCmd;
@@ -66,28 +68,32 @@ public class RobotContainer {
   private Joystick armJoystick;
   private Joystick numpad;
 
-  private final ArmSubsystem arm = ArmSubsystem.getInstance();
-  private final ClawSubsystem claw = ClawSubsystem.getInstance();
+  
   private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
-  InstantCommand command;
-  ArrayList<PathPoint> points = new ArrayList<>();
+  
 
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private final ArmSubsystem arm = ArmSubsystem.getInstance();
+  private final ClawSubsystem claw = ClawSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, DockingConstants.DOCKING_SPEED));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      put("MoveToTargetLeft", new MoveToTag(MoveToTag.LEFT, swerveSubsystem));
-      put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
+      // put("MoveToTargetLeft", new MoveToTag(MoveToTag.LEFT, swerveSubsystem));
+      // put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
       put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
       put("ScoreHighCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
       put("RetractArmToMin", new RetractArmCmd(arm));
       put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
       put("ExtendArmToMax", new JankArmToTicks(304433, arm));
       put("ToggleClaw", new ToggleClaw(claw));
+      put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
+      put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
+      put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
   }};
   
 
@@ -171,21 +177,6 @@ public class RobotContainer {
 
   public void initializeAutonChooser() {
 
-    
-    
-    // autonChooser.addOption("oranje bottom", makeAuton((AutonPaths.oranjebottom)));
-    // autonChooser.addOption("oranje no charge up", makeAuton((AutonPaths.oranjeup)));
-    // autonChooser.addOption("oranjeMid", new RetractArmCmd(arm)
-    // .andThen(
-    //   new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true),
-    //   new WaitCommand(0.25), 
-    //   new RetractArmCmd(arm),
-    //   new WaitCommand(0.25),
-    //   new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED))
-    // );
-    // autonChooser.addOption("oranje complex top", makeAuton((AutonPaths.oranjeComplexTop)));
-    // autonChooser.addOption("oranje complex mid", makeAuton((AutonPaths.oranjeComplexMid)));
-    // autonChooser.addOption("oranje complex bottom", makeAuton((AutonPaths.oranjeComplexBottom)));
     autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
     autonChooser.addOption("complexTopAuton", makeAuton(AutonPaths.complexTopAuton));
     autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
@@ -194,7 +185,8 @@ public class RobotContainer {
     autonChooser.addOption("topAutonNoCharge", makeAuton(AutonPaths.topAutonNoCharge));
     autonChooser.addOption("bottomAutonNoCharge", makeAuton(AutonPaths.bottomAutonNoCharge));
 
-    SmartDashboard.putData("auton chooser",autonChooser);
+    SmartDashboard.putData("auton chooser", autonChooser);
+
   }
 
   /**
@@ -218,34 +210,33 @@ public class RobotContainer {
     
     // Instantiate the auton path
     Command auton = new InstantCommand();
-
     
-    
-    // loop through every trajectory (each ending with a translational and/or rotational command outside of pathplanner)
+    // loop through every trajectory (each ending with a translational and/or rotational swerve cmd outside of pathplanner)
       for (List<PathPlannerTrajectory> ppt : ppts) {
       
         if (ppt != null){ // check if the trajectory exists, or if the filename was misspelled
 
-        auton = auton.andThen(
-        //reset odometry to the initial pose of each trajectory
-        new InstantCommand(() -> {
-          PathPlannerState initial = (PathPlannerState) ppt.get(0).sample(0);
-          Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
-          swerveSubsystem.resetOdometry(initialPose);
-        })).andThen(
-          // build the trajectory
-          autoBuilder.fullAuto(ppt));
+          auton = auton.andThen(
+          //reset odometry to the initial pose of each trajectory
+          new InstantCommand(() -> {
+            PathPlannerState initial = (PathPlannerState) ppt.get(0).sample(0);
+            Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
+            swerveSubsystem.resetOdometry(initialPose);
+          })).andThen(
+            // build the trajectory
+            autoBuilder.fullAuto(ppt));
 
-       }
+        }
        
-       else {
-        System.out.println("************** path is null! *************");
-        return new InstantCommand();
+        else {
+          // reports null trajectory, and prevents any path from running
+          System.out.println("************** path is null! *************");
+          return new InstantCommand();
         }
 
       } 
 
-      // reports null trajectory, and prevents any path from running
+      
       
     
     return auton;

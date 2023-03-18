@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 6.280341595405414,
-        "y": 4.569683451866903
+        "x": 5.8,
+        "y": 4.59
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.280341595405414,
-        "y": 4.569683451866903
+        "x": 4.8,
+        "y": 4.59
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,12 +24,12 @@
     },
     {
       "anchorPoint": {
-        "x": 2.159600954618576,
-        "y": 4.419842554962888
+        "x": 1.8858977683233145,
+        "y": 4.4313241716761205
       },
       "prevControl": {
-        "x": 3.7737716709276476,
-        "y": 5.351784452541942
+        "x": 3.5094447619450797,
+        "y": 5.14109684122146
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -39,8 +39,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "MoveToTarget",
-          "ScoreMidCube",
+          "MoveToTargetAndExtend",
+          "ToggleClaw",
           "RetractArmToMin"
         ],
         "executionBehavior": "sequential",
@@ -49,5 +49,13 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01644176136363635,
+      "names": [
+        "RetractArmToMin",
+        "ArmToHighCube"
+      ]
+    }
+  ]
 }

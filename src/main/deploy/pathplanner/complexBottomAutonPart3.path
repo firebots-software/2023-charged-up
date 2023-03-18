@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8821285507154348,
-        "y": 4.984703304476054
+        "x": 1.8924504081647053,
+        "y": 1.064543028391612
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6471637491886097,
-        "y": 4.542661061016567
+        "x": 1.9678927482854967,
+        "y": 1.3269965498264336
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -16,24 +16,20 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "RetractArmToMin",
-          "ScoreHighCube",
-          "RetractArmToMin"
-        ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
-        "waitTime": 0.5
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 5.8,
-        "y": 4.59
+        "x": 2.3253305534388846,
+        "y": 2.225230099765755
       },
       "prevControl": {
-        "x": 4.8,
-        "y": 4.59
+        "x": 2.2609639142889395,
+        "y": 1.488840955112466
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -43,20 +39,19 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "MoveToCubeAndExtend",
-          "ToggleClaw"
+          "ChargeStationBackward"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
-        "waitTime": 0.5
+        "waitBehavior": "none",
+        "waitTime": 0
       }
     }
   ],
   "markers": [
     {
-      "position": 0.02315340909090885,
+      "position": 0.022940340909090903,
       "names": [
-        "ArmToGroundBack"
+        "TuckArm"
       ]
     }
   ]

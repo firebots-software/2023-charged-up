@@ -173,6 +173,7 @@ public class RobotContainer {
 
     final Trigger goUp = new JoystickButton(armJoystick, 6);
     goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
+
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.

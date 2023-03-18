@@ -27,11 +27,11 @@ public class ClawSubsystem extends SubsystemBase {
   }
 
   public void close() {
-    piston.set(false);
+    piston.set(true);
   }
 
   public void open() {
-    piston.set(true);
+    piston.set(false);
   }
 
   public void toggle() {

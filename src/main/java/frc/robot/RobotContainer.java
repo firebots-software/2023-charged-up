@@ -57,6 +57,7 @@ import frc.robot.commandGroups.PickupFromGround;
 import frc.robot.commandGroups.PickupObjectFromHeight;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
+import frc.robot.commands.claw.CloseClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -94,6 +95,7 @@ public class RobotContainer {
       put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
       put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
       put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
+      put("CloseClaw", new CloseClaw(claw));
   }};
   
 

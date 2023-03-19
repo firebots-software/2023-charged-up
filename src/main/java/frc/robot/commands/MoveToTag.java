@@ -39,7 +39,7 @@ public class MoveToTag extends CommandBase {
 
   /** Creates a new MoveToTarget. */
   public MoveToTag(SwerveSubsystem swerveSubsystem) {
-    this.ss = SwerveSubsystem.getInstance();
+    this.ss = swerveSubsystem;
     this.xoffset = -PhotonVision.CAM_TO_FIDUCIAL_METERS;
     this.yoffset = 0;
   }

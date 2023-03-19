@@ -5,25 +5,21 @@
 package frc.robot;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DockingConstants;
-//import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.ResetAutoBuilder.ChargeStationOptions;
+import frc.robot.ResetAutoBuilder.PiecesScoredOptions;
+import frc.robot.ResetAutoBuilder.StartingPositionOptions;
 import frc.robot.commandGroups.ArmToGround;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
@@ -51,25 +47,28 @@ public class RobotContainer {
   private Joystick armJoystick;
   private Joystick numpad;
 
-  
-  private static SendableChooser<Command> autonChooser = new SendableChooser<>();
-
-  
+  private static SendableChooser<ResetAutoBuilder.StartingPositionOptions> startPosChooser = new SendableChooser<>();
+  private static SendableChooser<ResetAutoBuilder.ChargeStationOptions> chargeStationChooser = new SendableChooser<>();
+  private static SendableChooser<ResetAutoBuilder.PiecesScoredOptions> piecesChooser = new SendableChooser<>();
 
   // Subsystems
-  private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
-  private final ArmSubsystem arm = ArmSubsystem.getInstance();
-  private final ClawSubsystem claw = ClawSubsystem.getInstance();
+  private static final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
+  private static final ArmSubsystem arm = ArmSubsystem.getInstance();
+  private static final ClawSubsystem claw = ClawSubsystem.getInstance();
   // PathPlanner
-  private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
+  private static final Map<String, Command> eventMap = new HashMap<String, Command>() {
+    {
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, DockingConstants.DOCKING_SPEED));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
       // put("MoveToTargetLeft", new MoveToTag(MoveToTag.LEFT, swerveSubsystem));
       // put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
-      put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreHighCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ScoreMidCube",
+          new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ScoreHighCube",
+          new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
+      put("ScoreHighCone",
+          new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
       put("RetractArmToMin", new RetractArmCmd(arm));
       put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
       put("ExtendArmToMax", new JankArmToTicks(304433, arm));
@@ -78,10 +77,10 @@ public class RobotContainer {
       put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
       put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
       put("CloseClaw", new ToggleClaw(false, claw));
-  }};
-  
+    }
+  };
 
-  private final ResetAutoBuilder autoBuilder = new ResetAutoBuilder(
+  private static final ResetAutoBuilder autoBuilder = new ResetAutoBuilder(
       swerveSubsystem::getPose,
       swerveSubsystem::resetOdometry,
       DriveConstants.kDriveKinematics,
@@ -105,11 +104,10 @@ public class RobotContainer {
     swerveSubsystem.resetEncoders();
     swerveSubsystem.zeroHeading();
 
-    
     // Configure the button bindings
     configureButtonBindings();
 
-    initializeAutonChooser();
+    initializeAuton();
   }
 
   private void configureButtonBindings() {
@@ -123,20 +121,20 @@ public class RobotContainer {
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
     arm.setDefaultCommand(new ArmJoystickCmd(
+        arm,
         () -> armJoystick.getRawAxis(0) * 0.5,
         () -> -armJoystick.getRawAxis(1) * 0.5));
-    
-    for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
-    }
 
-    
+    for (int button = 1; button < 10; button++) {
+      new JoystickButton(numpad, button)
+          .whileTrue(new MoveAndScore(((button - 1) % 3) - 1, (button - 1) / 3, swerveSubsystem, arm, claw));
+    }
 
     final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
     armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
-    
+
     final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
-    tri.whileTrue(new PickupObjectFromHeight());
+    tri.whileTrue(new PickupObjectFromHeight(swerveSubsystem, arm, claw));
 
     final Trigger to90 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
     to90.whileTrue(new ArmToDegree(arm, () -> 90d));
@@ -159,72 +157,21 @@ public class RobotContainer {
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.
 
-  public void initializeAutonChooser() {
+  public static void initializeAuton() {
+    startPosChooser.setDefaultOption("Just Score", StartingPositionOptions.JUST_SCORE);
+    startPosChooser.addOption("Mobility", StartingPositionOptions.TOP);
+    startPosChooser.addOption("Mobility", StartingPositionOptions.MIDDLE);
+    startPosChooser.addOption("Mobility", StartingPositionOptions.BOTTOM);
 
-    autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
-    autonChooser.addOption("complexTopAuton", autoBuilder.fullAuto(ResetAutoBuilder.complexTopAuton));
-    autonChooser.addOption("topAuton", autoBuilder.fullAuto(ResetAutoBuilder.topAuton));
-    autonChooser.addOption("midAuton", autoBuilder.fullAuto(ResetAutoBuilder.midAuton));
-    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(ResetAutoBuilder.bottomAuton));
-    autonChooser.addOption("topAutonNoCharge", autoBuilder.fullAuto(ResetAutoBuilder.topAutonNoCharge));
-    autonChooser.addOption("bottomAutonNoCharge", autoBuilder.fullAuto(ResetAutoBuilder.bottomAutonNoCharge));
+    piecesChooser.setDefaultOption("1 Piece Scoring", PiecesScoredOptions.ONE);
+    piecesChooser.addOption("2 Piece Scoring", PiecesScoredOptions.TWO);
 
-    SmartDashboard.putData("auton chooser", autonChooser);
+    chargeStationChooser.setDefaultOption("Charge Station", ChargeStationOptions.CHARGE);
+    chargeStationChooser.addOption("No Charge Station", ChargeStationOptions.NO_CHARGE);
 
-  }
-
-  /**
-   * <p> Commands in the eventMap that change the robot position (including rotation)
-   while a PathPlannerTrajectory is running accumulate PID error. PathPlanner tries to compensate by
-   quickly correcting the PID error and then running the scheduled path, often overriding the maximum
-   velocity in order to run on time. 
-
-   <p> An example of this is {@link MoveToTag}. This command will find an AprilTag during autonomous
-   and try to align the robot for scoring. However, if we try to align to the tag, score, and try running
-   a trajectory that moves to a game piece, the error accumulates over time.
-
-   <p> Ending each trajectory with the command that changes the robot position (e.g. MoveToTag),
-   and then chaining each trajectory, will prevent any PID error from accumulating.
-
-   * @param ppts A List comprised of a List of PathPlannerTrajectories, loaded in {@link ResetAutoBuilder}
-   * @return A full autonomous command made by autoBuilder
-   */
-
-  public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
-    
-    // Instantiate the auton path
-    Command auton = new InstantCommand();
-    
-    // loop through every trajectory (each ending with a translational and/or rotational swerve cmd outside of pathplanner)
-      for (List<PathPlannerTrajectory> ppt : ppts) {
-      
-        if (ppt != null){ // check if the trajectory exists, or if the filename was misspelled
-
-          auton = auton.andThen(
-          //reset odometry to the initial pose of each trajectory
-          new InstantCommand(() -> {
-            PathPlannerState initial = (PathPlannerState) ppt.get(0).sample(0);
-            Pose2d initialPose = new Pose2d(initial.poseMeters.getTranslation(), initial.holonomicRotation);
-            swerveSubsystem.resetOdometry(initialPose);
-          })).andThen(
-            // build the trajectory
-            autoBuilder.fullAuto(ppt));
-
-        }
-       
-        else {
-          // reports null trajectory, and prevents any path from running
-          System.out.println("************** path is null! *************");
-          return new InstantCommand();
-        }
-
-      } 
-
-      
-      
-    
-    return auton;
-
+    SmartDashboard.putData("Auton: Starting Position Options", startPosChooser);
+    SmartDashboard.putData("Auton: Number of Pieces Options", piecesChooser);
+    SmartDashboard.putData("Auton: Charge Station Options", chargeStationChooser);
   }
 
   /**
@@ -233,32 +180,49 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-    return autonChooser.getSelected();
+    return AUTONS_MAP.get(ResetAutoBuilder.hashAuton(startPosChooser.getSelected(), piecesChooser.getSelected(),
+        chargeStationChooser.getSelected()));
   }
 
-  
-
-  
-
   public void printAuton() {
-    
     SmartDashboard.putString("selected auton", getAutonomousCommand().getName());
   }
 
-  // public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
-  //   Command current = new InstantCommand();
+  public static final Map<Integer, Command> AUTONS_MAP = new HashMap<>() {
+    {
+      // JUST SCORE
+      put(0, new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
 
-  //   for (int i = 0; i < ppts.size(); i++) {
-  //     current = current.andThen(new InstantCommand(() -> {
-  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(i).get(0).sample(0);
-  //       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
-  //       swerveSubsystem.resetOdometry(initial1Pose);
-  //     })).andThen(autoBuilder.fullAuto(ppts.get(i)));
-  //   }
-  //   return current;
-  // }
-  
+      // TOP
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.ONE,
+          ChargeStationOptions.NO_CHARGE),
+          autoBuilder.autoFromPath("Top 1"));
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.ONE, ChargeStationOptions.CHARGE),
+          autoBuilder.autoFromPath("Top Charge 1"));
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.TWO,
+          ChargeStationOptions.NO_CHARGE),
+          autoBuilder.autoFromPath("Top 2"));
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.TWO, ChargeStationOptions.CHARGE),
+          autoBuilder.autoFromPath("Top Charge 2"));
 
-  
+      // MIDDLE
+      // "Middle 1" does not exist (charge station obstructs leaving and then coming back w/pathplanner)
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.ONE,
+          ChargeStationOptions.CHARGE), // Middle Charge 1
+          new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true),
+              new RetractArmCmd(arm), new ChargeStation(swerveSubsystem, -2.5)));
+      // "Middle 2" does not exist (charge station gets in the way of accurate pickup)
+      // "Middle Charge 2" does not exist (charge station gets in the way of accurate pickup)
+
+      // BOTTOM
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.BOTTOM, PiecesScoredOptions.ONE,
+          ChargeStationOptions.NO_CHARGE),
+          autoBuilder.autoFromPath("Bottom 1"));
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.BOTTOM, PiecesScoredOptions.ONE,
+          ChargeStationOptions.CHARGE),
+          autoBuilder.autoFromPath("Bottom Charge 1"));
+      // "Bottom 2" does not exist (wire gets in the way of accurate pickup)
+      // "Bottom Charge 2" does not exist (wire gets in the way of accurate pickup)
+    }
+  };
 }

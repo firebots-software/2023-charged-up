@@ -7,14 +7,15 @@ import frc.robot.Constants.OI;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmJoystickCmd extends CommandBase {
-    private ArmSubsystem claw = ArmSubsystem.getInstance();
+    private ArmSubsystem arm;
     private final Supplier<Double> armspdfunc, extspdfunc;
 
-    public ArmJoystickCmd(Supplier<Double> rotation, Supplier<Double> extension) {
+    public ArmJoystickCmd(ArmSubsystem arm, Supplier<Double> rotation, Supplier<Double> extension) {
+        this.arm = arm;
         this.armspdfunc = rotation;
         this.extspdfunc = extension;
 
-        addRequirements(claw);
+        addRequirements(arm);
     }
 
     @Override
@@ -29,13 +30,13 @@ public class ArmJoystickCmd extends CommandBase {
         angleSpeed = Math.abs(angleSpeed) > OI.DEADBAND ? angleSpeed : 0.0;
         extSpeed = Math.abs(extSpeed) > OI.DEADBAND ? extSpeed : 0.0;
 
-        claw.setRotatingMotor(angleSpeed);
-        claw.setExtendingMotor(extSpeed);
+        arm.setRotatingMotor(angleSpeed);
+        arm.setExtendingMotor(extSpeed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        claw.setRotatingMotor(0);
+        arm.setRotatingMotor(0);
     }
 
     @Override

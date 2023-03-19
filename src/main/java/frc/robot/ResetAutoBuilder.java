@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonConstants;
 
 public class ResetAutoBuilder extends SwerveAutoBuilder {
@@ -29,19 +30,35 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
         useAllianceColor, driveRequirements);
   }
 
-  public static List<PathPlannerTrajectory> complexTopAuton = PathPlanner.loadPathGroup("complexTopAutonPart1", AutonConstants.kVMax, AutonConstants.kVMax);
+  public static enum ChargeStationOptions {
+    NO_CHARGE,
+    CHARGE
+  }
 
-  public static List<PathPlannerTrajectory> complexBottomAuton = PathPlanner.loadPathGroup("complexBottomAutonPart2", AutonConstants.kVMax, AutonConstants.kVMax);
+  public static enum PiecesScoredOptions {
+    ONE,
+    TWO
+  }
 
-  public static List<PathPlannerTrajectory> topAuton = PathPlanner.loadPathGroup("topAuton", AutonConstants.kVMax, AutonConstants.kVMax);
+  public static enum StartingPositionOptions {
+    JUST_SCORE,
+    TOP,
+    MIDDLE,
+    BOTTOM
+  }
 
-  public static List<PathPlannerTrajectory> midAuton = PathPlanner.loadPathGroup("midAuton", AutonConstants.kVMax, AutonConstants.kVMax);
+  public static int hashAuton(StartingPositionOptions startPos, PiecesScoredOptions pieces, ChargeStationOptions charge) {
+    return (startPos.ordinal() + (pieces.ordinal() << 2) + (charge.ordinal() << 3)) * (startPos == StartingPositionOptions.JUST_SCORE ? 0 : 1);
+  }
 
-  public static List<PathPlannerTrajectory> bottomAuton = PathPlanner.loadPathGroup("bottomAuton", AutonConstants.kVMax, AutonConstants.kVMax);
+  public Command autoFromPath(String name) {
+    List<PathPlannerTrajectory> ppts = PathPlanner.loadPathGroup(name, AutonConstants.kVMax, AutonConstants.kAMax);
+    if (ppts == null) {
+      return new WaitCommand(1);
+    }
 
-  public static List<PathPlannerTrajectory> topAutonNoCharge = PathPlanner.loadPathGroup("topAutonNoCharge", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> bottomAutonNoCharge = PathPlanner.loadPathGroup("bottomAutonNoCharge", AutonConstants.kVMax, AutonConstants.kVMax);
+    return fullAuto(ppts);
+  }
 
   @Override
   public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup) {

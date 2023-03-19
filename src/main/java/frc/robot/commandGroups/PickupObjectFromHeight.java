@@ -21,16 +21,13 @@ import frc.robot.subsystems.SwerveSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class PickupObjectFromHeight extends SequentialCommandGroup {
-  ArmSubsystem arm = ArmSubsystem.getInstance();
-  SwerveSubsystem ss = SwerveSubsystem.getInstance();
-
   /** Creates a new PickupObjectFromHeight. */
-  public PickupObjectFromHeight() {
+  public PickupObjectFromHeight(SwerveSubsystem ss, ArmSubsystem arm, ClawSubsystem claw) {
     addCommands(
         new RetractArmCmd(arm), 
         new ArmToDegree(arm, () -> Math.signum(arm.getRotationDegrees()) * Constants.ArmConstants.SHELF_PICKUP_DEG),
         new MoveToTag(-ArmConstants.SHELF_BACKUP_METERS, -Units.inchesToMeters(25), ss), 
-        new ToggleClaw(true,ClawSubsystem.getInstance()),
+        new ToggleClaw(true, claw),
         new JankArmToTicks(ArmConstants.SHELF_JANK_TICKS, arm));
   }
 }

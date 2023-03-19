@@ -57,7 +57,6 @@ import frc.robot.commandGroups.PickupFromGround;
 import frc.robot.commandGroups.PickupObjectFromHeight;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
-import frc.robot.commands.claw.CloseClaw;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -83,8 +82,6 @@ public class RobotContainer {
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, DockingConstants.DOCKING_SPEED));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      // put("MoveToTargetLeft", new MoveToTag(MoveToTag.LEFT, swerveSubsystem));
-      // put("MoveToTargetRight", new MoveToTag(MoveToTag.RIGHT, swerveSubsystem));
       put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
       put("ScoreHighCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
       put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
@@ -95,7 +92,7 @@ public class RobotContainer {
       put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
       put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
       put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
-      put("CloseClaw", new CloseClaw(claw));
+      put("CloseClaw", new ToggleClaw(true, claw));
   }};
   
 
@@ -238,9 +235,6 @@ public class RobotContainer {
 
       } 
 
-      
-      
-    
     return auton;
 
   }
@@ -264,18 +258,7 @@ public class RobotContainer {
     SmartDashboard.putString("selected auton", getAutonomousCommand().getName());
   }
 
-  // public Command makeAuton(List<List<PathPlannerTrajectory>> ppts) {
-  //   Command current = new InstantCommand();
-
-  //   for (int i = 0; i < ppts.size(); i++) {
-  //     current = current.andThen(new InstantCommand(() -> {
-  //       PathPlannerState initial1 = (PathPlannerState) ppts.get(i).get(0).sample(0);
-  //       Pose2d initial1Pose = new Pose2d(initial1.poseMeters.getTranslation(), initial1.holonomicRotation);
-  //       swerveSubsystem.resetOdometry(initial1Pose);
-  //     })).andThen(autoBuilder.fullAuto(ppts.get(i)));
-  //   }
-  //   return current;
-  // }
+  
   
 
   

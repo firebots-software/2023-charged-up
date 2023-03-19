@@ -4,38 +4,24 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutonConstants;
 import frc.robot.Constants.DockingConstants;
 //import frc.robot.commands.RunMotor;
 import frc.robot.Constants.DriveConstants;
@@ -44,12 +30,10 @@ import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.ArmToDegree;
 import frc.robot.commands.JankArmToTicks;
-import frc.robot.commands.LevelCmd;
 import frc.robot.commands.LimpArm;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.RetractArmCmd;
 import frc.robot.commands.ToggleClaw;
-import frc.robot.commandGroups.ConePivot;
 import frc.robot.commandGroups.MoveAndScore;
 import frc.robot.commandGroups.MoveToCubeAndExtend;
 import frc.robot.commandGroups.MoveToTargetAndExtend;
@@ -59,6 +43,7 @@ import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.ZeroHeadingCmd;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.ResetAutoBuilder;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -79,24 +64,43 @@ public class RobotContainer {
   private final ClawSubsystem claw = ClawSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
+      //DOCKING
       put("ChargeStationForward", new ChargeStation(swerveSubsystem, DockingConstants.DOCKING_SPEED));
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
+      //VISION
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      put("ScoreMidCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreHighCube", new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
+      put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
+      put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
+      //SCORING
+      put("ScoreMidCube", new SequentialCommandGroup(
+        new RetractArmCmd(arm),
+        new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true),
+        new RetractArmCmd(arm)
+      ));
+      put("ScoreHighCube", new SequentialCommandGroup(
+        new RetractArmCmd(arm),
+        new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true),
+        new RetractArmCmd(arm)
+      ));
+      put("ScoreHighCone", new SequentialCommandGroup(
+        new RetractArmCmd(arm),
+        new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true),
+        new RetractArmCmd(arm)
+      ));
+      //ARM
       put("RetractArmToMin", new RetractArmCmd(arm));
       put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
       put("ExtendArmToMax", new JankArmToTicks(304433, arm));
-      put("ToggleClaw", new ToggleClaw(claw));
-      put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
-      put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
+      put("ArmToHighCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.MID_CONE_FRONT_DEG));
       put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
-      put("CloseClaw", new ToggleClaw(true, claw));
+      //CLAW
+      put("ToggleClaw", new ToggleClaw(claw));
+      put("CloseClaw", new ToggleClaw(false, claw));
   }};
   
 
-  private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+  private final ResetAutoBuilder autoBuilder = new ResetAutoBuilder(
       swerveSubsystem::getPose,
       swerveSubsystem::resetOdometry,
       DriveConstants.kDriveKinematics,
@@ -178,12 +182,12 @@ public class RobotContainer {
   public void initializeAutonChooser() {
 
     autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
-    autonChooser.addOption("complexTopAuton", makeAuton(AutonPaths.complexTopAuton));
-    autonChooser.addOption("topAuton", makeAuton(AutonPaths.topAuton));
-    autonChooser.addOption("midAuton", makeAuton(AutonPaths.midAuton));
-    autonChooser.addOption("bottomAuton", makeAuton(AutonPaths.bottomAuton));
-    autonChooser.addOption("topAutonNoCharge", makeAuton(AutonPaths.topAutonNoCharge));
-    autonChooser.addOption("bottomAutonNoCharge", makeAuton(AutonPaths.bottomAutonNoCharge));
+    autonChooser.addOption("complexTopAuton", autoBuilder.fullAuto(ResetAutoBuilder.complexTopAuton));
+    autonChooser.addOption("topAuton", autoBuilder.fullAuto(ResetAutoBuilder.topAuton));
+    autonChooser.addOption("midAuton", autoBuilder.fullAuto(ResetAutoBuilder.midAuton));
+    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(ResetAutoBuilder.bottomAuton));
+    autonChooser.addOption("topAutonNoCharge", autoBuilder.fullAuto(ResetAutoBuilder.topAutonNoCharge));
+    autonChooser.addOption("bottomAutonNoCharge", autoBuilder.fullAuto(ResetAutoBuilder.bottomAutonNoCharge));
 
     SmartDashboard.putData("auton chooser", autonChooser);
 
@@ -202,7 +206,7 @@ public class RobotContainer {
    <p> Ending each trajectory with the command that changes the robot position (e.g. MoveToTag),
    and then chaining each trajectory, will prevent any PID error from accumulating.
 
-   * @param ppts A List comprised of a List of PathPlannerTrajectories, loaded in {@link AutonPaths}
+   * @param ppts A List comprised of a List of PathPlannerTrajectories, loaded in {@link ResetAutoBuilder}
    * @return A full autonomous command made by autoBuilder
    */
 

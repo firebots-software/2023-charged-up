@@ -1,0 +1,122 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.87,
+        "y": 4.43
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0512238767533093,
+        "y": 4.777802251785059
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ScoreHighCube"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 0.5
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.8,
+        "y": 4.59
+      },
+      "prevControl": {
+        "x": 4.8,
+        "y": 4.59
+      },
+      "nextControl": {
+        "x": 4.8,
+        "y": 4.59
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "ExtendArmToMax",
+          "CloseClaw"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 0.5
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.87,
+        "y": 4.43
+      },
+      "prevControl": {
+        "x": 2.191204394561567,
+        "y": 4.418392855882934
+      },
+      "nextControl": {
+        "x": 2.191204394561567,
+        "y": 4.418392855882934
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "MoveToTarget",
+          "ScoreMidCube"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 1.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 2.371083056402224,
+        "y": 3.409750224014337
+      },
+      "prevControl": {
+        "x": 2.0826509274546328,
+        "y": 3.729263901236136
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ChargeStationBackward"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "ArmToGroundBack"
+      ]
+    },
+    {
+      "position": 1.02,
+      "names": [
+        "ArmToMidCube"
+      ]
+    }
+  ]
+}

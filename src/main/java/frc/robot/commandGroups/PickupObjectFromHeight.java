@@ -25,7 +25,7 @@ public class PickupObjectFromHeight extends SequentialCommandGroup {
   public PickupObjectFromHeight(SwerveSubsystem ss, ArmSubsystem arm, ClawSubsystem claw) {
     addCommands(
         new RetractArmCmd(arm), 
-        new ArmToDegree(arm, () -> Math.signum(arm.getRotationDegrees()) * Constants.ArmConstants.SHELF_PICKUP_DEG),
+        new ArmToDegree(arm, -1 * Constants.ArmConstants.SHELF_PICKUP_DEG),
         new MoveToTag(-ArmConstants.SHELF_BACKUP_METERS, -Units.inchesToMeters(25), ss), 
         new ToggleClaw(true, claw),
         new JankArmToTicks(ArmConstants.SHELF_JANK_TICKS, arm));

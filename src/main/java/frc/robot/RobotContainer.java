@@ -19,9 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DockingConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.ResetAutoBuilder.ChargeStationOptions;
-import frc.robot.ResetAutoBuilder.PiecesScoredOptions;
-import frc.robot.ResetAutoBuilder.StartingPositionOptions;
 import frc.robot.commandGroups.ArmToGround;
 import frc.robot.commandGroups.ChargeStation;
 import frc.robot.commands.ArmJoystickCmd;
@@ -42,6 +39,9 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.ResetAutoBuilder;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.ResetAutoBuilder.ChargeStationOptions;
+import frc.robot.subsystems.ResetAutoBuilder.PiecesScoredOptions;
+import frc.robot.subsystems.ResetAutoBuilder.StartingPositionOptions;
 
 public class RobotContainer {
 
@@ -96,7 +96,7 @@ public class RobotContainer {
   }};
   
 
-  private static final ResetAutoBuilder autoBuilder = new ResetAutoBuilder(
+  private final ResetAutoBuilder autoBuilder = new ResetAutoBuilder(
       swerveSubsystem::getPose,
       swerveSubsystem::resetOdometry,
       DriveConstants.kDriveKinematics,
@@ -176,9 +176,9 @@ public class RobotContainer {
 
   public static void initializeAuton() {
     startPosChooser.setDefaultOption("Just Score", StartingPositionOptions.JUST_SCORE);
-    startPosChooser.addOption("Mobility", StartingPositionOptions.TOP);
-    startPosChooser.addOption("Mobility", StartingPositionOptions.MIDDLE);
-    startPosChooser.addOption("Mobility", StartingPositionOptions.BOTTOM);
+    startPosChooser.addOption("Top", StartingPositionOptions.TOP);
+    startPosChooser.addOption("Middle", StartingPositionOptions.MIDDLE);
+    startPosChooser.addOption("Bottom", StartingPositionOptions.BOTTOM);
 
     piecesChooser.setDefaultOption("1 Piece Scoring", PiecesScoredOptions.ONE);
     piecesChooser.addOption("2 Piece Scoring", PiecesScoredOptions.TWO);
@@ -205,10 +205,10 @@ public class RobotContainer {
     SmartDashboard.putString("selected auton", getAutonomousCommand().getName());
   }
 
-  public static final Map<Integer, Command> AUTONS_MAP = new HashMap<>() {
+  public final Map<Integer, Command> AUTONS_MAP = new HashMap<>() {
     {
       // JUST SCORE
-      put(0, new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
+      //put(0, new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
 
       // TOP
       put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.ONE,
@@ -224,10 +224,10 @@ public class RobotContainer {
 
       // MIDDLE
       // "Middle 1" does not exist (charge station obstructs leaving and then coming back w/pathplanner)
-      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.ONE,
-          ChargeStationOptions.CHARGE), // Middle Charge 1
-          new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true),
-              new RetractArmCmd(arm), new ChargeStation(swerveSubsystem, -2.5)));
+      // put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.ONE,
+      //     ChargeStationOptions.CHARGE), // Middle Charge 1
+      //     new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true),
+      //         new RetractArmCmd(arm), new ChargeStation(swerveSubsystem, -2.5)));
       // "Middle 2" does not exist (charge station gets in the way of accurate pickup)
       // "Middle Charge 2" does not exist (charge station gets in the way of accurate pickup)
 

@@ -60,8 +60,8 @@ public class RobotContainer {
 
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
-  private final ArmSubsystem arm = ArmSubsystem.getInstance();
-  private final ClawSubsystem claw = ClawSubsystem.getInstance();
+  //private final ArmSubsystem arm = ArmSubsystem.getInstance();
+  //private final ClawSubsystem claw = ClawSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       //DOCKING
@@ -69,34 +69,34 @@ public class RobotContainer {
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
       //VISION
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
-      put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
+      // put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
+      // put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
       //SCORING
-      put("ScoreMidCube", new SequentialCommandGroup(
-        new RetractArmCmd(arm),
-        new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true),
-        new RetractArmCmd(arm)
-      ));
-      put("ScoreHighCube", new SequentialCommandGroup(
-        new RetractArmCmd(arm),
-        new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true),
-        new RetractArmCmd(arm)
-      ));
-      put("ScoreHighCone", new SequentialCommandGroup(
-        new RetractArmCmd(arm),
-        new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true),
-        new RetractArmCmd(arm)
-      ));
+      // put("ScoreMidCube", new SequentialCommandGroup(
+      //   new RetractArmCmd(arm),
+      //   new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true),
+      //   new RetractArmCmd(arm)
+      // ));
+      // put("ScoreHighCube", new SequentialCommandGroup(
+      //   new RetractArmCmd(arm),
+      //   new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true),
+      //   new RetractArmCmd(arm)
+      // ));
+      // put("ScoreHighCone", new SequentialCommandGroup(
+      //   new RetractArmCmd(arm),
+      //   new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true),
+      //   new RetractArmCmd(arm)
+      // ));
       //ARM
-      put("RetractArmToMin", new RetractArmCmd(arm));
-      put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
-      put("ExtendArmToMax", new JankArmToTicks(304433, arm));
-      put("ArmToHighCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
-      put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.MID_CONE_FRONT_DEG));
-      put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
+      // put("RetractArmToMin", new RetractArmCmd(arm));
+      // put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
+      // put("ExtendArmToMax", new JankArmToTicks(304433, arm));
+      // put("ArmToHighCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      // put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.MID_CONE_FRONT_DEG));
+      // put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
       //CLAW
-      put("ToggleClaw", new ToggleClaw(claw));
-      put("CloseClaw", new ToggleClaw(false, claw));
+      // put("ToggleClaw", new ToggleClaw(claw));
+      // put("CloseClaw", new ToggleClaw(false, claw));
   }};
   
 
@@ -141,24 +141,24 @@ public class RobotContainer {
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-    arm.setDefaultCommand(new ArmJoystickCmd(
-        () -> armJoystick.getRawAxis(0) * 0.5,
-        () -> -armJoystick.getRawAxis(1) * 0.5));
+    // arm.setDefaultCommand(new ArmJoystickCmd(
+    //     () -> armJoystick.getRawAxis(0) * 0.5,
+    //     () -> -armJoystick.getRawAxis(1) * 0.5));
     
-    for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
-    }
+    // for (int button = 1; button < 10; button++) {
+    //   new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
+    // }
 
     
 
-    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
-    armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
+    // final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
+    // armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
     
-    final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
-    tri.whileTrue(new PickupObjectFromHeight());
+    // final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
+    // tri.whileTrue(new PickupObjectFromHeight());
 
-    final Trigger to90 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    to90.whileTrue(new ArmToDegree(arm, () -> 90d));
+    // final Trigger to90 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    // to90.whileTrue(new ArmToDegree(arm, () -> 90d));
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
@@ -166,28 +166,29 @@ public class RobotContainer {
     final Trigger thing = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
     thing.whileTrue(new ChargeStation(swerveSubsystem, -2.0));
 
-    final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
-    limpArm.whileTrue(new LimpArm(arm));
+    // final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
+    // limpArm.whileTrue(new LimpArm(arm));
 
-    final Trigger clawToggle = new JoystickButton(armJoystick, 1);
-    clawToggle.onTrue(new ToggleClaw(claw));
+    // final Trigger clawToggle = new JoystickButton(armJoystick, 1);
+    // clawToggle.onTrue(new ToggleClaw(claw));
 
-    final Trigger goUp = new JoystickButton(armJoystick, 6);
-    goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
+    // final Trigger goUp = new JoystickButton(armJoystick, 6);
+    // goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
 
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.
 
   public void initializeAutonChooser() {
-
-    autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
-    autonChooser.addOption("complexTopAuton", autoBuilder.fullAuto(ResetAutoBuilder.complexTopAuton));
-    autonChooser.addOption("topAuton", autoBuilder.fullAuto(ResetAutoBuilder.topAuton));
-    autonChooser.addOption("midAuton", autoBuilder.fullAuto(ResetAutoBuilder.midAuton));
-    autonChooser.addOption("bottomAuton", autoBuilder.fullAuto(ResetAutoBuilder.bottomAuton));
-    autonChooser.addOption("topAutonNoCharge", autoBuilder.fullAuto(ResetAutoBuilder.topAutonNoCharge));
-    autonChooser.addOption("bottomAutonNoCharge", autoBuilder.fullAuto(ResetAutoBuilder.bottomAutonNoCharge));
+    autonChooser.setDefaultOption("do nothing", new InstantCommand());
+    // autonChooser.setDefaultOption("just score", new RetractArmCmd(arm).andThen(new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true)));
+    autonChooser.addOption("Top Charge 2", autoBuilder.fullAuto(ResetAutoBuilder.Top_Charge_2));
+    autonChooser.addOption("Top 2", autoBuilder.fullAuto(ResetAutoBuilder.Top_2));
+    autonChooser.addOption("Top Charge 1", autoBuilder.fullAuto(ResetAutoBuilder.Top_Charge_1));
+    autonChooser.addOption("Mid Charge 1", autoBuilder.fullAuto(ResetAutoBuilder.Mid_Charge_1));
+    autonChooser.addOption("Bottom Charge 1", autoBuilder.fullAuto(ResetAutoBuilder.Bottom_Charge_1));
+    autonChooser.addOption("Top 1", autoBuilder.fullAuto(ResetAutoBuilder.Top_1));
+    autonChooser.addOption("Bottom 1", autoBuilder.fullAuto(ResetAutoBuilder.Bottom_1));
 
     SmartDashboard.putData("auton chooser", autonChooser);
 

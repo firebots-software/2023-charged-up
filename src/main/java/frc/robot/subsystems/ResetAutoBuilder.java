@@ -23,8 +23,6 @@ import frc.robot.Constants.AutonConstants;
 
 public class ResetAutoBuilder extends SwerveAutoBuilder {
 
-    
-
   public ResetAutoBuilder(Supplier<Pose2d> poseSupplier, Consumer<Pose2d> resetPose, SwerveDriveKinematics kinematics,
       PIDConstants translationConstants, PIDConstants rotationConstants,
       Consumer<SwerveModuleState[]> outputModuleStates, Map<String, Command> eventMap, boolean useAllianceColor,
@@ -33,27 +31,6 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
         useAllianceColor, driveRequirements);
   }
 
-  public static List<PathPlannerTrajectory> complexTopAuton = PathPlanner.loadPathGroup(
-    "complexTopAutonPart1", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> complexBottomAuton = PathPlanner.loadPathGroup(
-    "complexBottomAutonPart2", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> topAuton = PathPlanner.loadPathGroup(
-    "topAuton", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> midAuton = PathPlanner.loadPathGroup(
-    "midAuton", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> bottomAuton = PathPlanner.loadPathGroup(
-    "bottomAuton", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> topAutonNoCharge = PathPlanner.loadPathGroup(
-    "topAutonNoCharge", AutonConstants.kVMax, AutonConstants.kVMax);
-
-  public static List<PathPlannerTrajectory> bottomAutonNoCharge = PathPlanner.loadPathGroup(
-    "bottomAutonNoCharge", AutonConstants.kVMax, AutonConstants.kVMax);
-  
   @Override
   public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup) {
     List<CommandBase> commands = new ArrayList<>();
@@ -68,6 +45,29 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
 
     return Commands.sequence(commands.toArray(CommandBase[]::new));
   }
+
+  public static List<PathPlannerTrajectory>  Top_Charge_2 = PathPlanner.loadPathGroup(
+    "Top Charge 2", AutonConstants.kVMax, AutonConstants.kVMax);
+
+  public static List<PathPlannerTrajectory> Top_Charge_1 = PathPlanner.loadPathGroup(
+    "Top Charge 1", AutonConstants.kVMax, AutonConstants.kVMax);
+
+  public static List<PathPlannerTrajectory> Mid_Charge_1 = PathPlanner.loadPathGroup(
+    "Mid Charge 1", AutonConstants.kVMax, AutonConstants.kVMax);
+
+  public static List<PathPlannerTrajectory> Bottom_Charge_1 = PathPlanner.loadPathGroup(
+    "Bottom Charge 1", AutonConstants.kVMax, AutonConstants.kVMax);
+
+  public static List<PathPlannerTrajectory> Top_1 = PathPlanner.loadPathGroup(
+    "Top 1", AutonConstants.kVMax, AutonConstants.kVMax);
+
+  public static List<PathPlannerTrajectory> Bottom_1 = PathPlanner.loadPathGroup(
+    "Bottom 1", AutonConstants.kVMax, AutonConstants.kVMax);
+
+  public static List<PathPlannerTrajectory> Top_2 = PathPlanner.loadPathGroup(
+    "Top 2", AutonConstants.kVMax, AutonConstants.kAMax);
+  
+  
 
 
 

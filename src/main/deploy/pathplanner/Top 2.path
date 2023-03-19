@@ -3,12 +3,12 @@
     {
       "anchorPoint": {
         "x": 1.87,
-        "y": 1.06
+        "y": 4.43
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8248707860610174,
-        "y": 0.918819276874664
+        "x": 2.6361460361809614,
+        "y": 4.8735403790252025
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -27,15 +27,15 @@
     {
       "anchorPoint": {
         "x": 5.8,
-        "y": 0.9332582797110035
+        "y": 4.59
       },
       "prevControl": {
-        "x": 5.065551754367398,
-        "y": 0.4453475573617806
+        "x": 4.8,
+        "y": 4.59
       },
       "nextControl": {
-        "x": 5.065551754367398,
-        "y": 0.4453475573617806
+        "x": 4.8,
+        "y": 4.59
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -44,7 +44,8 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "PickupCube"
+          "ExtendArmToMax",
+          "CloseClaw"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -54,38 +55,11 @@
     {
       "anchorPoint": {
         "x": 1.87,
-        "y": 1.06
+        "y": 4.43
       },
       "prevControl": {
-        "x": 2.5339712450258234,
-        "y": 1.145262273163435
-      },
-      "nextControl": {
-        "x": 2.5339712450258234,
-        "y": 1.145262273163435
-      },
-      "holonomicAngle": 180.0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [
-          "ScoreMidCube"
-        ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 2.33,
-        "y": 2.23
-      },
-      "prevControl": {
-        "x": 2.5100802041881862,
-        "y": 1.7867831100245526
+        "x": 2.2892620403296364,
+        "y": 4.809115751912059
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -95,11 +69,12 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ChargeStationBackward"
+          "MoveToTargetAndExtend",
+          "ScoreMidCube"
         ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 1.0
       }
     }
   ],

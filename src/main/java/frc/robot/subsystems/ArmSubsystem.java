@@ -118,6 +118,17 @@ public class ArmSubsystem extends SubsystemBase {
 
   private void priorityExtend(double speed) {
     double deg = getRotationDegrees();
+
+    if (Math.abs(deg) <= 60 && speed >= 0) {
+      extendingMotor.set(-0.1);
+    } 
+
+    if (Math.abs(deg) >= ArmConstants.MAX_RETRACTED_DEG && speed >= -0.3) {
+      // cant extend when
+      extendingMotor.set(-0.3);
+      return;
+    }
+
     if ((Math.abs(speed) < 0.1) ||
     (getBottomStatus() && speed < 0) ||
     (getTopStatus() && speed > 0)) {
@@ -126,14 +137,7 @@ public class ArmSubsystem extends SubsystemBase {
       return;
     }
 
-    if ((Math.abs(deg) <= 60 && speed > 0) ||
-    (Math.abs(deg) >= ArmConstants.MAX_ROTATION_ANGLE_DEG+10 && speed > 0)) {
-      // cant extend when 
-      extendingMotor.set(-0.1);
-      return;
-    }
-
-
+    SmartDashboard.putNumber("Retraction speed", speed);
     extendingMotor.set(speed);
   }
 

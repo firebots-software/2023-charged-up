@@ -132,13 +132,13 @@ public final class Constants {
         public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
-        public static final int STARTING_POINT = -1191;
+        public static final int STARTING_POINT = -997;
         public static final double MAX_ROTATION_SPEED = 0.65; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
-        public static final double pidPositionToleranceDegrees = 1.0;
+        public static final double pidPositionToleranceDegrees = 5.0;
         public static final double pidExtentionToleranceInches = 1.0;
-        public static final double ANGLE_P = 0.05; //subject to chagne
+        public static final double ANGLE_P = 0.01; //subject to chagne
         public static final double ANGLE_I = 0;
         public static final double ANGLE_D = 0;
 
@@ -153,24 +153,26 @@ public final class Constants {
         public static final double SHELF_BACKUP_METERS = Units.inchesToMeters(31 + 9);
         public static final double SHELF_JANK_TICKS = 169381;
 
-        public static final double HIGH_CONE_FRONT_DEG = -75.5;
+        public static final double HIGH_CONE_FRONT_DEG = -80.0;
         public static final double HIGH_CONE_BACK_DEG = -HIGH_CONE_FRONT_DEG;
-        public static final double HIGH_CUBE_FRONT_DEG = -86.0;
+        public static final double HIGH_CUBE_FRONT_DEG = -86.0; // confirmed
         public static final double HIGH_CUBE_BACK_DEG = -HIGH_CUBE_FRONT_DEG;
 
-        public static final double MID_CONE_FRONT_DEG = -88.4;
+        public static final double MID_CONE_FRONT_DEG = -80.0; // confirmed
         public static final double MID_CONE_BACK_DEG = -MID_CONE_FRONT_DEG;
-        public static final double MID_CUBE_FRONT_DEG = -88.4;
+        public static final double MID_CUBE_FRONT_DEG = -102.5; // confirmed
         public static final double MID_CUBE_BACK_DEG = -MID_CUBE_FRONT_DEG;
 
-        public static final double LOW_GOAL_FRONT_DEG = -115.0;
+        public static final double LOW_GOAL_FRONT_DEG = -140.0;
         public static final double LOW_GOAL_BACK_DEG = -LOW_GOAL_FRONT_DEG;
 
-        //ALL IN INCHES
-        public static final double HIGH_GOAL_DIST_IN = 52.0;
-        public static final double MID_CONE_DIST_IN = 35.0;
-        public static final double MID_CUBE_DIST_IN = 38.0;
-        public static final double LOW_GOAL_DIST_IN = 38.0;
+        //ALL IN TICKIES
+        public static final double HIGH_CONE_DIST_TICKIES = 217747;
+        public static final double HIGH_CUBE_DIST_TICKIES = 214798; // confirmed
+        public static final double MID_CONE_DIST_TICKIES = 33590; // confirmed 
+        public static final double MID_CUBE_DIST_TICKIES = 69354; // confirmed
+        public static final double LOW_GOAL_DIST_TICKIES = 0.0;
+
         public static final double MAX_RETRACTED_DEG = 160;
 		
 

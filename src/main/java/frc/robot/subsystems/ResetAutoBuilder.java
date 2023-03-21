@@ -54,12 +54,17 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
   }
 
   public Command autoFromPath(String name) {
-    List<PathPlannerTrajectory> ppts = PathPlanner.loadPathGroup(name, AutonConstants.kVMax, AutonConstants.kAMax);
-    if (ppts == null) {
+    try {
+      List<PathPlannerTrajectory> ppts = PathPlanner.loadPathGroup(name, AutonConstants.kVMax, AutonConstants.kAMax);
+      if (ppts == null) {
+        return new WaitCommand(1);
+      }
+      Command n = fullAuto(ppts);
+      n.setName(name);
+      return n;
+    } catch (Exception e) {
       return new WaitCommand(1);
     }
-
-    return fullAuto(ppts);
   }
 
   @Override

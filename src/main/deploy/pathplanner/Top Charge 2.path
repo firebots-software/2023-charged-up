@@ -95,9 +95,10 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ChargeStationBackward"
+          "ChargeStationBackward",
+          "TuckArm"
         ],
-        "executionBehavior": "sequential",
+        "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }

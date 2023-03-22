@@ -180,10 +180,6 @@ public final class Constants {
 
     public static final class ClawConstants {
 
-        public static final double MAX_INTAKE_SPEED = 1.0;
-        public static final double MIN_INTAKE_SPEED = 0.0; // subject to change
-        public static final double MAX_OUTTAKE_SPEED = -1.0;
-        public static final double MIN_OUTTAKE_SPEED = -0.0; // subject to change, must be negative
         public static final int CLAW_SOLENOID_PORT = 2; //Changing
 
     }
@@ -203,15 +199,15 @@ public final class Constants {
 
     public static final class DockingConstants {
         public static final double DOCKING_TOLERANCE = 17;
-        public static final double LEVEL_TOLERANCE = 12;
+        public static final double LEVEL_TOLERANCE = 11; //previously 13
         public static final double ENGAGE_TOLERANCE = 9;
 
 
         public static final double OSCILLATION_SPEED_INCREMENT = 0.02;
         public static final double DOCKING_SPEED = 2.0;
         public static final double ENGAGE_SPEED = 0.6;
-        public static final double kPEngage = 0.08;
-        public static final double KIEngage = 0;
-        public static final double KDEngage = 0;
+
+        
+        
     }
 }

@@ -70,7 +70,8 @@
       "stopEvent": {
         "names": [
           "MoveToTargetAndExtend",
-          "ScoreMidCube"
+          "ScoreMidCube",
+          "TuckArm"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",

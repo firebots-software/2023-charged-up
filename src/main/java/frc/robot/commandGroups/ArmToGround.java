@@ -10,7 +10,7 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmToGround extends SequentialCommandGroup {
     public ArmToGround(Supplier<Boolean> back, ArmSubsystem arm, boolean auton) {
         addCommands(
-            new ArmToDegree(arm, () -> 125d * (back.get() ? 1d : -1d)),
+            new ArmToDegree(arm, () -> 100d * (back.get() ? 1d : -1d)),
             new JankArmToTicks(277552, arm)
         );
     }

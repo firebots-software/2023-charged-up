@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0512238767533093,
-        "y": 4.777802251785059
+        "x": 2.6361460361809614,
+        "y": 4.8735403790252025
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -57,12 +57,12 @@
         "y": 4.43
       },
       "prevControl": {
-        "x": 2.191204394561567,
-        "y": 4.418392855882934
+        "x": 2.2892620403296364,
+        "y": 4.809115751912059
       },
       "nextControl": {
-        "x": 2.191204394561567,
-        "y": 4.418392855882934
+        "x": 2.2892620403296364,
+        "y": 4.809115751912059
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -73,9 +73,9 @@
         "names": [
           "ScoreMidCube"
         ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "executionBehavior": "sequential",
+        "waitBehavior": "minimum",
+        "waitTime": 1.0
       }
     },
     {
@@ -84,8 +84,8 @@
         "y": 3.409750224014337
       },
       "prevControl": {
-        "x": 2.0826509274546328,
-        "y": 3.729263901236136
+        "x": 2.345800304447831,
+        "y": 3.4860043956199025
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -95,13 +95,26 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ChargeStationBackwards"
+          "ChargeStationBackward"
         ],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.01,
+      "names": [
+        "ArmToGroundBack"
+      ]
+    },
+    {
+      "position": 1.02,
+      "names": [
+        "ArmToMidCube"
+      ]
+    }
+  ]
 }

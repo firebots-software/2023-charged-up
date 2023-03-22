@@ -44,8 +44,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "ExtendArmToMax",
-          "CloseClaw"
+          "PickupCube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -72,7 +71,6 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "MoveToTargetAndExtend",
           "ScoreMidCube"
         ],
         "executionBehavior": "sequential",

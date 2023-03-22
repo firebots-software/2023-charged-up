@@ -45,6 +45,7 @@ public class MoveAndScore extends SequentialCommandGroup {
         double[] deginches = cone ? coneLevelToDegTickies.get(level) : cubeLevelToDegTickies.get(level);
         addCommands(
             new RetractArmCmd(arm),
+            //new MoveToTag(pos, swerveSubsystem),
             new ArmToDegree(arm, deginches[0]),
             new JankArmToTicks(deginches[1], arm),
             new ToggleClaw(true, claw),

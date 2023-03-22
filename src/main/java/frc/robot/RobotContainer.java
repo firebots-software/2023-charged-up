@@ -75,6 +75,7 @@ public class RobotContainer {
       put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
       // ARM
       put("RetractArmToMin", new RetractArmCmd(arm));
+      put("PickupCube", new PickupFromGround(() -> true, arm, claw, true));
       put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
       put("ExtendArmToMax", new JankArmToTicks(304433, arm));
       put("ArmToHighCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
@@ -128,8 +129,8 @@ public class RobotContainer {
 
     arm.setDefaultCommand(new ArmJoystickCmd(
       arm,
-        () -> armJoystick.getRawAxis(0) * 0.5,
-        () -> -armJoystick.getRawAxis(1) * 0.5));
+        () -> armJoystick.getRawAxis(0) * (armJoystick.getRawButton(3) ? 0.2 : 0.5),
+        () -> -armJoystick.getRawAxis(1) * (armJoystick.getRawButton(3) ? 0.3 : 0.5)));
     
     for (int button = 1; button < 10; button++) {
       new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));

@@ -27,8 +27,8 @@ public class ArmJoystickCmd extends CommandBase {
         double angleSpeed = armspdfunc.get();
         double extSpeed = extspdfunc.get();
 
-        angleSpeed = Math.abs(angleSpeed) > OI.DEADBAND ? angleSpeed : 0.0;
-        extSpeed = Math.abs(extSpeed) > OI.DEADBAND ? extSpeed : 0.0;
+        angleSpeed = Math.abs(angleSpeed) > OI.ARM_DEADBAND ? angleSpeed : 0.0;
+        extSpeed = Math.abs(extSpeed) > OI.ARM_DEADBAND ? extSpeed : 0.0;
 
         arm.setRotatingMotor(angleSpeed);
         arm.setExtendingMotor(extSpeed);

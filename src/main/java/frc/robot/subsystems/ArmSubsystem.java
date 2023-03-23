@@ -19,7 +19,7 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
   private static ArmSubsystem instance;
-  private boolean canExtend;
+  private boolean canExtend, canRetract;
 
   // rotating
   private WPI_TalonFX rotatingMotor;
@@ -28,7 +28,6 @@ public class ArmSubsystem extends SubsystemBase {
 
   // extending
   private WPI_TalonSRX extendingMotor;
-  private DigitalInput topHall, bottomHall;
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -41,8 +40,6 @@ public class ArmSubsystem extends SubsystemBase {
     extendingMotor = new WPI_TalonSRX(ArmConstants.EXTENDINGMOTOR_PORT);
     extendingMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
-    topHall = new DigitalInput(ArmConstants.TOPHALLEFFECT_PORT);
-    bottomHall = new DigitalInput(ArmConstants.BOTTOMHALLEFFECT_PORT);
     setRotationWithPot();
   }
 
@@ -84,7 +81,7 @@ public class ArmSubsystem extends SubsystemBase {
     // TODO: when encoder works, do trig to figure out the actual limit based on the arm length.
     if (Math.abs(deg) <= 60 && !retracted) {
       canExtend = false;
-      priorityExtend(-0.3);
+      priorityExtend(-0.5);
       speed = 0; // make sure arm doesn't continue moving
     } else {
       canExtend = true;
@@ -117,39 +114,40 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private void priorityExtend(double speed) {
-    double deg = getRotationDegrees();
+    double deg = Math.abs(getRotationDegrees());
 
-    if (Math.abs(deg) <= 60 && speed >= 0) {
-      extendingMotor.set(-0.1);
-    } 
-
-    if (Math.abs(deg) >= ArmConstants.MAX_RETRACTED_DEG && speed >= -0.3) {
+    if (deg >= ArmConstants.MAX_ROTATION_ANGLE_DEG && speed >= -0.3) {
       // cant extend when
+      SmartDashboard.putNumber("Retraction speed", -0.3);
       extendingMotor.set(-0.3);
       return;
     }
 
-    if ((Math.abs(speed) < 0.1) ||
-    (getBottomStatus() && speed < 0) ||
-    (getTopStatus() && speed > 0)) {
-      // maintain position
+    if (deg <= 60 && speed >= 0) {
+      SmartDashboard.putNumber("Retraction speed", -0.1);
       extendingMotor.set(-0.1);
+      return;
+    } 
+
+    if ((Math.abs(speed) < 0.1) ||
+    (getBottomStatus() && speed < 0)) {
+      SmartDashboard.putNumber("Retraction speed", -0.2);
+      if (deg > 100) extendingMotor.set(-0.2);
+      else extendingMotor.set(-0.1);
       return;
     }
 
+    canRetract = true;
     SmartDashboard.putNumber("Retraction speed", speed);
     extendingMotor.set(speed);
   }
 
-  public boolean getTopStatus() {
-    boolean status = !topHall.get();
-    return status;
-  }
-
   public boolean getBottomStatus() {
-    boolean status = !bottomHall.get();
-    if (status) extendingMotor.setSelectedSensorPosition(0);
-    return status;
+    if (extendingMotor.getSupplyCurrent() > ArmConstants.SUPPLY_CURRENT_RETRACTION_THRESHOLD) { 
+      extendingMotor.setSelectedSensorPosition(0);
+      canRetract = false;
+    }
+    return !canRetract;
   }
 
   public double getArmLength() {
@@ -169,12 +167,14 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("arm angle", getRotationDegrees());
 
-    SmartDashboard.putBoolean("topHalStatus", getTopStatus());
     SmartDashboard.putBoolean("bottomHalStatus", getBottomStatus());
     SmartDashboard.putNumber("ticks", getTicks());
 
     SmartDashboard.putNumber("calculated extend length (inches)", getArmLength());
-
-    getBottomStatus();
+    SmartDashboard.putNumber("motor output voltage", extendingMotor.getMotorOutputVoltage());
+    SmartDashboard.putNumber("stator current", extendingMotor.getStatorCurrent());
+    SmartDashboard.putNumber("bus voltage", extendingMotor.getBusVoltage());
+    SmartDashboard.putNumber("output percent", extendingMotor.getMotorOutputPercent());
+    SmartDashboard.putNumber("supply current", extendingMotor.getSupplyCurrent());
   }
 }

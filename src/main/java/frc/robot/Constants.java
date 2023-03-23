@@ -40,6 +40,7 @@ public final class Constants {
 
         // Joystick constants 
         public static final double DEADBAND = 0.05;
+        public static final double ARM_DEADBAND = 0.1;
     }
 
    public static final class ModuleConstants {
@@ -141,6 +142,8 @@ public final class Constants {
         public static final double ANGLE_P = 0.01; //subject to chagne
         public static final double ANGLE_I = 0;
         public static final double ANGLE_D = 0;
+
+        public static final double SUPPLY_CURRENT_RETRACTION_THRESHOLD = 12.5;
 
         public static final double EXTENTION_P = 0.1; //subject to chagne
         public static final double EXTENTION_I = 0;

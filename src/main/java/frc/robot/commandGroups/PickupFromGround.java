@@ -15,7 +15,7 @@ public class PickupFromGround extends SequentialCommandGroup {
     public PickupFromGround(Supplier<Boolean> back, ArmSubsystem arm, ClawSubsystem claw, boolean auton) {
         addCommands(
             new ToggleClaw(true, claw),
-            new ArmToDegree(arm, () -> 120d * (back.get() ? 1d : -1d)),
+            new ArmToDegree(arm, () -> 125d * (back.get() ? 1d : -1d)),
             new JankArmToTicks(277552, arm),
             new ToggleClaw(false, claw),
             new WaitCommand(.75),

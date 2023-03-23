@@ -28,7 +28,7 @@ public class MoveToTag extends CommandBase {
   PhotonVision usedCam;
 
   SwerveSubsystem ss;
-  PPSwerveControllerCommand pp;
+  CommandBase pp;
   private int dir = 0;
 
   private double xoffset;
@@ -88,30 +88,8 @@ public class MoveToTag extends CommandBase {
     }
     */
 
-    PathPlannerTrajectory traj = PathPlanner.generatePath(new PathConstraints(2, 2),
-        new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), //TODO: if we ever get around to calculating vision, change to ss.getHeading()
-        new PathPoint(new Translation2d(dir*(usedCam.getX() + xoffset), dir*(usedCam.getY() + yoffset)),
-            Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)));
-    PathPlannerState initialSample = (PathPlannerState) traj.sample(0);
-    Pose2d initialPose = new Pose2d(initialSample.poseMeters.getTranslation(),
-        initialSample.holonomicRotation);
-    ss.resetOdometry(initialPose);
 
-    pp = new PPSwerveControllerCommand(
-        traj,
-        ss::getPose,
-        DriveConstants.kDriveKinematics,
-        new PIDController(Constants.AutonConstants.kPDriving, Constants.AutonConstants.kIDriving,
-            Constants.AutonConstants.kDDriving),
-        new PIDController(Constants.AutonConstants.kPDriving, Constants.AutonConstants.kIDriving,
-            Constants.AutonConstants.kDDriving),
-        new PIDController(Constants.AutonConstants.kPTurning, Constants.AutonConstants.kITurning,
-            Constants.AutonConstants.kDTurning),
-        ss::setModuleStates,
-        true,
-        ss);
-
-    pp.initialize();
+    pp = new MoveRelativeCmd(dir*(usedCam.getX() + xoffset), dir*(usedCam.getY() + yoffset), ss);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -145,11 +145,11 @@ public final class Constants {
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
         public static final double pidPositionToleranceDegrees = 5.0;
         public static final double pidExtentionToleranceInches = 1.0;
-        public static final double ANGLE_P = 0.025; //subject to chagne
+        public static final double ANGLE_P = 0.025; //subject to change
         public static final double ANGLE_I = 0;
         public static final double ANGLE_D = 0;
 
-        public static final double EXTENTION_P = 0.1; //subject to chagne
+        public static final double EXTENTION_P = 0.1; //subject to change
         public static final double EXTENTION_I = 0;
         public static final double EXTENTION_D = 0;
 

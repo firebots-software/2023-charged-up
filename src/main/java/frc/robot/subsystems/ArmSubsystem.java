@@ -120,7 +120,7 @@ public class ArmSubsystem extends SubsystemBase {
     double deg = getRotationDegrees();
 
     if (Math.abs(deg) <= 60 && speed >= 0) {
-      extendingMotor.set(-0.1);
+      extendingMotor.set(-0.1); 
     } 
 
     if (Math.abs(deg) >= ArmConstants.MAX_RETRACTED_DEG && speed >= -0.3) {

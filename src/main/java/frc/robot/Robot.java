@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Webcam;
@@ -21,6 +22,7 @@ public class Robot extends TimedRobot {
   private ClawSubsystem clawSubsystem;
   private Webcam frontWebcam, backWebcam;
   private PhotonVision frontLimelight, backLimelight;
+  private LightsSubsystem lights;
 
   private RobotContainer m_robotContainer;
 
@@ -34,6 +36,7 @@ public class Robot extends TimedRobot {
     clawSubsystem = ClawSubsystem.getInstance();
     frontWebcam = Webcam.getFrontWebcam();
     backWebcam = Webcam.getBackWebcam();
+    lights = LightsSubsystem.getInstance();
   }
 
   @Override

@@ -10,6 +10,7 @@ public class LightsSubsystem extends SubsystemBase {
     private static int lightsCount;
     private static AddressableLED m_led;
     private static AddressableLEDBuffer m_ledBuffer;
+    private static LightsSubsystem instance;
 
     public LightsSubsystem() {
         counter = 0;
@@ -22,6 +23,14 @@ public class LightsSubsystem extends SubsystemBase {
         m_led.setData(m_ledBuffer);
         m_led.start();
     }
+
+    public static LightsSubsystem getInstance(){
+        if (instance == null) {
+            instance = new LightsSubsystem();
+          }
+          return instance;
+        }    
+    
 
     public void incrementer() {
         if (counter == lightsCount-1) {

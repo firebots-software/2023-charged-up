@@ -31,6 +31,9 @@ public class ArmSubsystem extends SubsystemBase {
   private WPI_TalonSRX extendingMotor;
   private PIDController extendingPid;
 
+  private boolean stopped;
+  private double targetTicks;
+
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
     pot = new AnalogPotentiometer(ArmConstants.POTENTIOMETER_PORT, ArmConstants.RANGE_OF_MOTION,
@@ -45,8 +48,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     setRotationWithPot();
 
-    stopTick = getTicks();
-
+    stopped = true;
     canRetract = true;
   }
 
@@ -88,7 +90,7 @@ public class ArmSubsystem extends SubsystemBase {
     // TODO: when encoder works, do trig to figure out the actual limit based on the arm length.
     if (Math.abs(deg) <= 60 && !retracted) {
       canExtend = false;
-      priorityExtend(-0.5);
+      priorityExtend(-0.6);
       speed = 0; // make sure arm doesn't continue moving
     } else {
       canExtend = true;
@@ -116,8 +118,17 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   // retracting is negative, extending is positive
-  public void setExtendingMotor(double speed) {
-    if (canExtend) priorityExtend(speed);
+  public void setExtendingMotor(double targetTicks) {
+    if (canExtend) priorityExtend(targetTicks);
+  }
+
+  private void keepArmInPlace() {
+    if (!stopped) {
+      extendingPid.setSetpoint(getTicks());
+      stopped = true;
+    }
+    
+    extendingMotor.set(extendingPid.calculate(getTicks()));
   }
 
   private void priorityExtend(double speed) {
@@ -125,26 +136,23 @@ public class ArmSubsystem extends SubsystemBase {
 
     if (deg >= ArmConstants.MAX_ROTATION_ANGLE_DEG && speed >= -0.3) { // tucked in
       // cant extend when
-      SmartDashboard.putNumber("Retraction speed", -0.3);
-      extendingMotor.set(extendingPid.calculate());
+      keepArmInPlace();
       return;
     }
 
-    if (deg <= 60 && speed >= 0) { // automatic retraction
-      SmartDashboard.putNumber("Retraction speed", -0.3);
-      extendingMotor.set(-0.3);
+    if (deg <= 60 && speed >= 0) { // keep it retracted 
+      keepArmInPlace();
       return;
     } 
 
     if ((Math.abs(speed) < 0.1) || // speed too low
     (getBottomStatus() && speed < 0)) { // already retracted
-      SmartDashboard.putNumber("Retraction speed", -0.3);
-      extendingMotor.set(-0.3);
+      keepArmInPlace();
       return;
     }
 
+    stopped = false;
     canRetract = true;
-    SmartDashboard.putNumber("Retraction speed", speed);
     extendingMotor.set(speed);
   }
 

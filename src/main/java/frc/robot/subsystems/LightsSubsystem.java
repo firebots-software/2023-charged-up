@@ -69,7 +69,7 @@ public class LightsSubsystem extends SubsystemBase {
     private void lightSetting2(int firstRed) {
         // GRADIENT RED-YELLOW
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setRGB(i, 255, 0, 0);
+            m_ledBuffer.setHSV(i, 170, ((i+firstRed)%LIGHTS.LED_BUFFER_LENGTH) * 3, 50);
         }
     }
 
@@ -77,5 +77,7 @@ public class LightsSubsystem extends SubsystemBase {
 
     @Override
     public void periodic () {
+        t = (t+1) % LIGHTS.LED_BUFFER_LENGTH;
+        lightSetting2(t);
     }
 }

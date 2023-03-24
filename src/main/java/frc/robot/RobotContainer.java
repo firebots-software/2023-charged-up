@@ -180,9 +180,9 @@ public class RobotContainer {
     chargeStationChooser.setDefaultOption("Charge Station", ChargeStationOptions.CHARGE);
     chargeStationChooser.addOption("No Charge Station", ChargeStationOptions.NO_CHARGE);
 
+    SmartDashboard.putData("Auton: Charge Station Options", chargeStationChooser);
     SmartDashboard.putData("Auton: Starting Position Options", startPosChooser);
     SmartDashboard.putData("Auton: Number of Pieces Options", piecesChooser);
-    SmartDashboard.putData("Auton: Charge Station Options", chargeStationChooser);
   }
 
   /**

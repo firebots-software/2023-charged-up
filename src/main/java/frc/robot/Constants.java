@@ -18,9 +18,9 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     public static class LIGHTS {
-        public static final int LED_PWM_PORT = 9;
+        public static final int LED_PWM_PORT = 7; // confirmed
         public static final int LIGHT_SETTINGS_COUNT = 5; 
-        public static final int LED_BUFFER_LENGTH = 60;
+        public static final int LED_BUFFER_LENGTH = 34; // confirmed
         public static final int[] YELLOW_3501 = {255, 234, 5};
         public static final int[] BLUE_3501 = {70,105,225};
     }
@@ -102,7 +102,7 @@ public final class Constants {
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.2242676466703415;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.559135138988495;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 3.827274329960346;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.2793342163178583;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 3.8073333;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5106;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
@@ -140,7 +140,7 @@ public final class Constants {
         public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
-        public static final int STARTING_POINT = -997;
+        public static final int STARTING_POINT = -796;
         public static final double MAX_ROTATION_SPEED = 0.65; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
@@ -152,7 +152,7 @@ public final class Constants {
 
         public static final double SUPPLY_CURRENT_RETRACTION_THRESHOLD = 12.5;
 
-        public static final double EXTENTION_P = 0.1; //subject to chagne
+        public static final double EXTENTION_P = 0.00001; //subject to chagne 10000
         public static final double EXTENTION_I = 0;
         public static final double EXTENTION_D = 0;
 
@@ -163,25 +163,25 @@ public final class Constants {
         public static final double SHELF_BACKUP_METERS = Units.inchesToMeters(31 + 9);
         public static final double SHELF_JANK_TICKS = 169381;
 
-        public static final double HIGH_CONE_FRONT_DEG = -80.0;
+        public static final double HIGH_CONE_FRONT_DEG = -75.28;
         public static final double HIGH_CONE_BACK_DEG = -HIGH_CONE_FRONT_DEG;
-        public static final double HIGH_CUBE_FRONT_DEG = -86.0; // confirmed
+        public static final double HIGH_CUBE_FRONT_DEG = -85.84; // confirmed
         public static final double HIGH_CUBE_BACK_DEG = -HIGH_CUBE_FRONT_DEG;
 
-        public static final double MID_CONE_FRONT_DEG = -80.0; // confirmed
+        public static final double MID_CONE_FRONT_DEG = -90.0; // confirmed
         public static final double MID_CONE_BACK_DEG = -MID_CONE_FRONT_DEG;
-        public static final double MID_CUBE_FRONT_DEG = -102.5; // confirmed
+        public static final double MID_CUBE_FRONT_DEG = -106.89; // confirmed
         public static final double MID_CUBE_BACK_DEG = -MID_CUBE_FRONT_DEG;
 
-        public static final double LOW_GOAL_FRONT_DEG = -140.0;
+        public static final double LOW_GOAL_FRONT_DEG = -130.4;
         public static final double LOW_GOAL_BACK_DEG = -LOW_GOAL_FRONT_DEG;
 
         //ALL IN TICKIES
-        public static final double HIGH_CONE_DIST_TICKIES = 217747;
-        public static final double HIGH_CUBE_DIST_TICKIES = 214798; // confirmed
+        public static final double HIGH_CONE_DIST_TICKIES = 217747; 
+        public static final double HIGH_CUBE_DIST_TICKIES = 214798; // confirmed 251929?
         public static final double MID_CONE_DIST_TICKIES = 33590; // confirmed 
-        public static final double MID_CUBE_DIST_TICKIES = 69354; // confirmed
-        public static final double LOW_GOAL_DIST_TICKIES = 0.0;
+        public static final double MID_CUBE_DIST_TICKIES = 69354; // confirmed 120677?
+        public static final double LOW_GOAL_DIST_TICKIES = 0.0; // 302?
 
         public static final double MAX_RETRACTED_DEG = 160;
 		

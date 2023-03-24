@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.LIGHTS;
 
 public class LightsSubsystem extends SubsystemBase {
     private static int counter;
@@ -12,12 +13,16 @@ public class LightsSubsystem extends SubsystemBase {
     private static AddressableLEDBuffer m_ledBuffer;
     private static LightsSubsystem instance;
 
-    public LightsSubsystem() {
+    private LightsSubsystem() {
         counter = 0;
-        lightsCount = Constants.LIGHTS.LIGHT_SETTINGS_COUNT;
-        m_led = new AddressableLED(Constants.LIGHTS.LED_PWM_PORT);
-        m_ledBuffer = new AddressableLEDBuffer(Constants.LIGHTS.LED_BUFFER_LENGTH);
-        m_led.setLength(m_ledBuffer.getLength());
+        lightsCount = LIGHTS.LIGHT_SETTINGS_COUNT;
+        m_led = new AddressableLED(LIGHTS.LED_PWM_PORT);
+        m_ledBuffer = new AddressableLEDBuffer(LIGHTS.LED_BUFFER_LENGTH);
+        m_led.setLength(LIGHTS.LED_BUFFER_LENGTH);
+
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            m_ledBuffer.setRGB(i, 180, 0, 0);
+        }
 
         // Set the data
         m_led.setData(m_ledBuffer);
@@ -64,12 +69,13 @@ public class LightsSubsystem extends SubsystemBase {
     private void lightSetting2(int firstRed) {
         // GRADIENT RED-YELLOW
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setHSV(i, 255, Math.abs(i-firstRed)*3, 0);
+            m_ledBuffer.setRGB(i, 255, 0, 0);
         }
     }
 
+    private int t = 0;
+
     @Override
     public void periodic () {
-        
     }
 }

@@ -59,12 +59,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void _frictionBreakOn() {
     if (!_isFrictionBreakOn())
-      frictionBreakSolenoid.set(true);
+      frictionBreakSolenoid.set(false);
   }
 
   public void _frictionBreakOff() {
     if (_isFrictionBreakOn())
-      frictionBreakSolenoid.set(true);
+      frictionBreakSolenoid.set(!frictionBreakSolenoid.get());
       System.out.println("*********RETRACTING**********");
   }
 

@@ -40,9 +40,10 @@ public class JankEngageCmd extends CommandBase {
 
         if (Math.abs(pitch - startPitch) > 2 * DockingConstants.ENGAGE_TOLERANCE - 2.0) {
             this.startPitch = pitch;
-            this.speed -= DockingConstants.OSCILLATION_SPEED_INCREMENT;
-            
+            this.speed -= DockingConstants.OSCILLATION_SPEED_INCREMENT;   
         }
+
+
 
     }
 

@@ -125,6 +125,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("front right encoder", frontRight.getDrivingTickValues());
         SmartDashboard.putNumber("back left encoder", backLeft.getDrivingTickValues());
         SmartDashboard.putNumber("back right encoder", backRight.getDrivingTickValues());
+        SmartDashboard.putNumber("back right absolute encoder value", backRight.getAbsolutePosition());
     } 
 
     public void stopModules() {

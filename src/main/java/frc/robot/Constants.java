@@ -17,6 +17,13 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static class LIGHTS {
+        public static final int LED_PWM_PORT = 9;
+        public static final int LIGHT_SETTINGS_COUNT = 5; 
+        public static final int LED_BUFFER_LENGTH = 60;
+        public static final int[] YELLOW_3501 = {255, 234, 5};
+        public static final int[] BLUE_3501 = {70,105,225};
+    }
     public static class OI {
         public static final int DRIVER_PS4_PORT = 3;
         public static final int ARM_JOYSTICK_PORT = 1;

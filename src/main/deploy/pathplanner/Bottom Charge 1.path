@@ -17,9 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "RetractArmToMin",
-          "ScoreHighCube",
-          "RetractArmToMin"
+          "ScoreHighCube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -28,12 +26,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.4083210301837275,
-        "y": 2.196352094093077
+        "x": 5.7052169764061755,
+        "y": 2.2379294637061498
       },
       "prevControl": {
-        "x": 6.581705040146192,
-        "y": 0.3380118374820076
+        "x": 6.592838729080237,
+        "y": 0.4909840843987238
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -54,12 +52,5 @@
   "maxVelocity": 4.0,
   "maxAcceleration": 4.0,
   "isReversed": null,
-  "markers": [
-    {
-      "position": 0.02,
-      "names": [
-        "TuckArm"
-      ]
-    }
-  ]
+  "markers": []
 }

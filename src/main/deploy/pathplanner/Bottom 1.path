@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.684684386729885,
-        "y": 0.326182292989586
+        "x": 3.6817270006067795,
+        "y": 0.6570036230350234
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -17,9 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "RetractArmToMin",
-          "ScoreHighCube",
-          "RetractArmToMin"
+          "ScoreHighCube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "minimum",
@@ -28,12 +26,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.4083210301837275,
-        "y": 2.196352094093077
+        "x": 6.057493852834929,
+        "y": 0.8771259313351959
       },
       "prevControl": {
-        "x": 6.581705040146192,
-        "y": 0.3380118374820076
+        "x": 3.9122871422826186,
+        "y": 0.9514665001552215
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -49,12 +47,5 @@
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.02,
-      "names": [
-        "TuckArm"
-      ]
-    }
-  ]
+  "markers": []
 }

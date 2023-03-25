@@ -53,9 +53,9 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
     return (startPos.ordinal() + (pieces.ordinal() << 2) + (charge.ordinal() << 3)) * (startPos == StartingPositionOptions.JUST_SCORE ? 0 : 1);
   }
 
-  public Command autoFromPath(String name) {
+  public Command autoFromPath(String name, double velOverride) {
     try {
-      List<PathPlannerTrajectory> ppts = PathPlanner.loadPathGroup(name, AutonConstants.kVMax, AutonConstants.kAMax);
+      List<PathPlannerTrajectory> ppts = PathPlanner.loadPathGroup(name, velOverride, AutonConstants.kAMax);
       if (ppts == null) {
         return new WaitCommand(1);
       }
@@ -66,6 +66,12 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
       return new WaitCommand(1);
     }
   }
+
+  public Command autoFromPath(String name) {
+    return autoFromPath(name, AutonConstants.kVMax);
+  }
+
+  
 
   @Override
   public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup) {

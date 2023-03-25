@@ -22,8 +22,8 @@ import frc.robot.subsystems.Webcam;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private SwerveSubsystem swerveSubsystem;
-  private ArmSubsystem armSubsystem;
-  private ClawSubsystem clawSubsystem;
+  //private ArmSubsystem armSubsystem;
+  //private ClawSubsystem clawSubsystem;
   private Webcam frontWebcam, backWebcam;
   private PhotonVision frontLimelight, backLimelight;
   private LightsSubsystem frontLed, backLed;
@@ -37,10 +37,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     swerveSubsystem = SwerveSubsystem.getInstance();
-    armSubsystem = ArmSubsystem.getInstance();
+    //armSubsystem = ArmSubsystem.getInstance();
     frontLimelight = PhotonVision.getFrontCam();
     // backLimelight = PhotonVision.getBackCam();
-    clawSubsystem = ClawSubsystem.getInstance();
+    //clawSubsystem = ClawSubsystem.getInstance();
     frontWebcam = Webcam.getFrontWebcam();
     backWebcam = Webcam.getBackWebcam();
     frontLed = LightsSubsystem.getFrontLed();
@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    armSubsystem.unZero();
+    //armSubsystem.unZero();
     onInit();
     swerveSubsystem.zeroPitch();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     DataLogManager.log("Starting teleop!");
     onInit();
-    armSubsystem.unZero();
+    //armSubsystem.unZero();
     swerveSubsystem.setHeading(180);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
@@ -124,8 +124,8 @@ public class Robot extends TimedRobot {
   }
 
   public void onInit() {
-    armSubsystem._frictionBreakOn();
-    clawSubsystem.close();
+    //armSubsystem._frictionBreakOn();
+    //clawSubsystem.close();
     swerveSubsystem.zeroHeading();
   }
 

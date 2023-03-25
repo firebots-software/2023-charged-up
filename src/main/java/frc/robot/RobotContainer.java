@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -56,8 +57,8 @@ public class RobotContainer {
 
   // Subsystems
   private final SwerveSubsystem swerveSubsystem = SwerveSubsystem.getInstance();
-  private final ArmSubsystem arm = ArmSubsystem.getInstance();
-  private final ClawSubsystem claw = ClawSubsystem.getInstance();
+  //private final ArmSubsystem arm = ArmSubsystem.getInstance();
+  //private final ClawSubsystem claw = ClawSubsystem.getInstance();
   // PathPlanner
   private final Map<String, Command> eventMap = new HashMap<String, Command>() {{
       //DOCKING
@@ -65,25 +66,25 @@ public class RobotContainer {
       put("ChargeStationBackward", new ChargeStation(swerveSubsystem, -DockingConstants.DOCKING_SPEED));
       //VISION
       put("MoveToTarget", new MoveToTag(swerveSubsystem));
-      put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
-      put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
+      // put("MoveToCubeAndExtend", new MoveToCubeAndExtend(swerveSubsystem, arm));
+      // put("MoveToTargetAndExtend", new MoveToTargetAndExtend(swerveSubsystem, arm));
       // SCORING
-      put("ScoreMidCube", 
-        new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreHighCube", 
-        new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
-      put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
+      // put("ScoreMidCube", 
+      //   new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.MID_LEVEL, swerveSubsystem, arm, claw, true));
+      // put("ScoreHighCube", 
+      //   new MoveAndScore(MoveAndScore.MIDDLE_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
+      // put("ScoreHighCone", new MoveAndScore(MoveAndScore.RIGHT_POS, MoveAndScore.HIGH_LEVEL, swerveSubsystem, arm, claw, true));
       // ARM
-      put("RetractArmToMin", new RetractArmCmd(arm));
-      put("PickupCube", new PickupFromGround(() -> true, arm, claw, true));
-      put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
-      put("ExtendArmToMax", new JankArmToTicks(304433, arm));
-      put("ArmToHighCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
-      put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.MID_CONE_FRONT_DEG));
-      put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
+      // put("RetractArmToMin", new RetractArmCmd(arm));
+      // put("PickupCube", new PickupFromGround(() -> true, arm, claw, true));
+      // put("ArmToGroundBack", new ArmToGround(() -> true, arm, true));
+      // put("ExtendArmToMax", new JankArmToTicks(304433, arm));
+      // put("ArmToHighCube", new ArmToDegree(arm, ArmConstants.HIGH_CUBE_FRONT_DEG));
+      // put("ArmToMidCube", new ArmToDegree(arm, ArmConstants.MID_CONE_FRONT_DEG));
+      // put("TuckArm", new ArmToDegree(arm, ArmConstants.MAX_RETRACTED_DEG));
       // CLAW
-      put("ToggleClaw", new ToggleClaw(claw));
-      put("CloseClaw", new ToggleClaw(false, claw));
+      // put("ToggleClaw", new ToggleClaw(claw));
+      // put("CloseClaw", new ToggleClaw(false, claw));
   }};
   
 
@@ -127,25 +128,25 @@ public class RobotContainer {
 
         () -> !driverPS4.getRawButton(Constants.OI.SQUARE_BUTTON_PORT)));
 
-    arm.setDefaultCommand(new ArmJoystickCmd(
-      arm,
-        () -> armJoystick.getRawAxis(0) * (armJoystick.getRawButton(3) ? 0.2 : 0.5),
-        () -> -armJoystick.getRawAxis(1) * (armJoystick.getRawButton(3) ? 0.3 : 0.5)));
+    // arm.setDefaultCommand(new ArmJoystickCmd(
+    //   arm,
+    //     () -> armJoystick.getRawAxis(0) * (armJoystick.getRawButton(3) ? 0.2 : 0.5),
+    //     () -> -armJoystick.getRawAxis(1) * (armJoystick.getRawButton(3) ? 0.3 : 0.5)));
     
-    for (int button = 1; button < 10; button++) {
-      new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
-    }
+    // for (int button = 1; button < 10; button++) {
+    //   new JoystickButton(numpad, button).whileTrue(new MoveAndScore(((button-1) % 3) - 1, (button-1) / 3, swerveSubsystem, arm, claw));
+    // }
 
     
 
-    final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
-    armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
+    // final Trigger armToDegree = new JoystickButton(driverPS4, Constants.OI.X_BUTTON_PORT);
+    // armToDegree.whileTrue(new PickupFromGround(() -> arm.getRotationDegrees() > 0, arm, claw));
     
-    final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
-    tri.whileTrue(new PickupObjectFromHeight(swerveSubsystem, arm, claw));
+    // final Trigger tri = new JoystickButton(driverPS4, Constants.OI.TRIANGLE_BUTTON_PORT);
+    // tri.whileTrue(new PickupObjectFromHeight(swerveSubsystem, arm, claw));
 
-    final Trigger to90 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
-    to90.whileTrue(new ArmToDegree(arm, () -> 90d));
+    // final Trigger to90 = new JoystickButton(driverPS4, Constants.OI.R1_BUTTON_PORT);
+    // to90.whileTrue(new ArmToDegree(arm, () -> 90d));
 
     final Trigger damageControl = new JoystickButton(driverPS4, Constants.OI.CIRCLE_BUTTON_PORT);
     damageControl.onTrue(new ZeroHeadingCmd(swerveSubsystem));
@@ -153,17 +154,17 @@ public class RobotContainer {
     final Trigger thing = new JoystickButton(driverPS4, Constants.OI.SQUARE_BUTTON_PORT);
     thing.whileTrue(new ChargeStation(swerveSubsystem, -2.0));
 
-    final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
-    limpArm.whileTrue(new LimpArm(arm));
+    // final Trigger limpArm = new JoystickButton(driverPS4, Constants.OI.PS_SHARE_BUTTON_PORT);
+    // limpArm.whileTrue(new LimpArm(arm));
 
-    final Trigger clawToggle = new JoystickButton(armJoystick, 1);
-    clawToggle.onTrue(new ToggleClaw(claw));
+    // final Trigger clawToggle = new JoystickButton(armJoystick, 1);
+    // clawToggle.onTrue(new ToggleClaw(claw));
 
-    final Trigger goUp = new JoystickButton(armJoystick, 6);
-    goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
+    // final Trigger goUp = new JoystickButton(armJoystick, 6);
+    // goUp.onTrue(new RetractArmCmd(arm).andThen(new ArmToDegree(arm, 0)));
 
-    final Trigger shelfPickupAngle = new JoystickButton(armJoystick, 4);
-    shelfPickupAngle.whileTrue(new ArmToDegree(arm, ArmConstants.SHELF_PICKUP_DEG));
+    // final Trigger shelfPickupAngle = new JoystickButton(armJoystick, 4);
+    // shelfPickupAngle.whileTrue(new ArmToDegree(arm, ArmConstants.SHELF_PICKUP_DEG));
   }
   // Changing the R2 axis range from [-1, 1] to [0, 1] because we are using
   // this value as a decimal to multiply and control the speed of the robot.
@@ -191,8 +192,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return AUTONS_MAP.get(ResetAutoBuilder.hashAuton(startPosChooser.getSelected(), piecesChooser.getSelected(),
+    Command n = AUTONS_MAP.get(ResetAutoBuilder.hashAuton(startPosChooser.getSelected(), piecesChooser.getSelected(),
         chargeStationChooser.getSelected()));
+    if (n != null) {
+      return n;
+    }
+
+    return new WaitCommand(1);
   }
 
   int count = 0;
@@ -205,7 +211,7 @@ public class RobotContainer {
   public final Map<Integer, Command> AUTONS_MAP = new HashMap<>() {
     {
       // JUST SCORE
-      put(0, new MoveAndScore(0, 2, swerveSubsystem, arm, claw, true));
+      //put(0, new MoveAndScore(0, 2, swerveSubsystem, arm, claw, true));
 
       // TOP
       put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.ONE,
@@ -213,20 +219,21 @@ public class RobotContainer {
           autoBuilder.autoFromPath("Top 1"));
       put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.ONE, ChargeStationOptions.CHARGE),
           autoBuilder.autoFromPath("Top Charge 1"));
-      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.TWO,
-          ChargeStationOptions.NO_CHARGE),
-          autoBuilder.autoFromPath("Top 2"));
-      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.TWO, ChargeStationOptions.CHARGE),
-          autoBuilder.autoFromPath("Top Charge 2"));
+      // put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.TWO,
+      //     ChargeStationOptions.NO_CHARGE),
+      //     autoBuilder.autoFromPath("Top 2"));
+      // put(ResetAutoBuilder.hashAuton(StartingPositionOptions.TOP, PiecesScoredOptions.TWO, ChargeStationOptions.CHARGE),
+      //     autoBuilder.autoFromPath("Top Charge 2"));
 
       // MIDDLE
       // "Middle 1" does not exist (charge station obstructs leaving and then coming back w/pathplanner)
       put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.ONE,
-          ChargeStationOptions.CHARGE), // Middle Charge 1
-          new MoveAndScore(0, 2, swerveSubsystem, arm, claw, true).andThen(new ChargeStation(swerveSubsystem, -2.5)));
+          ChargeStationOptions.CHARGE), // Middle Charge no score
+          //new MoveAndScore(0, 2, swerveSubsystem, arm, claw, true).andThen(
+            new ChargeStation(swerveSubsystem, -2.5));
       put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.TWO,
-          ChargeStationOptions.CHARGE), // Middle Charge 2
-          new ChargeStation(swerveSubsystem, -2.5));
+          ChargeStationOptions.CHARGE), // Middle Charge + mobility
+          autoBuilder.autoFromPath("Mid Charge 1", 1));
       // "Middle 2" does not exist (charge station gets in the way of accurate pickup)
       // "Middle Charge 2" does not exist (charge station gets in the way of accurate pickup)
 

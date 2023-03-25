@@ -10,7 +10,7 @@ public class ChargeStation extends SequentialCommandGroup {
     public ChargeStation(SwerveSubsystem swerveSubsystem, double speed) {
         addCommands(
             new DockCmd(swerveSubsystem, speed),
-            new LevelCmd(swerveSubsystem, 1.0*Math.signum(speed)),
+            new LevelCmd(swerveSubsystem, 1.2*Math.signum(speed)),
             //new EngageCmd(new PIDController(Constants.DockingConstants.kPEngage, Constants.DockingConstants.KIEngage, Constants.DockingConstants.KDEngage), swerveSubsystem)
             new JankEngageCmd(swerveSubsystem)
         );

@@ -46,11 +46,8 @@ public class MoveAndScore extends SequentialCommandGroup {
         addCommands(
             new RetractArmCmd(arm),
             //new MoveToTag(pos, swerveSubsystem),
-            new WaitCommand(1),
             new ArmToDegree(arm, deginches[0]),
-            new WaitCommand(1),
             new JankArmToTicks(deginches[1], arm),
-            new WaitCommand(1),
             new ToggleClaw(true, claw),
             new WaitCommand(0.2),
             new RetractArmCmd(arm)

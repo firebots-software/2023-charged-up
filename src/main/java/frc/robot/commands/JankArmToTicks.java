@@ -20,7 +20,7 @@ public class JankArmToTicks extends CommandBase {
     @Override
     public void execute() {
         arm.setExtendingMotor(0.35 * Math.signum(ticks-arm.getTicks())); 
-        System.out.println("************* EXTENDING *************");// retract arm
+        // System.out.println("************* EXTENDING *************");// retract arm
     }
 
     @Override

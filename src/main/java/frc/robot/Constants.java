@@ -17,8 +17,9 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static class LIGHTS {
-        public static final int LED_PWM_PORT = 7; // confirmed
+    public static class Lights {
+        public static final int LED_FRONT_PWM_PORT = 7; // confirmed
+        public static final int LED_BACK_PWM_PORT = 6; // confirmed
         public static final int LIGHT_SETTINGS_COUNT = 5; 
         public static final int LED_BUFFER_LENGTH = 34; // confirmed
         public static final int[] YELLOW_3501 = {255, 234, 5};
@@ -145,12 +146,12 @@ public final class Constants {
         public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed
         public static final double pidPositionToleranceDegrees = 5.0;
-        public static final double pidExtentionToleranceInches = 1.0;
+        public static final double pidExtentionToleranceTicks = 1000;
         public static final double ANGLE_P = 0.01; //subject to chagne
         public static final double ANGLE_I = 0;
         public static final double ANGLE_D = 0;
 
-        public static final double SUPPLY_CURRENT_RETRACTION_THRESHOLD = 12.5;
+        public static final double SUPPLY_CURRENT_RETRACTION_THRESHOLD = 17;
 
         public static final double EXTENTION_P = 0.00001; //subject to chagne 10000
         public static final double EXTENTION_I = 0;
@@ -183,7 +184,7 @@ public final class Constants {
         public static final double MID_CUBE_DIST_TICKIES = 69354; // confirmed 120677?
         public static final double LOW_GOAL_DIST_TICKIES = 0.0; // 302?
 
-        public static final double MAX_RETRACTED_DEG = 160;
+        public static final double MAX_RETRACTED_DEG = 155; 
 		
 
     }

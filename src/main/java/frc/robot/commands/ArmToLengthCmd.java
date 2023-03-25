@@ -15,7 +15,7 @@ public class ArmToLengthCmd extends CommandBase {
         this.arm = arm;
         this.targetInches = targetInches;
         pid = new PIDController(ArmConstants.EXTENTION_P, ArmConstants.EXTENTION_I, ArmConstants.EXTENTION_D);
-        pid.setTolerance(ArmConstants.pidExtentionToleranceInches);
+        // pid.setTolerance(ArmConstants.pidExtentionToleranceInches);
         addRequirements(arm);
     }
     

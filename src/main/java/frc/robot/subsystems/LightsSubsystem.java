@@ -21,7 +21,7 @@ public class LightsSubsystem extends SubsystemBase {
         m_led.setLength(Lights.LED_BUFFER_LENGTH);
 
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            m_ledBuffer.setRGB(i, i, 180, 0); // g r b
+            m_ledBuffer.setRGB(i, 35-i, 180, 0); // g r b
         }
 
         // Set the data
@@ -38,9 +38,9 @@ public class LightsSubsystem extends SubsystemBase {
 
     public static LightsSubsystem getBackLed() {
         if (back == null) {
-            back = new LightsSubsystem(Lights.LED_BACK_PWM_PORT);
+        //    back = new LightsSubsystem(Lights.LED_BACK_PWM_PORT);
         }
-        return back;
+        return front;
     }
 
     public void incrementer() {

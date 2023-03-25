@@ -141,7 +141,7 @@ public final class Constants {
         public static final int EXTENDINGMOTOR_PORT = 14; // confirmed
         
         public static final int RANGE_OF_MOTION = 1800; //confirmed
-        public static final int STARTING_POINT = -796;
+        public static final int STARTING_POINT = -439;
         public static final double MAX_ROTATION_SPEED = 0.65; //confirmed
         public static final double MAX_ROTATION_ANGLE_DEG = 125;
         public static final double MAX_EXTENTION_SPEED = 0.5; //confirmed

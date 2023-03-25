@@ -34,18 +34,27 @@ public class ArmSubsystem extends SubsystemBase {
   private AnalogPotentiometer pot;
   private Solenoid frictionBreakSolenoid;
 
+  private Timer zeroTimer;
+
   // extending
   private WPI_TalonSRX extendingMotor;
   private PIDController extendingPid;
 
   private StringLogEntry armLog;
 
-  public boolean isZeroed;
+  private boolean isZeroed;
 
-  private boolean safteyStop;
+  private boolean stopped;
+  private double stopPoint;
+
+  public void unZero() {
+    isZeroed = false;
+    zeroTimer = new Timer();
+    zeroTimer.start();
+  }
 
   /** Creates a new ArmSubsystem. */
-  public ArmSubsystem() {
+  private ArmSubsystem() {
     pot = new AnalogPotentiometer(ArmConstants.POTENTIOMETER_PORT, ArmConstants.RANGE_OF_MOTION,
         ArmConstants.STARTING_POINT);
     frictionBreakSolenoid = new Solenoid(PneumaticsModuleType.REVPH,
@@ -64,7 +73,6 @@ public class ArmSubsystem extends SubsystemBase {
 
     extendingMotor.setSelectedSensorPosition(0);
 
-    safteyStop = false;
     canRetract = true;
   }
 
@@ -77,7 +85,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double _getPotentiometerDegrees() {
     double val = pot.get();
-    armLog.append("pot deg: " + val);
+    logArm("pot deg: " + val);
     return val;
   }
 
@@ -99,22 +107,13 @@ public class ArmSubsystem extends SubsystemBase {
     double deg = _getPotentiometerDegrees();
     boolean retracted = getBottomStatus();
 
-    if (safteyStop) {
-      DriverStation.getMatchTime()
-    }
-
-    if (rotatingMotor.getSupplyCurrent() >= 30) {
-      safteyStop = true;
-      return;
-    }
-
     if ((deg <= -ArmConstants.MAX_ROTATION_ANGLE_DEG && !retracted) || (deg <= -ArmConstants.MAX_RETRACTED_DEG)) {
       speed = Math.max(speed, 0);
-      armLog.append("deg " + deg + " too negative, speed to " + speed);
+      logArm("deg " + deg + " too negative, speed to " + speed);
     }
     else if ((deg >= ArmConstants.MAX_ROTATION_ANGLE_DEG && !retracted) || (deg >= ArmConstants.MAX_RETRACTED_DEG)) {
       speed = Math.min(speed, 0);
-      armLog.append("deg " + deg + " too positive, speed to " + speed);
+      logArm("deg " + deg + " too positive, speed to " + speed);
     }
 
     // Guard 2: if the arm is in between -60 and 60 degrees, we need to retract the arm fully to not extend past 6' 4"
@@ -153,19 +152,36 @@ public class ArmSubsystem extends SubsystemBase {
     if (canExtend && canExtend2) priorityExtend(targetTicks);
   }
 
+  private long dutycounter;
+  private final double DUTY_CYCLE_SECONDS = .25;
+  private final double DUTY_CYCLE_PERCENT = .5;
+
   private void keepArmInPlace() {
-    extendingMotor.set(-0.1);
-    /*if (!stopped) {
-      extendingPid.setSetpoint(Math.max(getTicks(), 300_000));
+    /*
+    dutycounter = (dutycounter + 1) % Math.round(DUTY_CYCLE_SECONDS * 50);
+    SmartDashboard.putNumber("duty counter", dutycounter);
+    if (dutycounter < DUTY_CYCLE_PERCENT * DUTY_CYCLE_SECONDS * 50) {
+      extendingMotor.set(-0.2);
+      SmartDashboard.putNumber("keep arm speed", -0.4);
+    }
+    else {
+      extendingMotor.set(0);
+      SmartDashboard.putNumber("keep arm speed", 0);
+    }*/
+  
+    if (!stopped) {
+      stopPoint = getTicks();
       stopped = true;
     }
-    
-    double val = extendingPid.calculate(getTicks());
-    double clamp = MathUtil.clamp(val, -0.3, 0.3);
-    extendingMotor.set(clamp);
-    SmartDashboard.putNumber("Unclamped PID output", val);
-    SmartDashboard.putNumber("PID output", clamp);
-    SmartDashboard.putNumber("Setpoint", extendingPid.getSetpoint());*/
+  
+    double dist = stopPoint-getTicks();
+    double val = 0.4 * Math.signum(dist);
+    SmartDashboard.putNumber("keep arm speed", val);
+    if (dist <= 10000) {
+      extendingMotor.set(val);
+    } else {
+      extendingMotor.set(0);
+    }
   }
 
   private void priorityExtend(double speed) {
@@ -190,8 +206,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("retraction speed", speed);
 
-    stopped = false;
+
+    SmartDashboard.putNumber("keep arm speed", speed);
     canRetract = true;
+    stopped = false;
     extendingMotor.set(speed);
   }
 
@@ -215,11 +233,16 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (!isZeroed) {
+      if (zeroTimer.hasElapsed(5)) {
+        isZeroed = true;
+        canExtend2 = true;
+        extendingMotor.setSelectedSensorPosition(0);
+        return;
+      }
       priorityExtend(-0.4);
       canExtend2 = false;
       if (extendingMotor.getSupplyCurrent() > ArmConstants.SUPPLY_CURRENT_RETRACTION_THRESHOLD) { 
-
-        armLog.append("zeroing encoder!");
+        logArm("zeroing encoder!");
         extendingMotor.setSelectedSensorPosition(0);
         isZeroed = true;
       }
@@ -240,5 +263,10 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("output percent", extendingMotor.getMotorOutputPercent());
 
 
+  }
+
+  private void logArm(String x) {
+    if (armLog != null)
+      armLog.append(x);
   }
 }

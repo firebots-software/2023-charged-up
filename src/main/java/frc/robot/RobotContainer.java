@@ -223,7 +223,10 @@ public class RobotContainer {
       // "Middle 1" does not exist (charge station obstructs leaving and then coming back w/pathplanner)
       put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.ONE,
           ChargeStationOptions.CHARGE), // Middle Charge 1
-          new MoveAndScore(0, 1, swerveSubsystem, arm, claw, true).andThen(new ChargeStation(swerveSubsystem, -2.5)));
+          new MoveAndScore(0, 2, swerveSubsystem, arm, claw, true).andThen(new ChargeStation(swerveSubsystem, -2.5)));
+      put(ResetAutoBuilder.hashAuton(StartingPositionOptions.MIDDLE, PiecesScoredOptions.TWO,
+          ChargeStationOptions.CHARGE), // Middle Charge 2
+          new ChargeStation(swerveSubsystem, -2.5));
       // "Middle 2" does not exist (charge station gets in the way of accurate pickup)
       // "Middle Charge 2" does not exist (charge station gets in the way of accurate pickup)
 

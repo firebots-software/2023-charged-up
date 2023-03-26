@@ -103,7 +103,7 @@ public final class Constants {
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.2242676466703415;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.559135138988495;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 3.827274329960346;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 3.8073333;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 3.6323333-(4.0*0.017453295);
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 4.5106;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
@@ -215,14 +215,14 @@ public final class Constants {
     public static final class DockingConstants {
         public static final double DOCKING_TOLERANCE = 17;
         public static final double LEVEL_TOLERANCE = 12;
-        public static final double ENGAGE_TOLERANCE = 9;
+        public static final double ENGAGE_TOLERANCE = 7;
 
 
         public static final double OSCILLATION_SPEED_INCREMENT = 0.02;
         public static final double DOCKING_SPEED = 2.0;
         public static final double ENGAGE_SPEED = 0.6;
-        public static final double kPEngage = 0.08;
-        public static final double KIEngage = 0;
-        public static final double KDEngage = 0;
+        // public static final double kPEngage = 0.08;
+        // public static final double KIEngage = 0;
+        // public static final double KDEngage = 0;
     }
 }

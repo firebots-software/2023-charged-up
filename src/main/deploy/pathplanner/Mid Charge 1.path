@@ -20,7 +20,7 @@
           "ScoreHighCube"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
+        "waitBehavior": "none",
         "waitTime": 2.0
       }
     },

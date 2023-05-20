@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.Set;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -16,13 +18,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class MoveToTag extends CommandBase {
-  PhotonVision frontCam = PhotonVision.getFrontCam();
+  PhotonVision frontCam = PhotonVision.getInstance();
   //PhotonVision backCam = PhotonVision.getBackCam();
 
   PhotonVision usedCam;
@@ -133,4 +136,12 @@ public class MoveToTag extends CommandBase {
   public boolean isFinished() {
     return pp == null ? false : pp.isFinished();
   }
+
+  @Override
+  public Set<Subsystem> getRequirements() {
+    // TODO Auto-generated method stub
+    return Set.of(ss, frontCam);
+  }
+
+  
 }

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -202,6 +203,12 @@ public final class Constants {
 
         public static final double kVMax = 3;
         public static final double kAMax = 3;
+
+        public static final double kAngularVMax = Math.PI;
+        public static final double kAngularAMax = Math.PI;
+
+        public static final TrapezoidProfile.Constraints kThetaConstraints = new TrapezoidProfile.Constraints(
+            kAngularVMax, kAngularAMax);
     }
 
     public static final class DockingConstants {

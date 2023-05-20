@@ -3,11 +3,13 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.*;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.PathPlannerTrajectory.StopEvent;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
@@ -19,10 +21,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AutonConstants;
 
 public class ResetAutoBuilder extends SwerveAutoBuilder {
+
+  private Map<String, Command> eventMap;
 
   public ResetAutoBuilder(Supplier<Pose2d> poseSupplier, Consumer<Pose2d> resetPose, SwerveDriveKinematics kinematics,
       PIDConstants translationConstants, PIDConstants rotationConstants,
@@ -30,6 +36,8 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
       Subsystem... driveRequirements) {
     super(poseSupplier, resetPose, kinematics, translationConstants, rotationConstants, outputModuleStates, eventMap,
         useAllianceColor, driveRequirements);
+    
+        this.eventMap = eventMap;
   }
 
   public static enum ChargeStationOptions {
@@ -57,6 +65,7 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
     try {
       List<PathPlannerTrajectory> ppts = PathPlanner.loadPathGroup(name, AutonConstants.kVMax, AutonConstants.kAMax);
       if (ppts == null) {
+        System.out.println("********** PathPlannerTrajectory is null! **********");
         return new WaitCommand(1);
       }
       Command n = fullAuto(ppts);
@@ -69,9 +78,14 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
 
   @Override
   public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup) {
+    return fullAuto(pathGroup, 0);
+  }
+
+  public CommandBase fullAuto(List<PathPlannerTrajectory> pathGroup, int startTraj) {
     List<CommandBase> commands = new ArrayList<>();
 
-    for (PathPlannerTrajectory traj : pathGroup) {
+    for (int i = startTraj; i < pathGroup.size(); i++) {
+      PathPlannerTrajectory traj = pathGroup.get(i);
       commands.add(stopEventGroup(traj.getStartStopEvent()));
       commands.add(resetPose(traj));
       commands.add(followPathWithEvents(traj));
@@ -82,7 +96,9 @@ public class ResetAutoBuilder extends SwerveAutoBuilder {
     return Commands.sequence(commands.toArray(CommandBase[]::new));
   }
 
-  public static List<PathPlannerTrajectory>  Top_Charge_2 = PathPlanner.loadPathGroup(
+ 
+
+  public static List<PathPlannerTrajectory> Top_Charge_2 = PathPlanner.loadPathGroup(
     "Top Charge 2", AutonConstants.kVMax, AutonConstants.kVMax);
 
   public static List<PathPlannerTrajectory> Top_Charge_1 = PathPlanner.loadPathGroup(

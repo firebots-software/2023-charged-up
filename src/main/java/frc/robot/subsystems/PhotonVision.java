@@ -14,8 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class PhotonVision extends SubsystemBase{
-    private static PhotonVision frontCam;
-    private static PhotonVision backCam;
+    private static PhotonVision instance;
     
     PhotonCamera camera = new PhotonCamera("limelightCam");
     PhotonPipelineResult result = getLatestPipeline();
@@ -35,9 +34,11 @@ public class PhotonVision extends SubsystemBase{
         camera = new PhotonCamera(camName);
     }   
 
-    public static PhotonVision getFrontCam() {
-        if (frontCam == null) frontCam = new PhotonVision("limelightCam");
-        return frontCam;
+    
+
+    public static PhotonVision getInstance() {
+        if (instance == null) instance = new PhotonVision("limelightCam");
+        return instance;
     }
 
     /*

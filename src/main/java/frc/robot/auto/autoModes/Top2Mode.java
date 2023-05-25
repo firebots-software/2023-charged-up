@@ -56,8 +56,6 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
             )
         );
 
-        stop();
-
     }
 
     public void setup(){
@@ -79,6 +77,7 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
             new ProfiledPIDController(AutonConstants.kPTurning, AutonConstants.kITurning, AutonConstants.kDTurning, AutonConstants.kThetaConstraints),
             m_swerve::setModuleStates,
             () -> false,
+            () -> false,
             m_swerve,
             m_photonVision
         );
@@ -91,14 +90,11 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
             new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
             new ProfiledPIDController(AutonConstants.kPTurning, AutonConstants.kITurning, AutonConstants.kDTurning, AutonConstants.kThetaConstraints),
             m_swerve::setModuleStates,
+            () -> false,
             () -> true,
             m_swerve,
             m_photonVision
         );  
-    }
-
-    public void stop(){
-        SmartDashboard.putBoolean("Auto finished", true);
     }
 
     public Pose2d getInitialPose(){

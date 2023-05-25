@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class DoNothingMode extends SequentialCommandGroup implements AutoModeBase {
     public DoNothingMode(){
         setup();
-        stop();
     }
 
     @Override
@@ -15,9 +14,6 @@ public class DoNothingMode extends SequentialCommandGroup implements AutoModeBas
         SmartDashboard.putBoolean("Auto finished", true);
         System.out.println("Auto finished!");
     }
-
-    @Override
-    public void stop() {}
 
     @Override
     public Pose2d getInitialPose() {

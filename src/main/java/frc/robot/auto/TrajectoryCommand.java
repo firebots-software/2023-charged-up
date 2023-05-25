@@ -1,8 +1,10 @@
 package frc.robot.auto;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.Constants.AutonConstants;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -37,8 +40,11 @@ public class TrajectoryCommand extends CommandBase {
 
   private final Supplier<Rotation2d> desiredRotation;
   private final Supplier<Boolean> wantsVisionRotationAlign;
+  private final Supplier<Boolean> wantsVisionTranslationAlign;
 
   private PathPlannerTrajectory transformedTrajectory;
+
+  private boolean targetDetected;
 
   private static SwerveSubsystem swerve;
   private static PhotonVision pv;
@@ -73,7 +79,7 @@ public class TrajectoryCommand extends CommandBase {
    *     the field.
    * @param requirements The subsystems to require.
    */
-  private TrajectoryCommand(
+  public TrajectoryCommand(
       PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       SwerveDriveKinematics kinematics,
@@ -82,6 +88,7 @@ public class TrajectoryCommand extends CommandBase {
       ProfiledPIDController rotationController,
       Consumer<SwerveModuleState[]> outputModuleStates,
       Supplier<Boolean> wantsVisionRotationAlign,
+      Supplier<Boolean> wantsVisionTranslationAlign,
       boolean useAllianceColor,
       Subsystem... requirements) {
     this.trajectory = trajectory;
@@ -91,7 +98,10 @@ public class TrajectoryCommand extends CommandBase {
     this.outputModuleStates = outputModuleStates;
     this.desiredRotation = () -> trajectory.getEndState().poseMeters.getRotation();
     this.wantsVisionRotationAlign = wantsVisionRotationAlign;
+    this.wantsVisionTranslationAlign = wantsVisionTranslationAlign;
     this.useAllianceColor = useAllianceColor;
+
+    this.targetDetected = false;
 
     addRequirements(requirements);
 
@@ -131,6 +141,7 @@ public class TrajectoryCommand extends CommandBase {
       ProfiledPIDController rotationController,
       Consumer<SwerveModuleState[]> outputModuleStates,
       Supplier<Boolean> wantsVisionRotationAlign,
+      Supplier<Boolean> wantsVisionTranslationAlign,
       Subsystem... requirements) {
     this(
         trajectory,
@@ -141,6 +152,7 @@ public class TrajectoryCommand extends CommandBase {
         rotationController,
         outputModuleStates,
         wantsVisionRotationAlign,
+        wantsVisionTranslationAlign,
         false,
         requirements);
   }
@@ -178,30 +190,50 @@ public class TrajectoryCommand extends CommandBase {
         new Pose2d(desiredPPState.poseMeters.getTranslation(), desiredPPState.holonomicRotation),
         currentPose);
 
-    // Check for vision alignment, and make necessary PID changes
+    
 
     var desiredState = this.trajectory.sample(currentTime);
-    Rotation2d desiredRotation = new Rotation2d();
+    Rotation2d desiredRotation = this.desiredRotation.get();
     
-    if (this.wantsVisionRotationAlign.get()){
-        if (pv.hasTarget(pv.getLatestPipeline())){
-            desiredRotation = Rotation2d.fromDegrees(
-                pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
-        } else {
-            desiredRotation = this.desiredRotation.get();
-        }
-    } else {
-        desiredRotation = this.desiredRotation.get();
+    // if (this.wantsVisionRotationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
+    //     desiredRotation = Rotation2d.fromDegrees(
+    //         pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));    
+    // } else {
+    //     desiredRotation = this.desiredRotation.get();
+    // }
+
+
+
+    // theoretical translation alignment
+    
+
+    if(this.wantsVisionTranslationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
+      if(!this.targetDetected){
+        double forwardDistToTarget = pv.getX();
+        double leftwardDistToTarget = pv.getY();
+        Translation2d distToTarget = new Translation2d(forwardDistToTarget, leftwardDistToTarget);
+        Rotation2d initialHeading = new Rotation2d(forwardDistToTarget, leftwardDistToTarget);
+        Rotation2d angleToTarget = new Rotation2d(pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
+        transformedTrajectory = 
+          PathPlanner.generatePath(
+            new PathConstraints(AutonConstants.kVMax, AutonConstants.kAMax),
+            new PathPoint(currentPose.getTranslation(), initialHeading, currentPose.getRotation(), desiredState.velocityMetersPerSecond),
+            new PathPoint(distToTarget, angleToTarget)
+          );
+        timer.restart();
+        this.targetDetected = true;
+      }
     }
 
-    // PID calculation
+    // PID calculation and setting swerve module states
 
     ChassisSpeeds targetChassisSpeeds =
-            this.controller.calculate(this.poseSupplier.get(), desiredState, desiredRotation);
+    this.controller.calculate(this.poseSupplier.get(), desiredState, desiredRotation);
     SwerveModuleState[] targetModuleStates = this.kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
     this.outputModuleStates.accept(targetModuleStates);
     
+    // Logging
 
     if (logTargetPose != null) {
       logTargetPose.accept(

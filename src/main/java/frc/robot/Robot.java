@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     swerveSubsystem = SwerveSubsystem.getInstance();
     armSubsystem = ArmSubsystem.getInstance();
-    frontLimelight = PhotonVision.getFrontCam();
+    frontLimelight = PhotonVision.getInstance();
     // backLimelight = PhotonVision.getBackCam();
     clawSubsystem = ClawSubsystem.getInstance();
     frontWebcam = Webcam.getFrontWebcam();

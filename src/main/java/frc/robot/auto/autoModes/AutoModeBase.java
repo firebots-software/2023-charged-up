@@ -6,7 +6,5 @@ public interface AutoModeBase {
     
     public abstract void setup();
 
-    public abstract void stop();
-
     public abstract Pose2d getInitialPose();
 }

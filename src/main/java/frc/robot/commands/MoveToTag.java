@@ -139,7 +139,6 @@ public class MoveToTag extends CommandBase {
 
   @Override
   public Set<Subsystem> getRequirements() {
-    // TODO Auto-generated method stub
     return Set.of(ss, frontCam);
   }
 

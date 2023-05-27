@@ -206,23 +206,22 @@ public class TrajectoryCommand extends CommandBase {
 
     // theoretical translation alignment
     
-
+if(!this.targetDetected){
     if(this.wantsVisionTranslationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
-      if(!this.targetDetected){
-        double forwardDistToTarget = pv.getX();
-        double leftwardDistToTarget = pv.getY();
-        Translation2d distToTarget = new Translation2d(forwardDistToTarget, leftwardDistToTarget);
-        Rotation2d initialHeading = new Rotation2d(forwardDistToTarget, leftwardDistToTarget);
-        Rotation2d angleToTarget = new Rotation2d(pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
-        transformedTrajectory = 
-          PathPlanner.generatePath(
-            new PathConstraints(AutonConstants.kVMax, AutonConstants.kAMax),
-            new PathPoint(currentPose.getTranslation(), initialHeading, currentPose.getRotation(), desiredState.velocityMetersPerSecond),
-            new PathPoint(distToTarget, angleToTarget)
-          );
-        timer.restart();
-        this.targetDetected = true;
-      }
+      double forwardDistToTarget = pv.getX();
+      double leftwardDistToTarget = pv.getY();
+      Translation2d distToTarget = new Translation2d(forwardDistToTarget, leftwardDistToTarget);
+      Rotation2d initialHeading = new Rotation2d(forwardDistToTarget, leftwardDistToTarget);
+      Rotation2d angleToTarget = new Rotation2d(pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
+      transformedTrajectory = 
+        PathPlanner.generatePath(
+          new PathConstraints(AutonConstants.kVMax, AutonConstants.kAMax),
+          new PathPoint(currentPose.getTranslation(), initialHeading, currentPose.getRotation(), desiredState.velocityMetersPerSecond),
+          new PathPoint(currentPose.getTranslation().plus(distToTarget), angleToTarget)
+        );
+      timer.restart();
+      this.targetDetected = true;
+      }   
     }
 
     // PID calculation and setting swerve module states

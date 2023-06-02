@@ -25,12 +25,15 @@ import frc.robot.commandGroups.PickupFromGround;
 
 public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
 
+    private final String fileName = "Top 2";
+   
+
     private final SwerveSubsystem m_swerve = SwerveSubsystem.getInstance();
     private final PhotonVision m_photonVision = PhotonVision.getInstance();
     private final ArmSubsystem m_arm = ArmSubsystem.getInstance();
     private final ClawSubsystem m_claw = ClawSubsystem.getInstance();
     
-    private final String fileName = "Top 2";
+    
 
     private PathPlannerTrajectory traj_path_a;
     private PathPlannerTrajectory traj_path_b;
@@ -59,8 +62,8 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
     }
 
     public void setup(){
-        
-        SmartDashboard.putBoolean("Auto finished", false);
+
+        setName(fileName);
 
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(
             fileName, Constants.AutonConstants.kVMax, Constants. AutonConstants.kAMax);
@@ -78,6 +81,7 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
             m_swerve::setModuleStates,
             () -> false,
             () -> false,
+            0.4,
             m_swerve,
             m_photonVision
         );
@@ -92,6 +96,7 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
             m_swerve::setModuleStates,
             () -> false,
             () -> true,
+            0.4,
             m_swerve,
             m_photonVision
         );  
@@ -100,6 +105,11 @@ public class Top2Mode extends SequentialCommandGroup implements AutoModeBase{
     public Pose2d getInitialPose(){
         return traj_path_a.getInitialPose();
     }
+
+    public String getFileName(){
+        return fileName;
+    }
+
 
 
 }

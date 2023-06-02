@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DoNothingMode extends SequentialCommandGroup implements AutoModeBase {
+
+    private final String fileName = "";
+
     public DoNothingMode(){
         setup();
     }
@@ -19,4 +22,9 @@ public class DoNothingMode extends SequentialCommandGroup implements AutoModeBas
     public Pose2d getInitialPose() {
         return null;
     }
+
+    public String getFileName(){
+        return fileName;
+    }
+    
 }

@@ -169,20 +169,22 @@ public class RobotContainer {
   // this value as a decimal to multiply and control the speed of the robot.
 
   public static void initializeAuton() {
-    startPosChooser.setDefaultOption("Just Score", StartingPositionOptions.JUST_SCORE);
-    startPosChooser.addOption("Top", StartingPositionOptions.TOP);
-    startPosChooser.addOption("Middle", StartingPositionOptions.MIDDLE);
-    startPosChooser.addOption("Bottom", StartingPositionOptions.BOTTOM);
+    // startPosChooser.setDefaultOption("Just Score", StartingPositionOptions.JUST_SCORE);
+    // startPosChooser.addOption("Top", StartingPositionOptions.TOP);
+    // startPosChooser.addOption("Middle", StartingPositionOptions.MIDDLE);
+    // startPosChooser.addOption("Bottom", StartingPositionOptions.BOTTOM);
 
-    piecesChooser.setDefaultOption("1 Piece Scoring", PiecesScoredOptions.ONE);
-    piecesChooser.addOption("2 Piece Scoring", PiecesScoredOptions.TWO);
+    // piecesChooser.setDefaultOption("1 Piece Scoring", PiecesScoredOptions.ONE);
+    // piecesChooser.addOption("2 Piece Scoring", PiecesScoredOptions.TWO);
 
-    chargeStationChooser.setDefaultOption("Charge Station", ChargeStationOptions.CHARGE);
-    chargeStationChooser.addOption("No Charge Station", ChargeStationOptions.NO_CHARGE);
+    // chargeStationChooser.setDefaultOption("Charge Station", ChargeStationOptions.CHARGE);
+    // chargeStationChooser.addOption("No Charge Station", ChargeStationOptions.NO_CHARGE);
 
-    SmartDashboard.putData("Auton: Starting Position Options", startPosChooser);
-    SmartDashboard.putData("Auton: Number of Pieces Options", piecesChooser);
-    SmartDashboard.putData("Auton: Charge Station Options", chargeStationChooser);
+    // SmartDashboard.putData("Auton: Starting Position Options", startPosChooser);
+    // SmartDashboard.putData("Auton: Number of Pieces Options", piecesChooser);
+    // SmartDashboard.putData("Auton: Charge Station Options", chargeStationChooser);
+
+    
   }
 
   /**

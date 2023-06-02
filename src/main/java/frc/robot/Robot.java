@@ -61,6 +61,8 @@ public class Robot extends TimedRobot {
     swerveSubsystem.zeroPitch();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
+    SmartDashboard.putBoolean("Auto finished (" + m_autonomousCommand.getName() + ")", false);
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -70,6 +72,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
     SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());
+    SmartDashboard.putBoolean("Auto finished (" + m_autonomousCommand.getName() + ")", m_autonomousCommand.isFinished());
   }
 
   @Override

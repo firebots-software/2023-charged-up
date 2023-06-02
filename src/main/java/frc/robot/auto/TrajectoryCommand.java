@@ -45,6 +45,7 @@ public class TrajectoryCommand extends CommandBase {
   private PathPlannerTrajectory transformedTrajectory;
 
   private boolean targetDetected;
+  private double alignWaitTime;
 
   private static SwerveSubsystem swerve;
   private static PhotonVision pv;
@@ -73,7 +74,8 @@ public class TrajectoryCommand extends CommandBase {
    * @param yController The Trajectory Tracker PID controller for the robot's y position.
    * @param rotationController The Trajectory Tracker PID controller for angle for the robot.
    * @param outputModuleStates The raw output module states from the position controllers.
-   * @param wantsVisionRotationAlign Does the trajectory ever align with a vision target?
+   * @param wantsVisionTranslationAlign Whether the trajectory ends with a vision target.
+   * @param alignWaitTime Time to wait BEFORE beginning vision alignment process. Useful for not overriding the generated path preemptively.
    * @param useAllianceColor Should the path states be automatically transformed based on alliance
    *     color? In order for this to work properly, you MUST create your path on the blue side of
    *     the field.
@@ -89,6 +91,7 @@ public class TrajectoryCommand extends CommandBase {
       Consumer<SwerveModuleState[]> outputModuleStates,
       Supplier<Boolean> wantsVisionRotationAlign,
       Supplier<Boolean> wantsVisionTranslationAlign,
+      double alignWaitTime,
       boolean useAllianceColor,
       Subsystem... requirements) {
     this.trajectory = trajectory;
@@ -130,6 +133,8 @@ public class TrajectoryCommand extends CommandBase {
    * @param yController The Trajectory Tracker PID controller for the robot's y position.
    * @param rotationController The Trajectory Tracker PID controller for angle for the robot.
    * @param outputModuleStates The raw output module states from the position controllers.
+   * @param wantsVisionTranslationAlign Whether the trajectory ends with a vision target.
+   * @param alignWaitTime Time to wait BEFORE beginning vision alignment process. Useful for not overriding the generated path preemptively.
    * @param requirements The subsystems to require.
    */
   public TrajectoryCommand(
@@ -142,6 +147,7 @@ public class TrajectoryCommand extends CommandBase {
       Consumer<SwerveModuleState[]> outputModuleStates,
       Supplier<Boolean> wantsVisionRotationAlign,
       Supplier<Boolean> wantsVisionTranslationAlign,
+      double alignWaitTime,
       Subsystem... requirements) {
     this(
         trajectory,
@@ -153,6 +159,7 @@ public class TrajectoryCommand extends CommandBase {
         outputModuleStates,
         wantsVisionRotationAlign,
         wantsVisionTranslationAlign,
+        alignWaitTime,
         false,
         requirements);
   }
@@ -173,6 +180,7 @@ public class TrajectoryCommand extends CommandBase {
 
     timer.reset();
     timer.start();
+    swerve.resetOdometry(this.trajectory.sample(0).poseMeters);
 
     PathPlannerServer.sendActivePath(transformedTrajectory.getStates());
   }
@@ -207,17 +215,17 @@ public class TrajectoryCommand extends CommandBase {
     // theoretical translation alignment
     
 if(!this.targetDetected){
-    if(this.wantsVisionTranslationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
+    if(timer.hasElapsed(alignWaitTime) && this.wantsVisionTranslationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
       double forwardDistToTarget = pv.getX();
       double leftwardDistToTarget = pv.getY();
       Translation2d distToTarget = new Translation2d(forwardDistToTarget, leftwardDistToTarget);
       Rotation2d initialHeading = new Rotation2d(forwardDistToTarget, leftwardDistToTarget);
-      Rotation2d angleToTarget = new Rotation2d(pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
+      Rotation2d angleToTarget = Rotation2d.fromDegrees(-pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
       transformedTrajectory = 
         PathPlanner.generatePath(
           new PathConstraints(AutonConstants.kVMax, AutonConstants.kAMax),
           new PathPoint(currentPose.getTranslation(), initialHeading, currentPose.getRotation(), desiredState.velocityMetersPerSecond),
-          new PathPoint(currentPose.getTranslation().plus(distToTarget), angleToTarget)
+          new PathPoint(distToTarget, angleToTarget)
         );
       timer.restart();
       this.targetDetected = true;

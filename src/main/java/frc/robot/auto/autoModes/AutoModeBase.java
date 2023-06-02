@@ -7,4 +7,7 @@ public interface AutoModeBase {
     public abstract void setup();
 
     public abstract Pose2d getInitialPose();
+
+    public abstract String getFileName();
+
 }

@@ -225,7 +225,7 @@ if(!this.targetDetected){
         PathPlanner.generatePath(
           new PathConstraints(AutonConstants.kVMax, AutonConstants.kAMax),
           new PathPoint(currentPose.getTranslation(), initialHeading, currentPose.getRotation(), desiredState.velocityMetersPerSecond),
-          new PathPoint(distToTarget, angleToTarget)
+          new PathPoint(currentPose.getTranslation().plus(distToTarget), angleToTarget)
         );
       timer.restart();
       this.targetDetected = true;

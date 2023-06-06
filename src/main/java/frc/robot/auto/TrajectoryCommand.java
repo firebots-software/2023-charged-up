@@ -37,7 +37,7 @@ public class TrajectoryCommand extends CommandBase {
   private final HolonomicDriveController controller;
   private final Consumer<SwerveModuleState[]> outputModuleStates;
   private final boolean useAllianceColor;
-
+  private final double alignWaitTime;
   private final Supplier<Rotation2d> desiredRotation;
   private final Supplier<Boolean> wantsVisionRotationAlign;
   private final Supplier<Boolean> wantsVisionTranslationAlign;
@@ -45,7 +45,7 @@ public class TrajectoryCommand extends CommandBase {
   private PathPlannerTrajectory transformedTrajectory;
 
   private boolean targetDetected;
-  private double alignWaitTime;
+  
 
   private static SwerveSubsystem swerve;
   private static PhotonVision pv;
@@ -102,7 +102,9 @@ public class TrajectoryCommand extends CommandBase {
     this.desiredRotation = () -> trajectory.getEndState().poseMeters.getRotation();
     this.wantsVisionRotationAlign = wantsVisionRotationAlign;
     this.wantsVisionTranslationAlign = wantsVisionTranslationAlign;
+    this.alignWaitTime = alignWaitTime;
     this.useAllianceColor = useAllianceColor;
+    
 
     this.targetDetected = false;
 
@@ -214,19 +216,26 @@ public class TrajectoryCommand extends CommandBase {
 
     // theoretical translation alignment
     
-if(!this.targetDetected){
+if(!this.targetDetected){ // Only generates the new path ONCE
+
+    // Passed wait time and wants to align to a target and limelight can see a target.
     if(timer.hasElapsed(alignWaitTime) && this.wantsVisionTranslationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
+      
       double forwardDistToTarget = pv.getX();
       double leftwardDistToTarget = pv.getY();
       Translation2d distToTarget = new Translation2d(forwardDistToTarget, leftwardDistToTarget);
       Rotation2d initialHeading = new Rotation2d(forwardDistToTarget, leftwardDistToTarget);
       Rotation2d angleToTarget = Rotation2d.fromDegrees(-pv.getYaw(pv.getBestTarget(pv.getLatestPipeline())));
+      
+      // New path angled toward vision target
       transformedTrajectory = 
         PathPlanner.generatePath(
           new PathConstraints(AutonConstants.kVMax, AutonConstants.kAMax),
           new PathPoint(currentPose.getTranslation(), initialHeading, currentPose.getRotation(), desiredState.velocityMetersPerSecond),
           new PathPoint(currentPose.getTranslation().plus(distToTarget), angleToTarget)
         );
+      
+      // Restart timer because we are running a "new" path
       timer.restart();
       this.targetDetected = true;
       }   

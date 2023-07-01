@@ -30,6 +30,9 @@ import java.util.function.Supplier;
 
 /** Custom PathPlanner version of SwerveControllerCommand */
 public class TrajectoryCommand extends CommandBase {
+
+  // Parameters
+
   private final Timer timer = new Timer();
   private final PathPlannerTrajectory trajectory;
   private final Supplier<Pose2d> poseSupplier;
@@ -39,16 +42,18 @@ public class TrajectoryCommand extends CommandBase {
   private final boolean useAllianceColor;
   private final double alignWaitTime;
   private final Supplier<Rotation2d> desiredRotation;
-  private final Supplier<Boolean> wantsVisionRotationAlign;
-  private final Supplier<Boolean> wantsVisionTranslationAlign;
+  private final Supplier<Boolean> visionTranslationOverride;
 
   private PathPlannerTrajectory transformedTrajectory;
 
   private boolean targetDetected;
   
+  // Subsystems
 
   private static SwerveSubsystem swerve;
   private static PhotonVision pv;
+
+  // Logging
 
   private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
   private static Consumer<Pose2d> logTargetPose = null;
@@ -74,7 +79,7 @@ public class TrajectoryCommand extends CommandBase {
    * @param yController The Trajectory Tracker PID controller for the robot's y position.
    * @param rotationController The Trajectory Tracker PID controller for angle for the robot.
    * @param outputModuleStates The raw output module states from the position controllers.
-   * @param wantsVisionTranslationAlign Whether the trajectory ends with a vision target.
+   * @param visionTranslationOverride Whether the trajectory ends with a vision target.
    * @param alignWaitTime Time to wait BEFORE beginning vision alignment process. Useful for not overriding the generated path preemptively.
    * @param useAllianceColor Should the path states be automatically transformed based on alliance
    *     color? In order for this to work properly, you MUST create your path on the blue side of
@@ -89,8 +94,7 @@ public class TrajectoryCommand extends CommandBase {
       PIDController yController,
       ProfiledPIDController rotationController,
       Consumer<SwerveModuleState[]> outputModuleStates,
-      Supplier<Boolean> wantsVisionRotationAlign,
-      Supplier<Boolean> wantsVisionTranslationAlign,
+      Supplier<Boolean> visionTranslationOverride,
       double alignWaitTime,
       boolean useAllianceColor,
       Subsystem... requirements) {
@@ -100,8 +104,7 @@ public class TrajectoryCommand extends CommandBase {
     this.controller = new HolonomicDriveController(xController, yController, rotationController);
     this.outputModuleStates = outputModuleStates;
     this.desiredRotation = () -> trajectory.getEndState().poseMeters.getRotation();
-    this.wantsVisionRotationAlign = wantsVisionRotationAlign;
-    this.wantsVisionTranslationAlign = wantsVisionTranslationAlign;
+    this.visionTranslationOverride = visionTranslationOverride;
     this.alignWaitTime = alignWaitTime;
     this.useAllianceColor = useAllianceColor;
     
@@ -135,7 +138,7 @@ public class TrajectoryCommand extends CommandBase {
    * @param yController The Trajectory Tracker PID controller for the robot's y position.
    * @param rotationController The Trajectory Tracker PID controller for angle for the robot.
    * @param outputModuleStates The raw output module states from the position controllers.
-   * @param wantsVisionTranslationAlign Whether the trajectory ends with a vision target.
+   * @param visionTranslationOverride Whether the trajectory ends with a vision target.
    * @param alignWaitTime Time to wait BEFORE beginning vision alignment process. Useful for not overriding the generated path preemptively.
    * @param requirements The subsystems to require.
    */
@@ -147,8 +150,7 @@ public class TrajectoryCommand extends CommandBase {
       PIDController yController,
       ProfiledPIDController rotationController,
       Consumer<SwerveModuleState[]> outputModuleStates,
-      Supplier<Boolean> wantsVisionRotationAlign,
-      Supplier<Boolean> wantsVisionTranslationAlign,
+      Supplier<Boolean> visionTranslationOverride,
       double alignWaitTime,
       Subsystem... requirements) {
     this(
@@ -159,8 +161,7 @@ public class TrajectoryCommand extends CommandBase {
         yController,
         rotationController,
         outputModuleStates,
-        wantsVisionRotationAlign,
-        wantsVisionTranslationAlign,
+        visionTranslationOverride,
         alignWaitTime,
         false,
         requirements);
@@ -219,7 +220,7 @@ public class TrajectoryCommand extends CommandBase {
 if(!this.targetDetected){ // Only generates the new path ONCE
 
     // Passed wait time and wants to align to a target and limelight can see a target.
-    if(timer.hasElapsed(alignWaitTime) && this.wantsVisionTranslationAlign.get() && pv.hasTarget(pv.getLatestPipeline())){
+    if(timer.hasElapsed(alignWaitTime) && this.visionTranslationOverride.get() && pv.hasTarget(pv.getLatestPipeline())){
       
       double forwardDistToTarget = pv.getX();
       double leftwardDistToTarget = pv.getY();

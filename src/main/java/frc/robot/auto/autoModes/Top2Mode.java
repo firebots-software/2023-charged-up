@@ -70,6 +70,8 @@ public class Top2Mode extends AutoModeBase {
                 
                 
 
+                new InstantCommand(() -> this.stop());
+
     }
 
     public InstantCommand setup() {
@@ -87,35 +89,33 @@ public class Top2Mode extends AutoModeBase {
                 traj_driveToFirstCargo = pathGroup.get(0);
                 traj_driveToGrid = pathGroup.get(1);
 
-                driveToFirstCargo = new TrajectoryCommand(
-                        traj_driveToFirstCargo,
-                        m_swerve::getPose,
-                        Constants.DriveConstants.kDriveKinematics,
-                        new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
-                        new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
-                        new ProfiledPIDController(AutonConstants.kPTurning, AutonConstants.kITurning,
-                                AutonConstants.kDTurning, AutonConstants.kThetaConstraints),
-                        m_swerve::setModuleStates,
-                        () -> false,
-                        () -> false,
-                        0.4,
-                        m_swerve,
-                        m_photonVision);
+            driveToFirstCargo = new TrajectoryCommand(
+                    traj_driveToFirstCargo,
+                    m_swerve::getPose,
+                    Constants.DriveConstants.kDriveKinematics,
+                    new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
+                    new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
+                    new ProfiledPIDController(AutonConstants.kPTurning, AutonConstants.kITurning,
+                            AutonConstants.kDTurning, AutonConstants.kThetaConstraints),
+                    m_swerve::setModuleStates,
+                    () -> false,
+                    0.4,
+                    m_swerve,
+                    m_photonVision);
 
-                driveToGrid = new TrajectoryCommand(
-                        traj_driveToGrid,
-                        m_swerve::getPose,
-                        Constants.DriveConstants.kDriveKinematics,
-                        new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
-                        new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
-                        new ProfiledPIDController(AutonConstants.kPTurning, AutonConstants.kITurning,
-                                AutonConstants.kDTurning, AutonConstants.kThetaConstraints),
-                        m_swerve::setModuleStates,
-                        () -> false,
-                        () -> true,
-                        0.4,
-                        m_swerve,
-                        m_photonVision);
+            driveToGrid = new TrajectoryCommand(
+                    traj_driveToGrid,
+                    m_swerve::getPose,
+                    Constants.DriveConstants.kDriveKinematics,
+                    new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
+                    new PIDController(AutonConstants.kPDriving, AutonConstants.kIDriving, AutonConstants.kDDriving),
+                    new ProfiledPIDController(AutonConstants.kPTurning, AutonConstants.kITurning,
+                            AutonConstants.kDTurning, AutonConstants.kThetaConstraints),
+                    m_swerve::setModuleStates,
+                    () -> true,
+                    0.4,
+                    m_swerve,
+                    m_photonVision);
 
                 } else {
                 System.out.println("Error loading path group of '" + fileName + "'. Check that the file name is spelled currently and does not include '.path'");
@@ -136,7 +136,5 @@ public class Top2Mode extends AutoModeBase {
     public String getFileName() {
         return fileName;
     }
-
-
 
 }

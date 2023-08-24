@@ -4,47 +4,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClawSubsystem;
-import frc.robot.subsystems.LightsSubsystem;
-import frc.robot.subsystems.PhotonVision;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.Webcam;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private SwerveSubsystem swerveSubsystem;
-  //private ArmSubsystem armSubsystem;
-  //private ClawSubsystem clawSubsystem;
-  private Webcam frontWebcam, backWebcam;
-  private PhotonVision frontLimelight, backLimelight;
-  private LightsSubsystem frontLed, backLed;
-
-  private AddressableLED m_led;
-  private AddressableLEDBuffer m_ledBuffer;
-
   private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    swerveSubsystem = SwerveSubsystem.getInstance();
-    //armSubsystem = ArmSubsystem.getInstance();
-    frontLimelight = PhotonVision.getFrontCam();
-    // backLimelight = PhotonVision.getBackCam();
-    //clawSubsystem = ClawSubsystem.getInstance();
-    frontWebcam = Webcam.getFrontWebcam();
-    backWebcam = Webcam.getBackWebcam();
-    frontLed = LightsSubsystem.getFrontLed();
-    backLed = LightsSubsystem.getBackLed();
 
     DataLogManager.start();
   }
@@ -56,13 +27,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    onInit();
   }
 
   @Override
-  public void disabledPeriodic() {
-    m_robotContainer.printAuton();
-  }
+  public void disabledPeriodic() {}
 
   @Override
   public void disabledExit() {
@@ -70,9 +38,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    //armSubsystem.unZero();
-    onInit();
-    swerveSubsystem.zeroPitch();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -83,8 +48,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    SmartDashboard.putNumber("poseX", swerveSubsystem.getPose().getX());
-    SmartDashboard.putNumber("poseY", swerveSubsystem.getPose().getY());
   }
 
   @Override
@@ -93,13 +56,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    DataLogManager.log("Starting teleop!");
-    onInit();
-    //armSubsystem.unZero();
-    swerveSubsystem.setHeading(180);
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
   }
 
   @Override
@@ -122,11 +78,4 @@ public class Robot extends TimedRobot {
   @Override
   public void testExit() {
   }
-
-  public void onInit() {
-    //armSubsystem._frictionBreakOn();
-    //clawSubsystem.close();
-    swerveSubsystem.zeroHeading();
-  }
-
 }

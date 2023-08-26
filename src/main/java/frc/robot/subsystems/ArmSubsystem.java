@@ -8,26 +8,21 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
   private static ArmSubsystem instance;
-  private boolean canExtend, canExtend2, canRetract;
+  private boolean canExtend, canExtend2;
 
   // rotating
   private WPI_TalonFX rotatingMotor;
@@ -72,8 +67,6 @@ public class ArmSubsystem extends SubsystemBase {
     armLog = new StringLogEntry(DataLogManager.getLog(), "/log/arm/potLog");
 
     extendingMotor.setSelectedSensorPosition(0);
-
-    canRetract = true;
   }
 
   public static ArmSubsystem getInstance() {
@@ -208,7 +201,6 @@ public class ArmSubsystem extends SubsystemBase {
 
 
     SmartDashboard.putNumber("keep arm speed", speed);
-    canRetract = true;
     stopped = false;
     extendingMotor.set(speed);
   }

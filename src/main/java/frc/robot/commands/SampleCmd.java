@@ -1,19 +1,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class SampleCmd extends CommandBase {
     // private subsystem instances or internal variables go here.
+    private SwerveSubsystem swerve;
 
-    public SampleCmd() {
+    public SampleCmd(SwerveSubsystem swerve) {
         // initialize your command,
         // set internal variables with constructor args,
         // or set subsystem instances. 
+        this.swerve = swerve;
 
         // put any subsystems this command uses as arguments to addRequirements.
         // this ensures that two commands running at the same time 
         // won't fight over control of the same subsystem.
-        addRequirements();
+        addRequirements(swerve);
     }
 
     @Override

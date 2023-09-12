@@ -25,6 +25,15 @@ public class SwerveModule extends SubsystemBase {
     private final double absoluteEncoderOffsetRad;
     private final double absoluteDriveEncoderOffset;
 
+    /**
+     * Constructor for 
+     * @param driveMotorId
+     * @param turningMotorId
+     * @param CANCoderId
+     * @param driveMotorReversed
+     * @param turningMotorReversed
+     * @param absoluteEncoderOffset
+     */
     public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed, double absoluteEncoderOffset) {
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;

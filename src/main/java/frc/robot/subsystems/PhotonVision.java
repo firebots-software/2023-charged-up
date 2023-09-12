@@ -45,16 +45,25 @@ public class PhotonVision extends SubsystemBase{
         return pvInstance;
     }
 
-    //Have to use the same pipeline result each time you want to gather data.
-    //Gets the processed data from the camera
+    /**
+     * have to use same pipeline result each time you want to gather data
+     * gets the processed data from the camera
+     * @return the latest pipeline result
+     */
     public PhotonPipelineResult getLatestPipeline(){
         return camera.getLatestResult();
     }
+    
     //Checks if there is a target in vision
     public boolean hasTarget(PhotonPipelineResult result){
         return result.hasTargets();
     }
 
+    /**
+     * gets the targets
+     * @param result stores data
+     * @returna copy of the vector of targets
+     */
     public List<PhotonTrackedTarget> getTargets(PhotonPipelineResult result){
         return result.getTargets();
     }

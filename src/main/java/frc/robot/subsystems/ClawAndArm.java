@@ -17,11 +17,18 @@ public class ClawAndArm extends SubsystemBase {
     private TalonFX rotationMotor; //subject to change
     private TalonFX extendingMotor; //subject to change
    
+    /**
+     * Constructor creates a new potentiometer and a new solenoidxs
+     */
     public ClawAndArm() {
         pot = new AnalogPotentiometer(clawConstants.POTENTIOMETER_CANID, clawConstants.MAX_RESISTANCE, clawConstants.ANGLE_OFFSET); // double check values
         piston = new Solenoid(PneumaticsModuleType.CTREPCM, clawConstants.PISTON_CANID);
     }
    
+    /**
+     * Gets singleton instance of the ClawAndArm class
+     * @return A singleton ClawAndArm class
+     */
     public static ClawAndArm getInstance() {
         if (instance == null) {
           instance = new ClawAndArm();
@@ -35,7 +42,10 @@ public class ClawAndArm extends SubsystemBase {
     public void setRotatingMotor(double speed) {
         rotationMotor.set(ControlMode.PercentOutput, speed);
     }
-   
+    /**
+     * It sets the speed for the extending motor of the arm
+     * @param speed Double input the desired speed of the motor
+     */
     public void setExtendingMotor(double speed) {
         extendingMotor.set(ControlMode.PercentOutput, speed);
     }

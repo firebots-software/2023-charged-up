@@ -25,6 +25,15 @@ public class SwerveModule extends SubsystemBase {
     private final double absoluteEncoderOffsetRad;
     private final double absoluteDriveEncoderOffset;
 
+    /**
+     * Constructor for one Swerve Module
+     * @param driveMotorId The port that the drive motor is connected to on the robot
+     * @param turningMotorId The port that the turning motor is connected to on the robot
+     * @param CANCoderId The port that the CANCoder is connected to on the robot
+     * @param driveMotorReversed Sets driving motor to inverse. Inverts direction of a speed controller.
+     * @param turningMotorReversed Sets turning motor to inverse. Inverts direction of a speed controller.
+     * @param absoluteEncoderOffset The offset of the turning motor. Ensures that the motor is zero'd to the correct position.
+     */
     public SwerveModule(int driveMotorId, int turningMotorId, int CANCoderId, boolean driveMotorReversed, boolean turningMotorReversed, double absoluteEncoderOffset) {
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
@@ -63,6 +72,10 @@ public class SwerveModule extends SubsystemBase {
         return turningEncoder.getVelocity();
     }
 
+    /**
+     * Gets the current state of the module. 
+     * @return a Swerve Module state. The state includes turning motor position and drive motor speed.
+     */
     public SwerveModuleState getState() {
         // * 10d because getSelectedSensorVelocity() returns ticks/100ms; 
         return new SwerveModuleState(driveMotor.getSelectedSensorVelocity() * 10d * Constants.ModuleConstants.kDriveEncoderTicks2Meter, new Rotation2d(getTurningPosition()));
@@ -82,6 +95,10 @@ public class SwerveModule extends SubsystemBase {
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
     }
 
+    /**
+     * The position of the drive motor and turning motor.
+     * @return The number of meters that the drive motor travelled and the angle of the turning motor in radians.
+     */
     public SwerveModulePosition getModulePosition() {
         return new SwerveModulePosition((driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset) * Constants.ModuleConstants.kDriveEncoderTicks2Meter, getState().angle);
     }
@@ -108,6 +125,10 @@ public class SwerveModule extends SubsystemBase {
     */
     }
 
+    /**
+     * The current position of the drive motor
+     * @return The number of ticks that the drive motor has traveled. We are not subtracting Offset here.
+     */
     public double getPosition(){
         return driveMotor.getSelectedSensorPosition();
     }
@@ -119,6 +140,10 @@ public class SwerveModule extends SubsystemBase {
         driveMotor.set(speed);
     }
 
+    /**
+     * The current position of the drive motor
+     * @return The number of ticks that the drive motor has traveled. EncoderOffset is taken into account here.
+     */
     public double getDrivingTickValues(){
         return (driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset);
     }

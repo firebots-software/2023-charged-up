@@ -57,17 +57,17 @@ public class SwerveModule extends SubsystemBase {
 
         absoluteDriveEncoderOffset = driveMotor.getSelectedSensorPosition();
     }
-/**
- * 
- * @return the aboslute position of the encoder after applying the offset (zeros it)
- */
+    /**
+     * 
+     * @return the aboslute position of the encoder after applying the offset (zeros it)
+     */
     public double getTurningPosition() {
         return turningEncoder.getAbsolutePosition() - absoluteEncoderOffsetRad;
     }
- /**
-  * 
-  * @return the velocity of the encoder
-  */   
+    /**
+     * 
+    * @return the velocity of the encoder
+    */   
     public double getTurningVelocity() {
         return turningEncoder.getVelocity();
     }
@@ -80,11 +80,11 @@ public class SwerveModule extends SubsystemBase {
         // * 10d because getSelectedSensorVelocity() returns ticks/100ms; 
         return new SwerveModuleState(driveMotor.getSelectedSensorVelocity() * 10d * Constants.ModuleConstants.kDriveEncoderTicks2Meter, new Rotation2d(getTurningPosition()));
     }
-/**
- * sets the state module to a desired speed and desired rotation by taking in current value and dividing it by drive constants max speed (4.5106)
- * sets the new rotation value by taking in current by the constant in radians 
- * @param state is a swerve module with the current state of speed and rotation
- */
+    /**
+     * sets the state module to a desired speed and desired rotation by taking in current value and dividing it by drive constants max speed (4.5106)
+     * sets the new rotation value by taking in current by the constant in radians 
+     * @param state is a swerve module with the current state of speed and rotation
+     */
     public void setDesiredState(SwerveModuleState state) {
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
@@ -102,9 +102,9 @@ public class SwerveModule extends SubsystemBase {
     public SwerveModulePosition getModulePosition() {
         return new SwerveModulePosition((driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset) * Constants.ModuleConstants.kDriveEncoderTicks2Meter, getState().angle);
     }
-/** 
- * stops the motor by setting the rotation and speed to 0.
- */
+    /** 
+     * stops the motor by setting the rotation and speed to 0.
+     */
     public void stop() {
         driveMotor.set(0);
         turningMotor.set(0);
@@ -132,10 +132,10 @@ public class SwerveModule extends SubsystemBase {
     public double getPosition(){
         return driveMotor.getSelectedSensorPosition();
     }
-/**
- * takes in a speed and sets the motor value to that
- * @param speed a double value of the desired speed
- */
+    /**
+     * takes in a speed and sets the motor value to that
+     * @param speed a double value of the desired speed
+     */
     public void setMotor(double speed){
         driveMotor.set(speed);
     }
@@ -147,10 +147,10 @@ public class SwerveModule extends SubsystemBase {
     public double getDrivingTickValues(){
         return (driveMotor.getSelectedSensorPosition()-absoluteDriveEncoderOffset);
     }
-/**
- * setting the drive motor to certain number of ticks
- * @param val desired value of ticks
- */
+    /**
+     * setting the drive motor to certain number of ticks
+     * @param val desired value of ticks
+     */
     public void setDrivingTickValues(double val){
         driveMotor.setSelectedSensorPosition(val);
     }

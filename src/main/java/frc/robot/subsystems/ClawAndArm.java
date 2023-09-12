@@ -28,39 +28,40 @@ public class ClawAndArm extends SubsystemBase {
         }
         return instance;
     }
-
+    /**
+     * Sets speed for the arm rotation motor
+     * @param speed speed for the rotation motor
+     */
     public void setRotatingMotor(double speed) {
         rotationMotor.set(ControlMode.PercentOutput, speed);
     }
-
+   
     public void setExtendingMotor(double speed) {
         extendingMotor.set(ControlMode.PercentOutput, speed);
     }
-
+    /**
+     * gets the voltage of the potentiometer depending on the angle of the arm
+     * @return voltage of potentiometer in that position
+     */
     public double getVoltage() {
         return pot.get();
     }
-
+    /**
+     * angle is calculated from the voltage from the potentiometer
+     * @return angle of the arm
+     */
     public double getAngle() {
         return getVoltage() * clawConstants.VOLTAGE_TO_ANGLE_CONSTANT; //to be calculated
     }
-    /*
-     * close the claw
-     */
+
     public void closeClaw() {
         piston.set(true);
     }
 
-    /*
-     * open the claw
-     */
     public void openClaw() {
         piston.set(false);
     } 
 
-    /*
-     * toggles state to opposite of current state
-     */
     public void toggleClaw(){
         piston.set(!piston.get());
     }

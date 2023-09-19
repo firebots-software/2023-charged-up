@@ -57,6 +57,11 @@ public class SwerveSubsystem extends SubsystemBase {
         getModulePositions()
     );
 
+    /**
+     * Constructor:
+     * Makes a new thread,
+     * and attempts to call zeroHeading().
+     */
     public SwerveSubsystem() {
         new Thread(() -> {
             try {
@@ -68,19 +73,33 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     
-
+    /**
+     * Sets the gyro yaw to 0
+     */
     public void zeroHeading() {
         gyro.setYaw(0);
     }
 
+    /**
+     * 
+     * @return The current yaw of the gyro, in degrees.
+     */
     public double getHeading() {
         return Math.IEEEremainder(gyro.getYaw(), 360); // TODO: maybe should be negative?
     }
 
+    /**
+     * 
+     * @return The pitch of the gyro (how leans up and down)
+     */
     public double getPitch() {
         return gyro.getPitch();
     }
 
+    /**
+     * 
+     * @return The roll of the gyro (how leans left and right)
+     */
     public double getRoll() {
         return gyro.getRoll();
     }

@@ -63,15 +63,21 @@ public class ClawAndArm extends SubsystemBase {
     public double getAngle() {
         return getVoltage() * clawConstants.VOLTAGE_TO_ANGLE_CONSTANT; //to be calculated
     }
-
+    /**
+     * This mothod closes the clow
+     */
     public void closeClaw() {
         piston.set(true);
     }
-
+    /**
+     * This method opens the claw
+     */
     public void openClaw() {
         piston.set(false);
     } 
-
+    /**
+     * This method reverses the state of the claw i.e if the claw is open it will close and if the the claw is closed, it with open.
+     */
     public void toggleClaw(){
         piston.set(!piston.get());
     }

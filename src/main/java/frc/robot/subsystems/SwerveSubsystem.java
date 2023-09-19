@@ -89,7 +89,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     /**
-     * 
+     * Gyro
      * @return The pitch of the gyro (how leans up and down)
      */
     public double getPitch() {

@@ -45,25 +45,16 @@ public class PhotonVision extends SubsystemBase{
         return pvInstance;
     }
 
-    /**
-     * have to use same pipeline result each time you want to gather data
-     * gets the processed data from the camera
-     * @return the latest pipeline result
-     */
+    //Have to use the same pipeline result each time you want to gather data.
+    //Gets the processed data from the camera
     public PhotonPipelineResult getLatestPipeline(){
         return camera.getLatestResult();
     }
-    
     //Checks if there is a target in vision
     public boolean hasTarget(PhotonPipelineResult result){
         return result.hasTargets();
     }
 
-    /**
-     * gets the targets
-     * @param result stores data
-     * @returna copy of the vector of targets
-     */
     public List<PhotonTrackedTarget> getTargets(PhotonPipelineResult result){
         return result.getTargets();
     }
@@ -122,10 +113,19 @@ public class PhotonVision extends SubsystemBase{
 
     /*Get the transform that maps camera space (X = forward, Y = left, Z = up) 
     to object/fiducial tag space (X forward, Y left, Z up) with the lowest highest error*/
+    /**
+     * Gets the transform that maps camera space (X = forward, Y = left, Z = up to object / fiducial tag space with the lowest highest error.)
+     * @param target The target that is tracked by the camera through Photon Vision
+     * @return
+     */
     public Transform3d getAlternateCamera(PhotonTrackedTarget target){
         return target.getAlternateCameraToTarget();
     }
 
+    /**
+     * This function returns the vertical distance to the target.
+     * @return
+     */
     public double getDistance(){
         double dist = 0.0;
        
@@ -141,6 +141,10 @@ public class PhotonVision extends SubsystemBase{
 
     }
 
+    /**
+     * This function gets the horizontal distance to the target. It uses tangent (the trig function) along with the vertical distance in order to do this.
+     * @return
+     */
     public double getY(){
         double yaw = 0;
         if(result.hasTargets()){
@@ -149,6 +153,11 @@ public class PhotonVision extends SubsystemBase{
         return -getDistance() * Math.tan(Units.degreesToRadians(AAGRIMS_CONSTANT * yaw + YAJWINS_CONSTANT));
     }
 
+    /**
+     * This function is an alternate name to the getDistance function in this subsystem. 
+     * It gets the vertical distance to the target.
+     * @return
+     */
     public double getX(){
         return getDistance();
     }

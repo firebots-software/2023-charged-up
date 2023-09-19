@@ -17,42 +17,67 @@ public class ClawAndArm extends SubsystemBase {
     private TalonFX rotationMotor; //subject to change
     private TalonFX extendingMotor; //subject to change
    
+    /**
+     * Constructor creates a new potentiometer and a new solenoidxs
+     */
     public ClawAndArm() {
         pot = new AnalogPotentiometer(clawConstants.POTENTIOMETER_CANID, clawConstants.MAX_RESISTANCE, clawConstants.ANGLE_OFFSET); // double check values
         piston = new Solenoid(PneumaticsModuleType.CTREPCM, clawConstants.PISTON_CANID);
     }
    
+    /**
+     * Gets singleton instance of the ClawAndArm class
+     * @return A singleton ClawAndArm class
+     */
     public static ClawAndArm getInstance() {
         if (instance == null) {
           instance = new ClawAndArm();
         }
         return instance;
     }
-
+    /**
+     * Sets speed for the arm rotation motor
+     * @param speed speed for the rotation motor
+     */
     public void setRotatingMotor(double speed) {
         rotationMotor.set(ControlMode.PercentOutput, speed);
     }
-
+    /**
+     * It sets the speed for the extending motor of the arm
+     * @param speed Double input the desired speed of the motor
+     */
     public void setExtendingMotor(double speed) {
         extendingMotor.set(ControlMode.PercentOutput, speed);
     }
-
+    /**
+     * gets the voltage of the potentiometer depending on the angle of the arm
+     * @return voltage of potentiometer in that position
+     */
     public double getVoltage() {
         return pot.get();
     }
-
+    /**
+     * angle is calculated from the voltage from the potentiometer
+     * @return angle of the arm
+     */
     public double getAngle() {
         return getVoltage() * clawConstants.VOLTAGE_TO_ANGLE_CONSTANT; //to be calculated
     }
-
+    /**
+     * This mothod closes the clow
+     */
     public void closeClaw() {
         piston.set(true);
     }
-
+    /**
+     * This method opens the claw
+     */
     public void openClaw() {
         piston.set(false);
     } 
-
+    /**
+     * This method reverses the state of the claw i.e if the claw is open it will close and if the the claw is closed, it with open.
+     */
     public void toggleClaw(){
         piston.set(!piston.get());
     }

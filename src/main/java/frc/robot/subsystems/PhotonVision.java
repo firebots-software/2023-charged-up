@@ -55,6 +55,11 @@ public class PhotonVision extends SubsystemBase{
         return result.hasTargets();
     }
 
+    /**
+     * gets the targets
+     * @param result stores data
+     * @return a copy of the vector of targets
+     */
     public List<PhotonTrackedTarget> getTargets(PhotonPipelineResult result){
         return result.getTargets();
     }
@@ -113,10 +118,19 @@ public class PhotonVision extends SubsystemBase{
 
     /*Get the transform that maps camera space (X = forward, Y = left, Z = up) 
     to object/fiducial tag space (X forward, Y left, Z up) with the lowest highest error*/
+    /**
+     * Gets the transform that maps camera space (X = forward, Y = left, Z = up to object / fiducial tag space with the lowest highest error.)
+     * @param target The target that is tracked by the camera through Photon Vision
+     * @return
+     */
     public Transform3d getAlternateCamera(PhotonTrackedTarget target){
         return target.getAlternateCameraToTarget();
     }
 
+    /**
+     * This function returns the vertical distance to the target.
+     * @return
+     */
     public double getDistance(){
         double dist = 0.0;
        
@@ -131,7 +145,10 @@ public class PhotonVision extends SubsystemBase{
         return dist;
 
     }
-
+/**
+ * getter that gives you the yaw for the y axis distance
+ * @return double that tells you the distance from the target in terms of y axis
+ */
     public double getY(){
         double yaw = 0;
         if(result.hasTargets()){
@@ -140,10 +157,18 @@ public class PhotonVision extends SubsystemBase{
         return -getDistance() * Math.tan(Units.degreesToRadians(AAGRIMS_CONSTANT * yaw + YAJWINS_CONSTANT));
     }
 
+/**
+ * gives you the distance in terms of x axis
+ * @return distance in terms of x
+ */
     public double getX(){
         return getDistance();
     }
 
+/**
+ * this will print out the information collected from the target and the distances in terms of the x and y axes
+ * this will be displayed in the smart dashboard, including info like the overall distance, vertical distance, horizontal distance, target pitch and yaw
+ */
     @Override
     public void periodic(){
         result = getLatestPipeline();

@@ -104,18 +104,36 @@ public class SwerveSubsystem extends SubsystemBase {
         return gyro.getRoll();
     }
 
+    /**
+     * Built-in function in WPI
+     * Returns the angle of desired swerve module (in degrees)
+     * @return
+     */
     public edu.wpi.first.math.geometry.Rotation2d getRotation2d() {
         return edu.wpi.first.math.geometry.Rotation2d.fromDegrees(getHeading());
     }
-
+    
+    /**
+     * Utilizes built-in WPI functions
+     * Returns the position of each swerve module with its distance and angle
+     * @return
+     */
     public SwerveModulePosition[] getModulePositions() {
         return new SwerveModulePosition[]{frontLeft.getModulePosition(), frontRight.getModulePosition(), backLeft.getModulePosition(), backRight.getModulePosition()};
     }
 
+    /**
+     * Returns the robot's position on the field in meters
+     * @return
+     */
     public edu.wpi.first.math.geometry.Pose2d getPose() {
         return odometer.getPoseMeters();
     }
 
+    /**
+     * Resets the swerve module's angle and thus the robot's position on the field
+     * @param pose
+     */
     public void resetOdometry(edu.wpi.first.math.geometry.Pose2d pose) {
         odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
